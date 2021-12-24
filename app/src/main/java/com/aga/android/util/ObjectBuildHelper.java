@@ -1,15 +1,19 @@
 package com.aga.android.util;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
@@ -17,6 +21,12 @@ import android.util.Log;
 
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.COLOR_CLEANUP;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.COLOR_SHADOW;
+import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LEVELS_NUMBER;
+import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.SHADOW_LAYER_OFFSET;
+import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.BASE_SCREEN_DIMENSION;
+import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.screenRect;
+
+import com.aga.woodentangrampuzzle2.R;
 
 /**
  *
@@ -25,11 +35,35 @@ import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.COLOR_S
  */
 public class ObjectBuildHelper {
 
+    //<editor-fold desc="Bitmap Manipulations">
     public static Bitmap loadBitmap(Context context, int resourceId) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inMutable = true;
         options.inScaled = false;
         return BitmapFactory.decodeResource(context.getResources(), resourceId, options);
+    }
+
+    public static Bitmap createTiledBitmap(Context context, RectF rect, int id) {
+        Bitmap b = Bitmap.createBitmap((int)rect.width(), (int)rect.height(), Bitmap.Config.ARGB_8888);
+        BitmapDrawable bitmapBack = new BitmapDrawable(context.getResources(), BitmapFactory.decodeResource(context.getResources(), id));
+        bitmapBack.setTileModeX(Shader.TileMode.REPEAT);
+        bitmapBack.setTileModeY(Shader.TileMode.REPEAT);
+        bitmapBack.setBounds(0, 0, (int)rect.width(), (int)rect.height());
+        Canvas c = new Canvas(b);
+        bitmapBack.draw(c);
+
+        return b;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Text Manipulations">
+    public static void setTextWithShader(String text, PointF textPos, Paint textPaint, Bitmap b, Shader shader) {
+        Canvas canvas = new Canvas(b);
+
+        canvas.drawText(text, textPos.x, textPos.y, textPaint);
+        textPaint.setShadowLayer(0, 0, 0, 0);
+        textPaint.setShader(shader);
+        canvas.drawText(text, textPos.x, textPos.y, textPaint);
     }
 
     public static Bitmap textToBitmap(String text, Paint textPaint) {
@@ -48,6 +82,7 @@ public class ObjectBuildHelper {
 
         return b;
     }
+    //</editor-fold>
 
     //<editor-fold desc="PixelsToDeviceCoords">
     public static RectF pixelsToDeviceCoords(RectF src, RectF screenRect) {
@@ -97,6 +132,13 @@ public class ObjectBuildHelper {
         return yOut;
     }
     //</editor-fold>
+
+    //<editor-fold desc="Mix">
+    public static BitmapShader getWoodShader(Context context) {
+        Resources res = context.getResources();
+        Bitmap bitmapWood = BitmapFactory.decodeResource(res, R.drawable.woodentexture);
+        return new  BitmapShader(bitmapWood, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+    }
 
     public static Bitmap bitmapToShadow(Bitmap srcBitmap) {
         int color;
@@ -157,4 +199,90 @@ public class ObjectBuildHelper {
 
         return textureObjectIds[0];
     }
+
+    public static Paint setPaint(float textSize, int color, boolean setShadow, Typeface typeface) {
+        Paint textPaint = new Paint();
+        textPaint.setAntiAlias(true);
+        textPaint.setDither(true);
+        textPaint.setFilterBitmap(true);
+        textPaint.setTextAlign(Paint.Align.CENTER);
+        textPaint.setTextSize(textSize);
+        textPaint.setColor(color);
+        if (setShadow)
+            textPaint.setShadowLayer(2, SHADOW_LAYER_OFFSET, SHADOW_LAYER_OFFSET, 0xff000000);
+        textPaint.setTypeface(typeface);
+
+        return textPaint;
+    }
+
+    /**
+     * Рассчитывает координаты прямоугольника, по данным параметрам.
+     * @param base Параметр, в котором указываются опорные стороны экрана, чтобы можно было верно рассчитать
+     *             необходимые данные. Может принимать следующие значения: <ul>
+     *             <li>"topleft" - опорными сторонами являются верхний и левый край экрана.</li>
+     *             <li>"topright" - опорными сторонами являются верхний и правый край экрана.</li>
+     *             <li>"bottomleft" - опорными сторонами являются нижний и левый край экрана.</li>
+     *             <li>"bottomright" - опорными сторонами являются нижний и правый край экрана.</li>
+     *             <li>"centerheight" - прямоугольник находится по ширине в центре экрана, а для расчета
+     *             отступа от верхнего края используется distanceFactor1. Если distanceFactor2 равен нулю,
+     *             то будет использоваться ширина экрана.</li>
+     *             <li>"centerwidth" - прямоугольник находится по высоте в центре экрана, а для расчета
+     *             отступа от левого края используется distanceFactor1. При этом параметры должны передавать иные значения: <ul>
+     *                  <li>distanceFactor1 - расстояние от левого края экрана в процентах от ширины.</li>
+     *                  <li>distanceFactor2 - высота, центр которой используется в вычислениях. Если равно нулю,
+     *                          то будет использоватся высота экрана.</li>
+     *                  <li>heightFactor - процент от ширины экрана.</li>
+     *                  <li>aspectRatio - соотношение сторон, должно быть вычислено по формуле: height / width.</li></ul></li></ul>
+     * @param distanceFactor1 Первый коэффициент из параметра "base", измеряется в процентах от высоты экрана.
+     * @param distanceFactor2 Второй коэффициент из параметра "base", измеряется в процентах от высоты экрана.
+     * @param heightFactor Высота прямоугольника, измеряется в процентах от высоты экрана.
+     * @param aspectRatio Соотношение сторон, должно быть вычислено по формуле: width / height.
+     * @return Прямоугольник, содержащий рассчитанные координаты.
+     */
+    public static RectF getSizeAndPositionRectangle(String base, float distanceFactor1, float distanceFactor2, float heightFactor, float aspectRatio) {
+        RectF calcRectF = new RectF();
+        switch (base) {
+            case "topleft":
+                calcRectF.top = BASE_SCREEN_DIMENSION * distanceFactor1;
+                calcRectF.bottom = BASE_SCREEN_DIMENSION * (distanceFactor1 + heightFactor);
+                calcRectF.left = BASE_SCREEN_DIMENSION * distanceFactor2;
+                calcRectF.right = calcRectF.left + BASE_SCREEN_DIMENSION * heightFactor * aspectRatio;
+                break;
+            case "topright":
+                calcRectF.top = BASE_SCREEN_DIMENSION * distanceFactor1;
+                calcRectF.bottom = BASE_SCREEN_DIMENSION * (distanceFactor1 + heightFactor);
+                calcRectF.right = screenRect.width() - BASE_SCREEN_DIMENSION * distanceFactor2;
+                calcRectF.left = calcRectF.right - BASE_SCREEN_DIMENSION * heightFactor * aspectRatio;
+                break;
+            case "bottomleft":
+                calcRectF.bottom = BASE_SCREEN_DIMENSION * (1 - distanceFactor1);
+                calcRectF.top = BASE_SCREEN_DIMENSION * (1 - distanceFactor1 - heightFactor);
+                calcRectF.left = BASE_SCREEN_DIMENSION * distanceFactor2;
+                calcRectF.right = calcRectF.left + BASE_SCREEN_DIMENSION * heightFactor * aspectRatio;
+                break;
+            case "bottomright":
+                calcRectF.bottom = BASE_SCREEN_DIMENSION * (1 - distanceFactor1);
+                calcRectF.top = BASE_SCREEN_DIMENSION * (1 - distanceFactor1 - heightFactor);
+                calcRectF.right = screenRect.width() - BASE_SCREEN_DIMENSION * distanceFactor2;
+                calcRectF.left = calcRectF.right - BASE_SCREEN_DIMENSION * heightFactor * aspectRatio;
+                break;
+            case "centerheight":
+                calcRectF.top = BASE_SCREEN_DIMENSION * distanceFactor1;
+                calcRectF.bottom = BASE_SCREEN_DIMENSION * (distanceFactor1 + heightFactor);
+                if (distanceFactor2 == 0)
+                    distanceFactor2 = screenRect.width() / BASE_SCREEN_DIMENSION;
+                calcRectF.left = BASE_SCREEN_DIMENSION * (distanceFactor2 - heightFactor * aspectRatio) / 2f;
+                calcRectF.right = calcRectF.left + BASE_SCREEN_DIMENSION * heightFactor * aspectRatio;
+                break;
+            case "centerwidth":
+                calcRectF.left = screenRect.width() * distanceFactor1;
+                calcRectF.right = screenRect.width() * (distanceFactor1 + heightFactor);
+                if (distanceFactor2 == 0)
+                    distanceFactor2 = BASE_SCREEN_DIMENSION / screenRect.width();
+                calcRectF.top = screenRect.width() * (distanceFactor2 - heightFactor * aspectRatio) / 2f;
+                calcRectF.bottom = calcRectF.top + screenRect.width() * heightFactor * aspectRatio;
+        }
+        return calcRectF;
+    }
+    //</editor-fold>
 }

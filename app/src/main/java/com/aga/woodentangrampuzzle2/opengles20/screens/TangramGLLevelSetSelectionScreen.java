@@ -1,5 +1,10 @@
 package com.aga.woodentangrampuzzle2.opengles20.screens;
 
+import static com.aga.android.util.ObjectBuildHelper.createTiledBitmap;
+import static com.aga.android.util.ObjectBuildHelper.getSizeAndPositionRectangle;
+import static com.aga.android.util.ObjectBuildHelper.getWoodShader;
+import static com.aga.android.util.ObjectBuildHelper.setPaint;
+import static com.aga.android.util.ObjectBuildHelper.setTextWithShader;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.ALL_FONTS_SIZE;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.COLOR_SHADOW;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.COLOR_TEXT_ON_BUTTONS;
@@ -16,11 +21,6 @@ import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LSS_LOC
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LSS_OFFSET_FROM_TOP_DC;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LSS_TITLE_HEIGHT;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LSS_TITLE_OFFSET_FROM_TOP;
-import static com.aga.woodentangrampuzzle2.common.TangramObjectBuilder.createTiledBitmap;
-import static com.aga.woodentangrampuzzle2.common.TangramObjectBuilder.getSizeAndPositionRectangle;
-import static com.aga.woodentangrampuzzle2.common.TangramObjectBuilder.getWoodShader;
-import static com.aga.woodentangrampuzzle2.common.TangramObjectBuilder.setMenusHeaderTextWithShader;
-import static com.aga.woodentangrampuzzle2.common.TangramObjectBuilder.setPaint;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.ASPECT_RATIO;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.INSTANTIATED_LEVEL_SET_NUMBER;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.textureProgram;
@@ -102,7 +102,7 @@ public class TangramGLLevelSetSelectionScreen {
         Paint textPaint = setPaint(ALL_FONTS_SIZE, Color.BLACK, true, Typeface.DEFAULT_BOLD);
         Bitmap textBitmap = createBitmapSizeFromText(text, textPaint, textPos, true);
         float aspectRatio = (float) textBitmap.getWidth() / textBitmap.getHeight();
-        setMenusHeaderTextWithShader(text, textPos, textPaint, textBitmap, getWoodShader(context));
+        setTextWithShader(text, textPos, textPaint, textBitmap, getWoodShader(context));
         RectF textRect = getSizeAndPositionRectangle("centerheight", LSS_TITLE_OFFSET_FROM_TOP, 0, LSS_TITLE_HEIGHT, aspectRatio);
         imageMenuHeader = setLSSHeader_Bg();
         imageMenuHeader.addBitmap(textBitmap, textRect);

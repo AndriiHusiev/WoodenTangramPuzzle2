@@ -2,19 +2,22 @@ package com.aga.woodentangrampuzzle2.opengles20;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PointF;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.MotionEvent;
 
 import com.aga.android.programs.TextureShaderProgram;
 import com.aga.woodentangrampuzzle2.R;
-import com.aga.woodentangrampuzzle2.common.TangramObjectBuilder;
 import com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLSquare;
-import com.aga.woodentangrampuzzle2.opengles20.level.TangramGLLevel;
 import com.aga.woodentangrampuzzle2.opengles20.screens.TangramGLLevelScreen;
 import com.aga.woodentangrampuzzle2.opengles20.screens.TangramGLLevelSelectionScreen;
 import com.aga.woodentangrampuzzle2.opengles20.screens.TangramGLLevelSetSelectionScreen;
@@ -24,8 +27,15 @@ import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.egl.EGLConfig;
 
 
+import static com.aga.android.util.ObjectBuildHelper.getSizeAndPositionRectangle;
+import static com.aga.android.util.ObjectBuildHelper.getWoodShader;
+import static com.aga.android.util.ObjectBuildHelper.setPaint;
+import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.ALL_FONTS_SIZE;
+import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LOADSCREEN_TEXT_HEIGHT;
+import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LOADSCREEN_TEXT_OFFSET_FROM_TOP;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.digitalTF;
-import static com.aga.woodentangrampuzzle2.common.TangramObjectBuilder.saveData;
+import static com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLSquare.createBitmapSizeFromText;
+import static com.aga.woodentangrampuzzle2.opengles20.screens.TangramGLLevelSelectionScreen.saveData;
 
 import androidx.core.content.res.ResourcesCompat;
 
@@ -223,7 +233,7 @@ public class TangramGLRenderer implements GLSurfaceView.Renderer {
         digitalTF = ResourcesCompat.getFont(context, R.font.digitaldismay);
 
         textureProgram = new TextureShaderProgram(context);
-        imageLoadingBg = TangramObjectBuilder.setLoadScreen(context);
+        imageLoadingBg = setLoadScreen(context);
         playMode = Mode.LOADING_SCREEN;
     }
 
@@ -235,6 +245,28 @@ public class TangramGLRenderer implements GLSurfaceView.Renderer {
 
         isLoadingEnds = true;
 //        Log.d("debug","setObjects ends.-------");
+    }
+
+    public static TangramGLSquare setLoadScreen(Context context) {
+        Bitmap b = Bitmap.createBitmap((int)screenRect.width(), (int)screenRect.height(), Bitmap.Config.ARGB_8888);
+        String text = context.getResources().getString(R.string.app_name);//"LoadScreen";//
+        PointF textPos = new PointF();
+
+        Paint textPaint = setPaint(ALL_FONTS_SIZE, Color.BLACK, false, Typeface.DEFAULT_BOLD);
+        textPaint.setShader(getWoodShader(context));
+        Bitmap textBitmap = createBitmapSizeFromText(text, textPaint, textPos, true);
+        RectF textRectF = getSizeAndPositionRectangle("centerheight", LOADSCREEN_TEXT_OFFSET_FROM_TOP, 0, LOADSCREEN_TEXT_HEIGHT, (float) textBitmap.getWidth() / textBitmap.getHeight());
+        Canvas canvas = new Canvas(textBitmap);
+        canvas.drawText(text, textPos.x, textPos.y, textPaint);
+
+        TangramGLSquare imageLoadingBg = new TangramGLSquare(b, ASPECT_RATIO, 1.0f);
+        imageLoadingBg.drawColor(Color.BLACK);
+        imageLoadingBg.addBitmap(textBitmap, textRectF);
+        imageLoadingBg.castObjectSizeAutomatically();
+        imageLoadingBg.bitmapToTexture(textureProgram);
+        imageLoadingBg.recycleBitmap();
+
+        return imageLoadingBg;
     }
     //</editor-fold>
 

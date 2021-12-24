@@ -1,5 +1,7 @@
 package com.aga.woodentangrampuzzle2.opengles20.screens;
 
+import static com.aga.android.util.ObjectBuildHelper.createTiledBitmap;
+import static com.aga.android.util.ObjectBuildHelper.setPaint;
 import static com.aga.android.util.ObjectBuildHelper.xPixelsToDeviceCoords;
 import static com.aga.android.util.ObjectBuildHelper.yPixelsToDeviceCoords;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.ALL_FONTS_SIZE;
@@ -35,16 +37,13 @@ import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.NO_CUP;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.SILVER_CUP;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.TILES_NUMBER;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.digitalTF;
-import static com.aga.woodentangrampuzzle2.common.TangramObjectBuilder.createTiledBitmap;
-import static com.aga.woodentangrampuzzle2.common.TangramObjectBuilder.loadDataCup;
-import static com.aga.woodentangrampuzzle2.common.TangramObjectBuilder.loadDataTimer;
-import static com.aga.woodentangrampuzzle2.common.TangramObjectBuilder.setPaint;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.BASE_SCREEN_DIMENSION;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.Mode;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.textureProgram;
 import static com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLSquare.createBitmapSizeFromText;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -74,10 +73,14 @@ import com.aga.woodentangrampuzzle2.opengles20.level.TangramGLLevelTimer;
  */
 
 public class TangramGLLevelScreen {
+    private static final String LEVEL_CUP = "_level_cup_";
+    private static final String LEVEL_TIME = "_level_time_";
+    private static final String SET = "set";
     private static final String TILE = "tile";
     private static final String COORD_X = "_x";
     private static final String COORD_Y = "_y";
     private static final String DEF_TYPE_ARRAY = "array";
+    private static final String DEF_TYPE_STRING = "string";
     private static final float FRAME_WIDTH = 2;
 
     public TangramGLLevelForeground foreground;
@@ -483,6 +486,48 @@ public class TangramGLLevelScreen {
         return interSymbolGap;
     }
 
+    //</editor-fold>
+
+    //<editor-fold desc="Save-Load Data">
+    private static long loadDataTimer(Context context, int selectedLevelSet, int level) {
+        int id;
+        long timer = 0;
+        String str;
+        Resources res = context.getResources();
+        try {
+            SharedPreferences sharedPref = context.getSharedPreferences(res.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+            Log.d("debug","loadDataTimer.");
+
+            str = SET + selectedLevelSet + LEVEL_TIME + level;
+            id = res.getIdentifier(str, DEF_TYPE_STRING, context.getPackageName());
+            timer = sharedPref.getLong(res.getString(id), 0);
+        }
+        catch (Exception ex) {
+            Log.d("debug","loadDataTimer. Exception: " + ex.getMessage());
+        }
+
+        return timer;
+    }
+
+    private static int loadDataCup(Context context, int selectedLevelSet, int level) {
+        int id;
+        int cup = 0;
+        String str;
+        Resources res = context.getResources();
+        try {
+            SharedPreferences sharedPref = context.getSharedPreferences(res.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+            Log.d("debug","loadDataCup.");
+
+            str = SET + selectedLevelSet + LEVEL_CUP + level;
+            id = res.getIdentifier(str, DEF_TYPE_STRING, context.getPackageName());
+            cup = sharedPref.getInt(res.getString(id), 0);
+        }
+        catch (Exception ex) {
+            Log.d("debug","loadDataCup. Exception: " + ex.getMessage());
+        }
+
+        return cup;
+    }
     //</editor-fold>
 
     //</editor-fold>

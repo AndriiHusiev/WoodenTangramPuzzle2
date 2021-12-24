@@ -1,5 +1,10 @@
 package com.aga.woodentangrampuzzle2.opengles20.screens;
 
+import static com.aga.android.util.ObjectBuildHelper.createTiledBitmap;
+import static com.aga.android.util.ObjectBuildHelper.getSizeAndPositionRectangle;
+import static com.aga.android.util.ObjectBuildHelper.getWoodShader;
+import static com.aga.android.util.ObjectBuildHelper.setPaint;
+import static com.aga.android.util.ObjectBuildHelper.setTextWithShader;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.ALL_FONTS_SIZE;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.BRONZE_CUP;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.COLOR_LEVEL_BG;
@@ -23,11 +28,6 @@ import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LS_TITL
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LS_TITLE_OFFSET_FROM_TOP;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.SILVER_CUP;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.digitalTF;
-import static com.aga.woodentangrampuzzle2.common.TangramObjectBuilder.createTiledBitmap;
-import static com.aga.woodentangrampuzzle2.common.TangramObjectBuilder.getSizeAndPositionRectangle;
-import static com.aga.woodentangrampuzzle2.common.TangramObjectBuilder.getWoodShader;
-import static com.aga.woodentangrampuzzle2.common.TangramObjectBuilder.setMenusHeaderTextWithShader;
-import static com.aga.woodentangrampuzzle2.common.TangramObjectBuilder.setPaint;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.ASPECT_RATIO;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.BASE_SCREEN_DIMENSION;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.textureProgram;
@@ -110,7 +110,7 @@ public class TangramGLLevelSelectionScreen {
 
         Bitmap textBitmap = createBitmapSizeFromText(text, textPaint, textPos, true);
         float aspectRatio = (float) textBitmap.getWidth() / textBitmap.getHeight();
-        setMenusHeaderTextWithShader(text, textPos, textPaint, textBitmap, getWoodShader(context));
+        setTextWithShader(text, textPos, textPaint, textBitmap, getWoodShader(context));
         RectF textRectF = getSizeAndPositionRectangle("centerheight", LS_TITLE_OFFSET_FROM_TOP, 0, LS_TITLE_HEIGHT, aspectRatio);
         imageMenuHeader = setLSHeader_Bg(context, screenRect);
         imageMenuHeader.addBitmap(textBitmap, textRectF);
@@ -379,29 +379,6 @@ public class TangramGLLevelSelectionScreen {
         return imageLSLockScreen;
     }
 
-    private static void loadData(Context context, int selectedLevelSet, long[] timer, int[] cup) {
-        int id;
-        String resName;
-        Resources res = context.getResources();
-        try {
-            SharedPreferences sharedPref = context.getSharedPreferences(res.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-            Log.d("debug","loadData.");
-
-            for (int i = 0; i < LEVELS_NUMBER; i++) {
-                resName = "set" + selectedLevelSet + LEVEL_CUP + i;
-                id = res.getIdentifier(resName, DEF_TYPE_STRING, context.getPackageName());
-                cup[i] = sharedPref.getInt(res.getString(id), 0);
-
-                resName = SET + selectedLevelSet + LEVEL_TIME + i;
-                id = res.getIdentifier(resName, DEF_TYPE_STRING, context.getPackageName());
-                timer[i] = sharedPref.getLong(res.getString(id), 0);
-            }
-        }
-        catch (Exception ex) {
-            Log.d("debug","loadData. Exception: " + ex.getMessage());
-        }
-    }
-
     private static RectF setButtonPositionFirstRow(RectF[] rectButtons, int index) {
         RectF rectButton = new RectF();
         rectButton.top = rectButtons[0].top;
@@ -521,4 +498,44 @@ public class TangramGLLevelSelectionScreen {
         return result;
     }
     //</editor-fold>
+
+    //<editor-fold desc="Save-Load Data">
+    private static void loadData(Context context, int selectedLevelSet, long[] timer, int[] cup) {
+        int id;
+        String resName;
+        Resources res = context.getResources();
+        try {
+            SharedPreferences sharedPref = context.getSharedPreferences(res.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+            Log.d("debug","loadData.");
+
+            for (int i = 0; i < LEVELS_NUMBER; i++) {
+                resName = SET + selectedLevelSet + LEVEL_CUP + i;
+                id = res.getIdentifier(resName, DEF_TYPE_STRING, context.getPackageName());
+                cup[i] = sharedPref.getInt(res.getString(id), 0);
+
+                resName = SET + selectedLevelSet + LEVEL_TIME + i;
+                id = res.getIdentifier(resName, DEF_TYPE_STRING, context.getPackageName());
+                timer[i] = sharedPref.getLong(res.getString(id), 0);
+            }
+        }
+        catch (Exception ex) {
+            Log.d("debug","loadData. Exception: " + ex.getMessage());
+        }
+    }
+
+    public static void saveData(Context context, int selectedLevelSet, int level, long timer, int cup) {
+        int id;
+        Resources res = context.getResources();
+        SharedPreferences sharedPref = context.getSharedPreferences(res.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        id = res.getIdentifier(SET + selectedLevelSet + LEVEL_CUP + level, DEF_TYPE_STRING, context.getPackageName());
+        editor.putInt(res.getString(id), cup);
+        id = res.getIdentifier(SET + selectedLevelSet + LEVEL_TIME + level, DEF_TYPE_STRING, context.getPackageName());
+        editor.putLong(res.getString(id), timer);
+        editor.apply();
+        Log.d("debug","saveData. Save data of level No" + level);
+    }
+    //</editor-fold>
+
 }

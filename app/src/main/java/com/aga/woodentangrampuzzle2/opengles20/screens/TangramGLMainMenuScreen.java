@@ -1,6 +1,10 @@
 package com.aga.woodentangrampuzzle2.opengles20.screens;
 
+import static com.aga.android.util.ObjectBuildHelper.createTiledBitmap;
+import static com.aga.android.util.ObjectBuildHelper.getSizeAndPositionRectangle;
+import static com.aga.android.util.ObjectBuildHelper.getWoodShader;
 import static com.aga.android.util.ObjectBuildHelper.rectContainsPoint;
+import static com.aga.android.util.ObjectBuildHelper.setPaint;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.ALL_FONTS_SIZE;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.COLOR_TEXT_INGAME_HEADER;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.COLOR_TEXT_ON_BUTTONS;
@@ -12,10 +16,6 @@ import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.MM_TITL
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.MM_TITLE_OFFSET_FROM_TOP;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.MM_VERSION_TEXT_HEIGHT;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.MM_VERSION_TEXT_OFFSET;
-import static com.aga.woodentangrampuzzle2.common.TangramObjectBuilder.createTiledBitmap;
-import static com.aga.woodentangrampuzzle2.common.TangramObjectBuilder.getSizeAndPositionRectangle;
-import static com.aga.woodentangrampuzzle2.common.TangramObjectBuilder.getWoodShader;
-import static com.aga.woodentangrampuzzle2.common.TangramObjectBuilder.setPaint;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.ASPECT_RATIO;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.textureProgram;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.Mode;
