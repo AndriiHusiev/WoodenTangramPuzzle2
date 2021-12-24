@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Танграм из дерева 2</string>
+
+    <string name="loading_title">Разработано\r\nАндреем Гусевым</string>
+    <string name="level_title">"Уровень %1$d. "</string>
+    <string name="levels_set_title">"Выберите набор уровней"</string>
+    <string name="levels_set_0">"Дом"</string>
+    <string name="levels_set_1">"Страны"</string>
+    <string name="levels_set_2">"Природа"</string>
+    <string name="levels_set_3">"Промышленность"</string>
+    <string name="button_MM_start">Старт</string>
+    <string name="button_MM_credits">Об игре</string>
+    <string name="button_MM_exit">Выход</string>
+    <string name="button_MM_shop">Магазин</string>
+    <string name="button_MM_achievements">Достижения</string>
+    <string name="locked_level_touched">Сначала необходимо получить любой кубок во всех открытых уровнях.</string>
+    <string name="ls_lockscreen_text">Загрузка&#8230;</string>
+    <string name="msg_quit_title">Выход</string>
+    <string name="really_quit">"Вы действительно хотите выйти?"</string>
+    <string name="msg_yes">Да</string>
+    <string name="msg_no">Нет</string>
+    <string name="msg_ok">OK</string>
+</resources>

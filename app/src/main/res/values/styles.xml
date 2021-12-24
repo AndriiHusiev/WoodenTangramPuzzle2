@@ -1,0 +1,20 @@
+<resources>
+
+    <style name="Widget.Theme.WoodenTangramPuzzle2.ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/gray_100</item>
+        <item name="colorPrimaryDark">@color/dark_gray_100</item>
+        <item name="colorAccent">@color/light_gray_100</item>
+    </style>
+
+    <style name="FullscreenTheme" parent="AppTheme">
+        <item name="android:actionBarStyle">@style/Widget.Theme.WoodenTangramPuzzle2.ActionBar.Fullscreen</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+    </style>
+</resources>

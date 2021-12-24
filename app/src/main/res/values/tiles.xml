@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="tile0_x">
+        <item>150</item>
+        <item>250</item>
+    </integer-array>
+    <integer-array name="tile0_y">
+        <item>80</item>
+        <item>180</item>
+    </integer-array>
+
+    <integer-array name="tile1_x">
+        <item>129</item>
+        <item>30</item>
+        <item>30</item>
+    </integer-array>
+    <integer-array name="tile1_y">
+        <item>179</item>
+        <item>80</item>
+        <item>179</item>
+    </integer-array>
+
+    <integer-array name="tile2_x">
+        <item>40</item>
+        <item>139</item>
+        <item>139</item>
+    </integer-array>
+    <integer-array name="tile2_y">
+        <item>80</item>
+        <item>179</item>
+        <item>80</item>
+    </integer-array>
+
+    <integer-array name="tile3_x">
+        <item>171</item>
+        <item>30</item>
+        <item>30</item>
+    </integer-array>
+    <integer-array name="tile3_y">
+        <item>331</item>
+        <item>190</item>
+        <item>331</item>
+    </integer-array>
+
+    <integer-array name="tile4_x">
+        <item>40</item>
+        <item>181</item>
+        <item>181</item>
+    </integer-array>
+    <integer-array name="tile4_y">
+        <item>190</item>
+        <item>331</item>
+        <item>190</item>
+    </integer-array>
+
+    <integer-array name="tile5_x">
+        <item>30</item>
+        <item>172</item>
+    </integer-array>
+    <integer-array name="tile5_y">
+        <item>340</item>
+        <item>482</item>
+    </integer-array>
+
+    <integer-array name="tile6_x">
+        <item>30</item>
+        <item>129</item>
+        <item>330</item>
+        <item>231</item>
+    </integer-array>
+    <integer-array name="tile6_y">
+        <item>493</item>
+        <item>592</item>
+        <item>592</item>
+        <item>493</item>
+    </integer-array>
+</resources>

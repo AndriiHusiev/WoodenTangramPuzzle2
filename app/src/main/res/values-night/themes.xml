@@ -1,0 +1,21 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.WoodenTangramPuzzle2" parent="@android:style/Theme.NoTitleBar.Fullscreen">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/light_gray_200</item>
+        <item name="colorPrimaryVariant">@color/dark_gray_200</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/light_gray_300</item>
+        <item name="colorSecondaryVariant">@color/light_gray_300</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="ThemeOverlay.WoodenTangramPuzzle2.FullscreenContainer" parent="">
+        <item name="fullscreenBackgroundColor">@color/dark_gray_100</item>
+        <item name="fullscreenTextColor">@color/light_gray_400</item>
+    </style>
+</resources>

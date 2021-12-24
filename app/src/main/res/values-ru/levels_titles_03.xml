@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ls2_level_0">Дерево</string>
+    <string name="ls2_level_1">Лист</string>
+    <string name="ls2_level_2">Брокколи</string>
+    <string name="ls2_level_3">Пень</string>
+    <string name="ls2_level_4">Елка</string>
+    <string name="ls2_level_5">Куст</string>
+    <string name="ls2_level_6">Гриб</string>
+    <string name="ls2_level_7">Холм</string>
+    <string name="ls2_level_8">Гора</string>
+    <string name="ls2_level_9">Скалы</string>
+    <string name="ls2_level_10">Волны</string>
+    <string name="ls2_level_11">Озеро</string>
+    <string name="ls2_level_12">Краб</string>
+    <string name="ls2_level_13">Паук</string>
+    <string name="ls2_level_14">Змея</string>
+    <string name="ls2_level_15">Осьминог</string>
+    <string name="ls2_level_16">Медуза</string>
+    <string name="ls2_level_17">Рыба</string>
+    <string name="ls2_level_18">Летучая мышь</string>
+    <string name="ls2_level_19">Сова</string>
+    <string name="ls2_level_20">Птица</string>
+    <string name="ls2_level_21">Гнездо</string>
+    <string name="ls2_level_22">Цветок</string>
+    <string name="ls2_level_23">Личинка</string>
+    <string name="ls2_level_24">Клешня</string>
+</resources>

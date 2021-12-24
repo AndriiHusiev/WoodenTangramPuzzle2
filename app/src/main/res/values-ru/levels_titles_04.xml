@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ls3_level_0">Щипцы</string>
+    <string name="ls3_level_1">Спутник</string>
+    <string name="ls3_level_2">Стопка тюков</string>
+    <string name="ls3_level_3">Электричество</string>
+    <string name="ls3_level_4">Ось</string>
+    <string name="ls3_level_5">Угольник</string>
+    <string name="ls3_level_6">Резец</string>
+    <string name="ls3_level_7">Вентилятор</string>
+    <string name="ls3_level_8">Штангенциркуль</string>
+    <string name="ls3_level_9">Тележка</string>
+    <string name="ls3_level_10">Комбинезон</string>
+    <string name="ls3_level_11">Ролик</string>
+    <string name="ls3_level_12">Стрелка</string>
+    <string name="ls3_level_13">Указатель налево</string>
+    <string name="ls3_level_14">Указатель направо</string>
+    <string name="ls3_level_15">Молот</string>
+    <string name="ls3_level_16">Манипулятор</string>
+    <string name="ls3_level_17">Подставка</string>
+    <string name="ls3_level_18">Самолет</string>
+    <string name="ls3_level_19">Фреза</string>
+    <string name="ls3_level_20">Острие</string>
+    <string name="ls3_level_21">Коронка</string>
+    <string name="ls3_level_22">Наконечник</string>
+    <string name="ls3_level_23">Сверло</string>
+    <string name="ls3_level_24">Основание</string>
+</resources>

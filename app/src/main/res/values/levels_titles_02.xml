@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ls1_level_0">Amphora</string>
+    <string name="ls1_level_1">Shuriken</string>
+    <string name="ls1_level_2">Pagoda</string>
+    <string name="ls1_level_3">Crystal</string>
+    <string name="ls1_level_4">Helmet</string>
+    <string name="ls1_level_5">Mace</string>
+    <string name="ls1_level_6">Crown</string>
+    <string name="ls1_level_7">Crypt</string>
+    <string name="ls1_level_8">Road</string>
+    <string name="ls1_level_9">Hat</string>
+    <string name="ls1_level_10">Pyramid</string>
+    <string name="ls1_level_11">Pedestal</string>
+    <string name="ls1_level_12">Maraca</string>
+    <string name="ls1_level_13">Yurt</string>
+    <string name="ls1_level_14">Tower</string>
+    <string name="ls1_level_15">Cross</string>
+    <string name="ls1_level_16">Monk</string>
+    <string name="ls1_level_17">Candlestick</string>
+    <string name="ls1_level_18">Ship</string>
+    <string name="ls1_level_19">Arrow</string>
+    <string name="ls1_level_20">Plow</string>
+    <string name="ls1_level_21">Kite</string>
+    <string name="ls1_level_22">Fighter</string>
+    <string name="ls1_level_23">Bust</string>
+    <string name="ls1_level_24">Wingsuit</string>
+</resources>

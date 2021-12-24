@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ls0_level_0">Home</string>
+    <string name="ls0_level_1">Kennel</string>
+    <string name="ls0_level_2">Doorstep</string>
+    <string name="ls0_level_3">Rug</string>
+    <string name="ls0_level_4">Armchair</string>
+    <string name="ls0_level_5">Funnel</string>
+    <string name="ls0_level_6">Corkscrew</string>
+    <string name="ls0_level_7">Towel</string>
+    <string name="ls0_level_8">Wineglass</string>
+    <string name="ls0_level_9">Opener</string>
+    <string name="ls0_level_10">Umbrella</string>
+    <string name="ls0_level_11">Hat</string>
+    <string name="ls0_level_12">Hammer</string>
+    <string name="ls0_level_13">Rack</string>
+    <string name="ls0_level_14">Whirligig</string>
+    <string name="ls0_level_15">Pants</string>
+    <string name="ls0_level_16">Overalls</string>
+    <string name="ls0_level_17">Bra</string>
+    <string name="ls0_level_18">Vane</string>
+    <string name="ls0_level_19">Cap</string>
+    <string name="ls0_level_20">Drill</string>
+    <string name="ls0_level_21">Bowl</string>
+    <string name="ls0_level_22">Spoon</string>
+    <string name="ls0_level_23">Ottoman</string>
+    <string name="ls0_level_24">Brilliant</string>
+</resources>

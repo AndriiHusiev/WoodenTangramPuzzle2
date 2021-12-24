@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ls0_level_0">Дом</string>
+    <string name="ls0_level_1">Конура</string>
+    <string name="ls0_level_2">Порог</string>
+    <string name="ls0_level_3">Ковёр</string>
+    <string name="ls0_level_4">Кресло</string>
+    <string name="ls0_level_5">Воронка</string>
+    <string name="ls0_level_6">Штопор</string>
+    <string name="ls0_level_7">Полотенце</string>
+    <string name="ls0_level_8">Бокал</string>
+    <string name="ls0_level_9">Открывашка</string>
+    <string name="ls0_level_10">Зонт</string>
+    <string name="ls0_level_11">Шляпа</string>
+    <string name="ls0_level_12">Молоток</string>
+    <string name="ls0_level_13">Подставка</string>
+    <string name="ls0_level_14">Юла</string>
+    <string name="ls0_level_15">Штаны</string>
+    <string name="ls0_level_16">Комбинезон</string>
+    <string name="ls0_level_17">Бюстгальтер</string>
+    <string name="ls0_level_18">Флюгер</string>
+    <string name="ls0_level_19">Шапка</string>
+    <string name="ls0_level_20">Сверло</string>
+    <string name="ls0_level_21">Миска</string>
+    <string name="ls0_level_22">Ложка</string>
+    <string name="ls0_level_23">Пуфик</string>
+    <string name="ls0_level_24">Бриллиант</string>
+</resources>

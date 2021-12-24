@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="font_loading_title">96</integer>
+    <integer name="font_mm_buttons">72</integer>
+    <integer name="font_lss_buttons">72</integer>
+    <integer name="font_level_progress">22</integer>
+    <integer name="font_digital">32</integer>
+    <integer name="level_scale_factor">560</integer>
+    <integer name="level_locked_font_start_size">20</integer>
+    <integer name="level_locked_font_end_size">36</integer>
+    <integer name="angular_header_scale_factor">55</integer>
+    <integer name="tile_shadow_size">12</integer>
+</resources>

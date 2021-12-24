@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ls2_level_0">Tree</string>
+    <string name="ls2_level_1">Leaf</string>
+    <string name="ls2_level_2">Broccoli</string>
+    <string name="ls2_level_3">Stump</string>
+    <string name="ls2_level_4">Spruce</string>
+    <string name="ls2_level_5">Bush</string>
+    <string name="ls2_level_6">Mushroom</string>
+    <string name="ls2_level_7">Hill</string>
+    <string name="ls2_level_8">Mountain</string>
+    <string name="ls2_level_9">Cliffs</string>
+    <string name="ls2_level_10">Waves</string>
+    <string name="ls2_level_11">Lake</string>
+    <string name="ls2_level_12">Crab</string>
+    <string name="ls2_level_13">Spider</string>
+    <string name="ls2_level_14">Snake</string>
+    <string name="ls2_level_15">Octopus</string>
+    <string name="ls2_level_16">Jellyfish</string>
+    <string name="ls2_level_17">Fish</string>
+    <string name="ls2_level_18">Bat</string>
+    <string name="ls2_level_19">Owl</string>
+    <string name="ls2_level_20">Bird</string>
+    <string name="ls2_level_21">Nest</string>
+    <string name="ls2_level_22">Flower</string>
+    <string name="ls2_level_23">Larva</string>
+    <string name="ls2_level_24">Claw</string>
+</resources>

@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Wooden Tangram Puzzle 2</string>
+    <string name="preference_file_key" translatable="false">"com.aga.woodentangrampuzzle2.PREFERENCE_FILE_KEY"</string>
+    <string name="loading_title">Created by\r\nAndrii Husiev</string>
+    <string name="level_title">"Level %1$d. "</string>
+    <string name="levels_set_title">"Choose levels\' set"</string>
+    <string name="levels_set_0">"Home"</string>
+    <string name="levels_set_1">"Countries"</string>
+    <string name="levels_set_2">"Nature"</string>
+    <string name="levels_set_3">"Industry"</string>
+    <string name="button_MM_start">Start</string>
+    <string name="button_MM_credits">Credits</string>
+    <string name="button_MM_exit">Exit</string>
+    <string name="button_MM_shop">Shop</string>
+    <string name="button_MM_achievements">Achievements</string>
+    <string name="locked_level_touched">First have to get any cup in all unlocked levels.</string>
+    <string name="ls_lockscreen_text">Loading&#8230;</string>
+    <string name="msg_quit_title">Quit</string>
+    <string name="really_quit">"Do you really want to quit?"</string>
+    <string name="msg_yes">Yes</string>
+    <string name="msg_no">No</string>
+    <string name="msg_ok">OK</string>
+</resources>

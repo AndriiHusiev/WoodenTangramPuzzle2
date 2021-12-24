@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ls3_level_0">Forceps</string>
+    <string name="ls3_level_1">Satellite</string>
+    <string name="ls3_level_2">Stack of bales</string>
+    <string name="ls3_level_3">Electricity</string>
+    <string name="ls3_level_4">Spindle</string>
+    <string name="ls3_level_5">Try-square</string>
+    <string name="ls3_level_6">Cutter</string>
+    <string name="ls3_level_7">Fan</string>
+    <string name="ls3_level_8">Calipers</string>
+    <string name="ls3_level_9">Carriage</string>
+    <string name="ls3_level_10">Overalls</string>
+    <string name="ls3_level_11">Roller</string>
+    <string name="ls3_level_12">Arrow</string>
+    <string name="ls3_level_13">Pointer to the left</string>
+    <string name="ls3_level_14">Pointer to the right</string>
+    <string name="ls3_level_15">Hammer</string>
+    <string name="ls3_level_16">Manipulator</string>
+    <string name="ls3_level_17">Stand</string>
+    <string name="ls3_level_18">Airplane</string>
+    <string name="ls3_level_19">Milling cutter</string>
+    <string name="ls3_level_20">Spearhead</string>
+    <string name="ls3_level_21">Crown</string>
+    <string name="ls3_level_22">Tip</string>
+    <string name="ls3_level_23">Drill</string>
+    <string name="ls3_level_24">Base</string>
+</resources>
