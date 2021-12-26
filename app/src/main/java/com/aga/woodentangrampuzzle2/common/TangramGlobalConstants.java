@@ -101,6 +101,15 @@ public class TangramGlobalConstants {
     public static final float INGAME_TILES_OFFSET_FROM_RIGHT = 0.3f;
     //</editor-fold>
 
+    //<editor-fold desc="Fling Constants">
+    public static final int FLING_MIN_DISTANCE = 120;
+    public static final int FLING_MAX_OFF_PATH = 250;
+    public static final int FLING_THRESHOLD_VELOCITY = 200;
+    public static final int SCROLL_DISTANCE_Y = 1000;
+    public static final float SCROLLING_DISTANCE_DIVIDER = 1500f;
+    public static final int SCROLLING_DURATION = 2000;
+    //</editor-fold>
+
     //<editor-fold desc="Mixed Constants">
     public static final float ALL_MENUS_HEADER_SHADOW_TAIL = 0.007f;
     public static final float INSENSITIVE_BACKLASH_ON_SCROLL = 0.002f;

@@ -26,6 +26,9 @@ import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LS_PREV
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LS_PREVIEW_PATH_SIZE;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LS_TITLE_HEIGHT;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LS_TITLE_OFFSET_FROM_TOP;
+import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.SCROLLING_DISTANCE_DIVIDER;
+import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.SCROLLING_DURATION;
+import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.SCROLL_DISTANCE_Y;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.SILVER_CUP;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.digitalTF;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.ASPECT_RATIO;
@@ -47,6 +50,7 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.widget.OverScroller;
 
 import com.aga.android.util.ObjectBuildHelper;
 import com.aga.woodentangrampuzzle2.R;
@@ -67,6 +71,7 @@ public class TangramGLLevelSelectionScreen {
 
     private Context context;
     private RectF screenRect;
+    private OverScroller mScroller;
     private float prevTouch;
     private boolean isStartScrolling;
     private int selectedLevelSet, selectedLevel;
@@ -92,6 +97,7 @@ public class TangramGLLevelSelectionScreen {
         this.screenRect.right = screenRect.right;
         this.screenRect.bottom = screenRect.bottom;
         this.selectedLevelSet = selectedLevelSet;
+        mScroller = new OverScroller(context);
     }
 
     private void setBackground() {
@@ -331,6 +337,22 @@ public class TangramGLLevelSelectionScreen {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Scrolling on Flinging">
+    public void onFling(boolean down) {
+        mScroller.forceFinished(true);
+        if (down)
+            mScroller.startScroll(0, 0, 0, -SCROLL_DISTANCE_Y, SCROLLING_DURATION);
+        else
+            mScroller.startScroll(0, 0, 0, SCROLL_DISTANCE_Y, SCROLLING_DURATION);
+        startScroll(0);
+    }
+
+    private void scrolling() {
+        if (mScroller.computeScrollOffset())
+            updateScroll(mScroller.getCurrY() / SCROLLING_DISTANCE_DIVIDER);
+    }
+    //</editor-fold>
+
     public void draw(float[] projectionMatrix, TangramGLRenderer.Mode playMode) {
         imageMenuBackground.draw(projectionMatrix);
         for (TangramGLButton t: button)
@@ -339,6 +361,7 @@ public class TangramGLLevelSelectionScreen {
         if (playMode == TangramGLRenderer.Mode.LOCK_LS_TOUCH)
             imageLockScreen.draw(projectionMatrix);
 
+        scrolling();
     }
 
     //<editor-fold desc="Static Auxiliary Functions">
