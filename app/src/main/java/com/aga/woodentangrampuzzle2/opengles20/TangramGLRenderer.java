@@ -14,10 +14,6 @@ import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
-import android.widget.OverScroller;
-import android.widget.Scroller;
 
 import com.aga.android.programs.TextureShaderProgram;
 import com.aga.woodentangrampuzzle2.R;
@@ -42,7 +38,6 @@ import static com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLSquar
 import static com.aga.woodentangrampuzzle2.opengles20.screens.TangramGLLevelSelectionScreen.saveData;
 
 import androidx.core.content.res.ResourcesCompat;
-import androidx.core.view.GestureDetectorCompat;
 
 /**
  *
@@ -125,7 +120,6 @@ public class TangramGLRenderer implements GLSurfaceView.Renderer {
                 if (playMode == Mode.LOCK_LS_TOUCH) {
                     if (additionalDrawCycleEnds){
                         loadLevel();
-//                        level.timer.resume();
                         levelScreen.timer.resume();
                         levelScreen.shiftTilesToStartPosition();
                         playMode = Mode.LEVEL;
@@ -148,12 +142,12 @@ public class TangramGLRenderer implements GLSurfaceView.Renderer {
     }
 
     //<editor-fold desc="All about screen interaction">
-    public void onFling(boolean down) {
+    public void onFling(float velocity) {
         switch (playMode) {
             case LEVELS_SET_SELECTION:
                 break;
             case LEVEL_SELECTION:
-                screenLS.onFling(down);
+                screenLS.onFling(velocity);
                 break;
         }
     }

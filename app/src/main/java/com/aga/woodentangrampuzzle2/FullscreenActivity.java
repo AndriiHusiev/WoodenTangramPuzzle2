@@ -94,10 +94,8 @@ public class FullscreenActivity extends AppCompatActivity {
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             if (Math.abs(e1.getX() - e2.getX()) > FLING_MAX_OFF_PATH)
                 return false;
-            if(e1.getY() - e2.getY() > FLING_MIN_DISTANCE && Math.abs(velocityY) > FLING_THRESHOLD_VELOCITY) {
-                mGLView.queueEvent(() -> mGLView.mRenderer.onFling(false));
-            } else if (e2.getY() - e1.getY() > FLING_MIN_DISTANCE && Math.abs(velocityY) > FLING_THRESHOLD_VELOCITY) {
-                mGLView.queueEvent(() -> mGLView.mRenderer.onFling(true));
+            if(Math.abs(e1.getY() - e2.getY()) > FLING_MIN_DISTANCE && Math.abs(velocityY) > FLING_THRESHOLD_VELOCITY) {
+                mGLView.queueEvent(() -> mGLView.mRenderer.onFling(velocityY));
             }
             return false;
 //            return true;

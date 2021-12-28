@@ -26,9 +26,7 @@ import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LS_PREV
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LS_PREVIEW_PATH_SIZE;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LS_TITLE_HEIGHT;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LS_TITLE_OFFSET_FROM_TOP;
-import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.SCROLLING_DISTANCE_DIVIDER;
-import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.SCROLLING_DURATION;
-import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.SCROLL_DISTANCE_Y;
+import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.SCROLLING_ANIMATION_DURATION;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.SILVER_CUP;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.digitalTF;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.ASPECT_RATIO;
@@ -50,10 +48,10 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.widget.OverScroller;
 
 import com.aga.android.util.ObjectBuildHelper;
 import com.aga.woodentangrampuzzle2.R;
+import com.aga.woodentangrampuzzle2.common.TangramAnimator;
 import com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer;
 import com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLButton;
 import com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLSquare;
@@ -71,10 +69,10 @@ public class TangramGLLevelSelectionScreen {
 
     private Context context;
     private RectF screenRect;
-    private OverScroller mScroller;
     private float prevTouch;
     private boolean isStartScrolling;
     private int selectedLevelSet, selectedLevel;
+    private TangramAnimator animator;
     private TangramGLSquare imageMenuBackground;
     private TangramGLSquare imageMenuHeader;
     private TangramGLSquare imageLockScreen;
@@ -97,7 +95,7 @@ public class TangramGLLevelSelectionScreen {
         this.screenRect.right = screenRect.right;
         this.screenRect.bottom = screenRect.bottom;
         this.selectedLevelSet = selectedLevelSet;
-        mScroller = new OverScroller(context);
+        animator = new TangramAnimator(screenRect.height());
     }
 
     private void setBackground() {
@@ -242,6 +240,7 @@ public class TangramGLLevelSelectionScreen {
         Mode playMode = Mode.LEVEL_SELECTION;
         switch (motionEvent) {
             case MotionEvent.ACTION_DOWN:
+                if (animator.isAnimationStarted()) animator.stop();
                 pressSelectedButton(normalizedX, normalizedY);
                 startScroll(normalizedY);
                 return playMode;
@@ -338,18 +337,17 @@ public class TangramGLLevelSelectionScreen {
     //</editor-fold>
 
     //<editor-fold desc="Scrolling on Flinging">
-    public void onFling(boolean down) {
-        mScroller.forceFinished(true);
-        if (down)
-            mScroller.startScroll(0, 0, 0, -SCROLL_DISTANCE_Y, SCROLLING_DURATION);
-        else
-            mScroller.startScroll(0, 0, 0, SCROLL_DISTANCE_Y, SCROLLING_DURATION);
-        startScroll(0);
+    public void onFling(float velocity) {
+        animator.stop();
+        animator.setAnimatedValues(velocity);
+        animator.setDuration(SCROLLING_ANIMATION_DURATION);
+        animator.start();
+        startScroll(animator.getAnimatedValue());
     }
 
     private void scrolling() {
-        if (mScroller.computeScrollOffset())
-            updateScroll(mScroller.getCurrY() / SCROLLING_DISTANCE_DIVIDER);
+        if (animator.isAnimationStarted())
+            updateScroll(animator.getAnimatedValue());
     }
     //</editor-fold>
 
@@ -516,7 +514,7 @@ public class TangramGLLevelSelectionScreen {
                 result &= (buttonLS[j].getCup() > 0);
             }
         }
-        Log.d("debug","onTouchEvent.ACTION_UP. allLevelsInThePrevRowSolved == " + result);
+//        Log.d("debug","onTouchEvent.ACTION_UP. allLevelsInThePrevRowSolved == " + result);
 
         return result;
     }
