@@ -3,7 +3,6 @@ package com.aga.woodentangrampuzzle2.opengles20.level;
 import android.graphics.Bitmap;
 import android.graphics.RectF;
 import android.opengl.Matrix;
-import android.util.Log;
 
 import com.aga.android.programs.TextureShaderProgram;
 import com.aga.android.util.ObjectBuildHelper;
@@ -11,6 +10,7 @@ import com.aga.woodentangrampuzzle2.common.TangramCommonTimer;
 import com.aga.woodentangrampuzzle2.common.TangramCommonTimer.mode;
 import com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLSquare;
 
+import static com.aga.android.util.ObjectBuildHelper.logDebugOut;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.screenRect;
 
 /**
@@ -20,6 +20,8 @@ import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.screenRe
  */
 
 public class TangramGLLevelTimer {
+    private static final String TAG = "TangramGLLevelTimer";
+
     //<editor-fold desc="Variables">
     private RectF firstDigitPosition;
     private float digitWidthDC;  // DC means "Device Coordinates"
@@ -45,7 +47,6 @@ public class TangramGLLevelTimer {
     public static int[] convertElapsedTime(long elapsedTime) {
         int[] elapsedTimeDigits= new int[4];
         int seconds = (int) (elapsedTime / 1000);
-//        Log.d("debug","TangramGLLevelTimer.convertElapsedTime seconds == " + seconds);
         int minutes = seconds / 60;
 //        int hours = minutes / 60;
         seconds = seconds % 60;
@@ -104,7 +105,7 @@ public class TangramGLLevelTimer {
             digits[index].recycleBitmap();
         }
         catch (Exception ex) {
-            Log.d("debug","TangramGLLevelTimer.addDigit catch an Exception: " + ex.getMessage());
+            logDebugOut(TAG, "addDigit","catch an Exception: " + ex.getMessage());
         }
     }
 
@@ -118,7 +119,7 @@ public class TangramGLLevelTimer {
             colonWidthDC = ObjectBuildHelper.pixelsToDeviceCoords(dst, screenRect).width();
         }
         catch (Exception ex) {
-            Log.d("debug","TangramGLLevelTimer.addColon catch an Exception: " + ex.getMessage());
+            logDebugOut(TAG, "addColon","catch an Exception: " + ex.getMessage());
         }
     }
 

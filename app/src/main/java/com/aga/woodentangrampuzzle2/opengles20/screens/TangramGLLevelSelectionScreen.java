@@ -3,6 +3,7 @@ package com.aga.woodentangrampuzzle2.opengles20.screens;
 import static com.aga.android.util.ObjectBuildHelper.createTiledBitmap;
 import static com.aga.android.util.ObjectBuildHelper.getSizeAndPositionRectangle;
 import static com.aga.android.util.ObjectBuildHelper.getWoodShader;
+import static com.aga.android.util.ObjectBuildHelper.logDebugOut;
 import static com.aga.android.util.ObjectBuildHelper.setPaint;
 import static com.aga.android.util.ObjectBuildHelper.setTextWithShader;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.ALL_FONTS_SIZE;
@@ -46,7 +47,6 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.aga.android.util.ObjectBuildHelper;
@@ -61,6 +61,7 @@ import com.aga.woodentangrampuzzle2.opengles20.level.TangramGLLevelTimer;
 import java.util.Locale;
 
 public class TangramGLLevelSelectionScreen {
+    private static final String TAG = "TangramGLLevelSelectionScreen";
     private static final String LEVEL_SET = "levels_set_";
     private static final String LEVEL_CUP = "_level_cup_";
     private static final String LEVEL_TIME = "_level_time_";
@@ -256,19 +257,14 @@ public class TangramGLLevelSelectionScreen {
                 }
                 for (int i = 0; i < LEVELS_NUMBER; i++) {
                     if (ObjectBuildHelper.rectContainsPoint(button[i].getDstRect(), normalizedX, normalizedY) && button[i].isPressed()) {
-//                        Log.d("debug","onTouchEvent.ACTION_UP. Button pressed. i == " + i);
                         if (allLevelsInThePrevRowSolved(i, button)) {
                             selectedLevel = i;
                             playMode = Mode.LOCK_LS_TOUCH;
-//                            Log.d("debug","onTouchEvent.ACTION_UP. Selected level is unlocked.");
                         }
                         else {
                             selectedLevel = i;
-                            Log.d("debug","onTouchEvent.ACTION_UP. Selected level is still locked.");
-                            // AndroidRuntimeException: Animators may only be run on Looper threads
-//                            playWarningLockedLevelAnimation();
+                            logDebugOut(TAG, "onTouchEvent.ACTION_UP","Selected level is still locked.");
                         }
-//                        button[i].setPressed(false);
                         break;
                     }
                 }
@@ -514,7 +510,7 @@ public class TangramGLLevelSelectionScreen {
                 result &= (buttonLS[j].getCup() > 0);
             }
         }
-//        Log.d("debug","onTouchEvent.ACTION_UP. allLevelsInThePrevRowSolved == " + result);
+//        logDebugOut(TAG, "onTouchEvent.ACTION_UP.allLevelsInThePrevRowSolved", result);
 
         return result;
     }
@@ -527,7 +523,7 @@ public class TangramGLLevelSelectionScreen {
         Resources res = context.getResources();
         try {
             SharedPreferences sharedPref = context.getSharedPreferences(res.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-            Log.d("debug","loadData.");
+            logDebugOut(TAG, "loadData","Data is loading.");
 
             for (int i = 0; i < LEVELS_NUMBER; i++) {
                 resName = SET + selectedLevelSet + LEVEL_CUP + i;
@@ -540,7 +536,7 @@ public class TangramGLLevelSelectionScreen {
             }
         }
         catch (Exception ex) {
-            Log.d("debug","loadData. Exception: " + ex.getMessage());
+            logDebugOut(TAG, "loadData","Exception: " + ex.getMessage());
         }
     }
 
@@ -555,7 +551,7 @@ public class TangramGLLevelSelectionScreen {
         id = res.getIdentifier(SET + selectedLevelSet + LEVEL_TIME + level, DEF_TYPE_STRING, context.getPackageName());
         editor.putLong(res.getString(id), timer);
         editor.apply();
-        Log.d("debug","saveData. Save data of level No" + level);
+        logDebugOut(TAG, "saveData","Save data of level No" + level);
     }
     //</editor-fold>
 

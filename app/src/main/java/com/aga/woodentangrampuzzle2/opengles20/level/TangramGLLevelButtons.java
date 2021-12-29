@@ -2,13 +2,13 @@ package com.aga.woodentangrampuzzle2.opengles20.level;
 
 import android.graphics.Bitmap;
 import android.graphics.RectF;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.aga.android.programs.TextureShaderProgram;
 import com.aga.android.util.ObjectBuildHelper;
 import com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLButton;
 
+import static com.aga.android.util.ObjectBuildHelper.logDebugOut;
 import static com.aga.android.util.ObjectBuildHelper.rectContainsPoint;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.screenRect;
 
@@ -19,6 +19,7 @@ import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.screenRe
  */
 
 public class TangramGLLevelButtons {
+    private static final String TAG = "TangramGLLevelButtons";
     private TangramGLButton buttonBackToMenu;
     private TangramGLButton buttonResetLevel;
     public enum SelectedButton {NOTHING, BACK, RESET}
@@ -35,7 +36,7 @@ public class TangramGLLevelButtons {
             buttonBackToMenu.recycleBitmap();
         }
         catch (Exception ex) {
-            Log.d("debug","TangramGLLevelButtons.buttonBackToMenu() catch an Exception: " + ex.getMessage());
+            logDebugOut(TAG, "buttonBackToMenu","catch an Exception: " + ex.getMessage());
         }
     }
 
@@ -48,7 +49,7 @@ public class TangramGLLevelButtons {
             buttonResetLevel.recycleBitmap();
         }
         catch (Exception ex) {
-            Log.d("debug","TangramGLLevelButtons.setButtonResetLevel() catch an Exception: " + ex.getMessage());
+            logDebugOut(TAG, "setButtonResetLevel","catch an Exception: " + ex.getMessage());
         }
     }
     //</editor-fold>
@@ -81,7 +82,6 @@ public class TangramGLLevelButtons {
     public void unpressAllButtons() {
         buttonBackToMenu.setPressed(false);
         buttonResetLevel.setPressed(false);
-//        Log.d("debug","TangramGLLevelButtons.unpressAllButtonLSS");
     }
     //</editor-fold>
 

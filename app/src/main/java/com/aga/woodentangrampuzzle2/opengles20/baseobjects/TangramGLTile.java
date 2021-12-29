@@ -2,8 +2,6 @@ package com.aga.woodentangrampuzzle2.opengles20.baseobjects;
 
 import android.graphics.Bitmap;
 import android.graphics.PointF;
-import android.graphics.RectF;
-import android.util.Log;
 
 import com.aga.android.programs.TextureShaderProgram;
 import com.aga.woodentangrampuzzle2.common.TangramLevelPath;
@@ -100,7 +98,6 @@ public class TangramGLTile{
 
         realPosition.x = x;
         realPosition.y = y;
-//        Log.d("debug","TangramGLTile.moveTo");
     }
 
     public boolean pointInPolygon(float x, float y) {
@@ -114,7 +111,6 @@ public class TangramGLTile{
             j = i;
         }
 
-//        Log.d("debug","TangramGLTile.pointInPolygon == " + result);
         return result;
     }
     //</editor-fold>

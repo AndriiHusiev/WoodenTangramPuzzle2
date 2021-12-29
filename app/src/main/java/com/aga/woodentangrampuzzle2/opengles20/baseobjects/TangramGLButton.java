@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.opengl.Matrix;
-import android.util.Log;
 
 /**
  *
@@ -101,7 +100,7 @@ public class TangramGLButton extends TangramGLSquare {
         dst.top += dy;
         dst.right += dx;
         dst.bottom += dy;
-//        Log.d("debug","TangramGLButton. dst == " + dst.left + " - " + dst.top + " - " + dst.right + " - " + dst.bottom);
+//        logDebugOut(TAG, "offset","dst == " + dst.left + " - " + dst.top + " - " + dst.right + " - " + dst.bottom);
     }
 
     @Override

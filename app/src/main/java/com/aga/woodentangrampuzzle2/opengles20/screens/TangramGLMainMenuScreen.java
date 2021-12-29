@@ -106,13 +106,11 @@ public class TangramGLMainMenuScreen {
     }
 
     private void setButtonStart() {
-//        Log.d("debug","setButtonStart -----------------------------------");
         buttonStart = createButtonWithBackground(context, screenRect, R.drawable.button01, MM_BUTTON_OFFSET_FROM_TOP);
         setButtonTitle(context, buttonStart, R.string.button_MM_start);
         buttonStart.castObjectSizeAutomatically();
         buttonStart.bitmapToTexture(textureProgram);
         buttonStart.recycleBitmap();
-//        Log.d("debug","setButtonStart end -------------------------------");
     }
 
     private void setButtonCredits() {
@@ -162,30 +160,24 @@ public class TangramGLMainMenuScreen {
             case MotionEvent.ACTION_DOWN:
                 if (rectContainsPoint(buttonStart.getDstRect(), normalizedX, normalizedY)) {
                     buttonStart.setPressed(true);
-//                    Log.d("debug","touchMainMenu. buttonMMStart Pressed");
                 }
                 else if (rectContainsPoint(buttonCredits.getDstRect(), normalizedX, normalizedY)) {
                     buttonCredits.setPressed(true);
-//                    Log.d("debug","touchMainMenu. buttonMMCredits Pressed");
                 }
                 else if (rectContainsPoint(buttonExit.getDstRect(), normalizedX, normalizedY)) {
                     buttonExit.setPressed(true);
-//                    Log.d("debug","touchMainMenu. buttonMMExit Pressed");
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
                 break;
             case MotionEvent.ACTION_UP:
                 if (rectContainsPoint(buttonStart.getDstRect(), normalizedX, normalizedY) && buttonStart.isPressed()) {
-//                    Log.d("debug","touchMainMenu. buttonMMStart unPressed");
 //                    gapAfterChangeMode = System.currentTimeMillis();
                     playMode = Mode.LEVELS_SET_SELECTION;
                 }
                 else if (rectContainsPoint(buttonCredits.getDstRect(), normalizedX, normalizedY) && buttonCredits.isPressed()) {
-//                    Log.d("debug","touchMainMenu. buttonMMCredits unPressed");
                 }
                 else if (rectContainsPoint(buttonExit.getDstRect(), normalizedX, normalizedY) && buttonExit.isPressed()) {
-//                    Log.d("debug","touchMainMenu. buttonMMExit unPressed");
                     exitApplication();
                 }
                 buttonStart.setPressed(false);

@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
-import android.util.Log;
 
 import com.aga.android.util.VertexArray;
 
@@ -38,10 +37,6 @@ public class TangramGLQuadrangle extends BaseGLObject {
                 x[3],   y[3],   s[4],   t[4],
                 x[0],   y[0],   s[5],   t[5]};
         super.setVertexArray(new VertexArray(vertex_data));
-//        Log.d("debug","TangramGLQuadrangle.. vertex_data == ");
-//        for (int i = 0; i < vertex_data.length; i+=4) {
-//            Log.d("debug","TangramGLQuadrangle.. " + vertex_data[i] + ",  " + vertex_data[i+1] + ",  " + vertex_data[i+2] + ",  " + vertex_data[i+3] + ",  ");
-//        }
 
         pivotPoint = XY;
         super.setPivotPoint(pivotPoint);

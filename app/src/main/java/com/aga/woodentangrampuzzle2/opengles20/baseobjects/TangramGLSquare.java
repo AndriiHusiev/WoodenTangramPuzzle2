@@ -99,7 +99,6 @@ public class TangramGLSquare extends BaseGLObject{
         bitmapPaint.setFilterBitmap(true);
         bitmapWidth = (float) bitmap.getWidth();
         bitmapHeight = (float) bitmap.getHeight();
-//        Log.d("debug","ExtendedGLSquare.init b height == " + bitmapHeight);
     }
 
     private PointF calcPivotPoint(float[] x, float[] y) {

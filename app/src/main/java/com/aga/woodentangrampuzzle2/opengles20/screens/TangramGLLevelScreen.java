@@ -1,6 +1,7 @@
 package com.aga.woodentangrampuzzle2.opengles20.screens;
 
 import static com.aga.android.util.ObjectBuildHelper.createTiledBitmap;
+import static com.aga.android.util.ObjectBuildHelper.logDebugOut;
 import static com.aga.android.util.ObjectBuildHelper.setPaint;
 import static com.aga.android.util.ObjectBuildHelper.xPixelsToDeviceCoords;
 import static com.aga.android.util.ObjectBuildHelper.yPixelsToDeviceCoords;
@@ -54,7 +55,6 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.Typeface;
-import android.util.Log;
 
 import com.aga.android.util.ObjectBuildHelper;
 import com.aga.woodentangrampuzzle2.R;
@@ -73,6 +73,7 @@ import com.aga.woodentangrampuzzle2.opengles20.level.TangramGLLevelTimer;
  */
 
 public class TangramGLLevelScreen {
+    private static final String TAG = "TangramGLLevelScreen";
     private static final String LEVEL_CUP = "_level_cup_";
     private static final String LEVEL_TIME = "_level_time_";
     private static final String SET = "set";
@@ -260,7 +261,7 @@ public class TangramGLLevelScreen {
         }
         catch (Exception ex) {
             result = false;
-            Log.d("debug","loadLevelByNumber(" + levelNumber + "). Exception: " + ex.getMessage());
+            logDebugOut(TAG, "loadLevelPathByNumber","loadLevelByNumber(" + levelNumber + "). Exception: " + ex.getMessage());
         }
 
         return result;
@@ -496,14 +497,14 @@ public class TangramGLLevelScreen {
         Resources res = context.getResources();
         try {
             SharedPreferences sharedPref = context.getSharedPreferences(res.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-            Log.d("debug","loadDataTimer.");
+            logDebugOut(TAG, "loadDataTimer","Timer data is begin to load.");
 
             str = SET + selectedLevelSet + LEVEL_TIME + level;
             id = res.getIdentifier(str, DEF_TYPE_STRING, context.getPackageName());
             timer = sharedPref.getLong(res.getString(id), 0);
         }
         catch (Exception ex) {
-            Log.d("debug","loadDataTimer. Exception: " + ex.getMessage());
+            logDebugOut(TAG, "loadDataTimer","Exception: " + ex.getMessage());
         }
 
         return timer;
@@ -516,14 +517,14 @@ public class TangramGLLevelScreen {
         Resources res = context.getResources();
         try {
             SharedPreferences sharedPref = context.getSharedPreferences(res.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-            Log.d("debug","loadDataCup.");
+            logDebugOut(TAG, "loadDataCup","Cup data is begin to load.");
 
             str = SET + selectedLevelSet + LEVEL_CUP + level;
             id = res.getIdentifier(str, DEF_TYPE_STRING, context.getPackageName());
             cup = sharedPref.getInt(res.getString(id), 0);
         }
         catch (Exception ex) {
-            Log.d("debug","loadDataCup. Exception: " + ex.getMessage());
+            logDebugOut(TAG, "loadDataCup","Exception: " + ex.getMessage());
         }
 
         return cup;

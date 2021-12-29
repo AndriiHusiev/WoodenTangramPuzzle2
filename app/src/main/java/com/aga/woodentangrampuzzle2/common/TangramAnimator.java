@@ -1,7 +1,5 @@
 package com.aga.woodentangrampuzzle2.common;
 
-import android.util.Log;
-
 import com.aga.woodentangrampuzzle2.common.TangramCommonTimer.mode;
 
 /**

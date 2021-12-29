@@ -2,10 +2,8 @@ package com.aga.woodentangrampuzzle2.common;
 
 import android.graphics.Path;
 import android.graphics.PointF;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Region;
-import android.util.Log;
 
 /**
  *
@@ -156,8 +154,6 @@ public class TangramLevelPath {
             if (x[i] == 0) continue;
             x[i] += dx;
             y[i] += dy;
-//            Log.d("debug","TangramLevelPath.offset x[i] = " + x[i]);
-//            Log.d("debug","TangramLevelPath.offset y[i] = " + y[i]);
         }
     }
 
@@ -171,7 +167,6 @@ public class TangramLevelPath {
             pathBounds.right = Math.max(pathBounds.right, x[i]);
             pathBounds.bottom = Math.max(pathBounds.bottom, y[i]);
         }
-        //Log.d("debug", "pathBounds: " + pathBounds.left + ", " + pathBounds.top + pathBounds.right + ", " + pathBounds.bottom);
     }
 
     private void setPivotPoint() {
@@ -180,7 +175,6 @@ public class TangramLevelPath {
         pivotPoint.x = pathBounds.left + pathBounds.width() / 2;
         pivotPoint.y = pathBounds.top + pathBounds.height() / 2;
 
-        //Log.d("debug", "pivotPoint: " + pivotPoint.x + ", " + pivotPoint.y);
     }
 
     private void xyToPath() {

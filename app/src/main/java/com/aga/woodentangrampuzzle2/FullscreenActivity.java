@@ -1,5 +1,6 @@
 package com.aga.woodentangrampuzzle2;
 
+import static com.aga.android.util.ObjectBuildHelper.logDebugOut;
 import static com.aga.android.util.ObjectBuildHelper.pixelsToDeviceCoords;
 
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.FLING_MAX_OFF_PATH;
@@ -14,7 +15,6 @@ import androidx.core.view.GestureDetectorCompat;
 
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,6 +22,7 @@ import android.view.View;
 import com.aga.woodentangrampuzzle2.opengles20.TangramGLView;
 
 public class FullscreenActivity extends AppCompatActivity {
+    private static final String TAG = "FullscreenActivity";
     private static float ASPECT_RATIO;
     private TangramGLView mGLView;
     private GestureDetectorCompat mDetector;
@@ -43,7 +44,7 @@ public class FullscreenActivity extends AppCompatActivity {
         super.onResume();
         mGLView.onResume();
 
-        Log.d("debug","onResume.");
+        logDebugOut(TAG, "onResume","resumed.");
         hideUI();
     }
 
@@ -56,7 +57,7 @@ public class FullscreenActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d("debug","onStop.");
+        logDebugOut(TAG, "onStop","stopped.");
     }
 
     public void onBackPressed () {

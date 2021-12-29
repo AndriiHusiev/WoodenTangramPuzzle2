@@ -3,6 +3,7 @@ package com.aga.woodentangrampuzzle2.opengles20.screens;
 import static com.aga.android.util.ObjectBuildHelper.createTiledBitmap;
 import static com.aga.android.util.ObjectBuildHelper.getSizeAndPositionRectangle;
 import static com.aga.android.util.ObjectBuildHelper.getWoodShader;
+import static com.aga.android.util.ObjectBuildHelper.logDebugOut;
 import static com.aga.android.util.ObjectBuildHelper.setPaint;
 import static com.aga.android.util.ObjectBuildHelper.setTextWithShader;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.ALL_FONTS_SIZE;
@@ -38,7 +39,6 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.aga.android.util.ObjectBuildHelper;
@@ -55,6 +55,7 @@ import com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLSquare;
  */
 
 public class TangramGLLevelSetSelectionScreen {
+    private static final String TAG = "TangramGLLevelSetSelectionScreen";
     private static final String LEVEL_SET = "levels_set_";
 
     private Context context;
@@ -331,7 +332,7 @@ public class TangramGLLevelSetSelectionScreen {
         Resources res = context.getResources();
         try {
             SharedPreferences sharedPref = context.getSharedPreferences(res.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-            Log.d("debug","loadData.");
+            logDebugOut(TAG, "loadData","Data is loading.");
 
             for (int i = 0; i < LEVELS_NUMBER; i++) {
                 str = "set" + selectedLevelSet + "_level_cup_" + i;
@@ -344,7 +345,7 @@ public class TangramGLLevelSetSelectionScreen {
             }
         }
         catch (Exception ex) {
-            Log.d("debug","loadData. Exception: " + ex.getMessage());
+            logDebugOut(TAG, "loadData","Exception: " + ex.getMessage());
         }
     }
     //</editor-fold>

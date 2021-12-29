@@ -1,7 +1,6 @@
 package com.aga.android.util;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,7 +20,6 @@ import android.util.Log;
 
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.COLOR_CLEANUP;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.COLOR_SHADOW;
-import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LEVELS_NUMBER;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.SHADOW_LAYER_OFFSET;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.BASE_SCREEN_DIMENSION;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.screenRect;
@@ -93,9 +91,6 @@ public class ObjectBuildHelper {
         dst.right = ((src.right / screenRect.width()) * 2 - 1) * ASPECT_RATIO;
         dst.top = -((src.top / screenRect.height()) * 2 - 1);
         dst.bottom = -((src.bottom / screenRect.height()) * 2 - 1);
-//        Log.d("debug","pixelsToDeviceCoords. dst == " + dst.left + " - " + dst.top + " - " + dst.right + " - " + dst.bottom);
-//        float height = -((src.height() / screenRect.height()) * 2 - 1);
-//        Log.d("debug","pixelsToDeviceCoords. width == " + width + ". height == " + height);
 
         return dst;
     }
@@ -287,6 +282,42 @@ public class ObjectBuildHelper {
                 calcRectF.bottom = calcRectF.top + screenRect.width() * heightFactor * aspectRatio;
         }
         return calcRectF;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Log Debug Out">
+    private static final String APP_TAG = "Tangram: ";
+    private static final String dot = ". ";
+    private static final String colon = ": ";
+    //    private static final boolean SHOW_LOG = true;
+    private static final boolean SHOW_LOG = false;
+
+    public static void logDebugOut(String object, String message, int param) {
+        if (SHOW_LOG) {
+            String compiledMessage = object + dot + message + colon + param;
+            Log.d(APP_TAG, compiledMessage);
+        }
+    }
+
+    public static void logDebugOut(String object, String message, float param) {
+        if (SHOW_LOG) {
+            String compiledMessage = object + dot + message + colon + param;
+            Log.d(APP_TAG, compiledMessage);
+        }
+    }
+
+    public static void logDebugOut(String object, String message, boolean param) {
+        if (SHOW_LOG) {
+            String compiledMessage = object + dot + message + colon + param;
+            Log.d(APP_TAG, compiledMessage);
+        }
+    }
+
+    public static void logDebugOut(String object, String message, String param) {
+        if (SHOW_LOG) {
+            String compiledMessage = object + dot + message + colon + param;
+            Log.d(APP_TAG, compiledMessage);
+        }
     }
     //</editor-fold>
 }

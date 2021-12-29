@@ -2,12 +2,12 @@ package com.aga.woodentangrampuzzle2.opengles20.level;
 
 import android.graphics.Bitmap;
 import android.graphics.RectF;
-import android.util.Log;
 
 import com.aga.android.programs.TextureShaderProgram;
 import com.aga.android.util.ObjectBuildHelper;
 import com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLSquare;
 
+import static com.aga.android.util.ObjectBuildHelper.logDebugOut;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.screenRect;
 
 /**
@@ -17,6 +17,7 @@ import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.screenRe
  */
 
 public class TangramGLLevelCup {
+    private static final String TAG = "TangramGLLevelCup";
     private static final int TOTAL_CUPS_AMOUNT = 4;
 
     private int reachedCup;
@@ -43,7 +44,7 @@ public class TangramGLLevelCup {
             cup[index].recycleBitmap();
         }
         catch (Exception ex) {
-            Log.d("debug","TangramGLLevelCup catch an Exception: " + ex.getMessage());
+            logDebugOut(TAG, "addCup","catch an Exception: " + ex.getMessage());
         }
     }
 

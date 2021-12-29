@@ -13,7 +13,6 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.util.DisplayMetrics;
-import android.util.Log;
 
 import com.aga.android.programs.TextureShaderProgram;
 import com.aga.woodentangrampuzzle2.R;
@@ -29,6 +28,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 
 import static com.aga.android.util.ObjectBuildHelper.getSizeAndPositionRectangle;
 import static com.aga.android.util.ObjectBuildHelper.getWoodShader;
+import static com.aga.android.util.ObjectBuildHelper.logDebugOut;
 import static com.aga.android.util.ObjectBuildHelper.setPaint;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.ALL_FONTS_SIZE;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LOADSCREEN_TEXT_HEIGHT;
@@ -47,6 +47,7 @@ import androidx.core.content.res.ResourcesCompat;
 public class TangramGLRenderer implements GLSurfaceView.Renderer {
 
     //<editor-fold desc="Constants">
+    private static final String TAG = "TangramGLRenderer";
     private static float TILES_SCALE_FACTOR;
     public static final int INSTANTIATED_LEVEL_SET_NUMBER = 2;
     //</editor-fold>
@@ -170,7 +171,7 @@ public class TangramGLRenderer implements GLSurfaceView.Renderer {
                 selectedLevel = screenLS.getSelectedLevel();
 //                if (selectedLevel > 0) {
 //                    if (screenLS.isSelectedLevelLocked()) {
-//                        Log.d("debug","TangramGLRenderer.handleTouch.LEVEL_SELECTION place here MsgBox");
+//                        logDebugOut(TAG, "handleTouch.LEVEL_SELECTION","Place here MsgBox");
 //                    }
 //                }
                 if (playMode == Mode.LOCK_LS_TOUCH)
@@ -184,7 +185,7 @@ public class TangramGLRenderer implements GLSurfaceView.Renderer {
     }
 
     void onBackPressed() {
-        Log.d("debug","TangramGLRenderer.onBackPressed.");
+        logDebugOut(TAG, "onBackPressed","pressed.");
 
         switch (playMode) {
             case MAIN_MENU:
@@ -245,13 +246,10 @@ public class TangramGLRenderer implements GLSurfaceView.Renderer {
     }
 
     private void setObjects() {
-//        Log.d("debug","setObjects starts.-----");
-
         screenMainMenu = new TangramGLMainMenuScreen(context, screenRect);
         screenLSS = new TangramGLLevelSetSelectionScreen(context, screenRect);
 
         isLoadingEnds = true;
-//        Log.d("debug","setObjects ends.-------");
     }
 
     public static TangramGLSquare setLoadScreen(Context context) {

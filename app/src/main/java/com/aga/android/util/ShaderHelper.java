@@ -1,7 +1,8 @@
 package com.aga.android.util;
 
+import static com.aga.android.util.ObjectBuildHelper.logDebugOut;
+
 import android.opengl.GLES20;
-import android.util.Log;
 
 /**
  *
@@ -9,7 +10,7 @@ import android.util.Log;
  *
  */
 public class ShaderHelper {
-    private static final String TAG = "debug";
+    private static final String TAG = "ShaderHelper";
 
     public static int buildProgram(String vertexShaderSource, String fragmentShaderSource) {
         int program;
@@ -36,18 +37,18 @@ public class ShaderHelper {
         final int[] compileStatus = new int[1];
 
         if (shaderObjectId == 0) {
-            Log.d(TAG, "Could not create new shader.");
+            logDebugOut(TAG, "compileShader", "Could not create new shader.");
             return 0;
         }
         GLES20.glShaderSource(shaderObjectId, shaderCode);
         GLES20.glCompileShader(shaderObjectId);
         GLES20.glGetShaderiv(shaderObjectId, GLES20.GL_COMPILE_STATUS, compileStatus, 0);
         // Print the shader info log to the Android log output.
-        //Log.d(TAG, "Results of compiling source:" + "\n" + shaderCode + "\n:" + GLES20.glGetShaderInfoLog(shaderObjectId));
+        //logDebugOut(TAG, "compileShader", "Results of compiling source:" + "\n" + shaderCode + "\n:" + GLES20.glGetShaderInfoLog(shaderObjectId));
         if (compileStatus[0] == 0) {
             // If it failed, delete the shader object.
             GLES20.glDeleteShader(shaderObjectId);
-            //Log.d(TAG, "Compilation of shader failed.");
+            //logDebugOut(TAG, "compileShader", "Compilation of shader failed.");
             return 0;
         }
 
@@ -59,7 +60,7 @@ public class ShaderHelper {
         final int[] linkStatus = new int[1];
 
         if (programObjectId == 0) {
-            Log.d(TAG, "Could not create new program");
+            logDebugOut(TAG, "linkProgram", "Could not create new program");
             return 0;
         }
         GLES20.glAttachShader(programObjectId, vertexShaderId);
@@ -67,11 +68,11 @@ public class ShaderHelper {
         GLES20.glLinkProgram(programObjectId);
         GLES20.glGetProgramiv(programObjectId, GLES20.GL_LINK_STATUS, linkStatus, 0);
         // Print the program info log to the Android log output.
-        //Log.d(TAG, "Results of linking program:\n" + GLES20.glGetProgramInfoLog(programObjectId));
+        //logDebugOut(TAG, "linkProgram", "Results of linking program:\n" + GLES20.glGetProgramInfoLog(programObjectId));
         if (linkStatus[0] == 0) {
             // If it failed, delete the program object.
             GLES20.glDeleteProgram(programObjectId);
-            Log.d(TAG, "Linking of program failed.");
+            logDebugOut(TAG, "linkProgram", "Linking of program failed.");
             return 0;
         }
 
@@ -82,7 +83,7 @@ public class ShaderHelper {
         GLES20.glValidateProgram(programObjectId);
         final int[] validateStatus = new int[1];
         GLES20.glGetProgramiv(programObjectId, GLES20.GL_VALIDATE_STATUS, validateStatus, 0);
-        //Log.d(TAG, "Results of validating program: " + validateStatus[0] + "\nLog:" + GLES20.glGetProgramInfoLog(programObjectId));
+        //logDebugOut(TAG, "validateProgram", "Results of validating program: " + validateStatus[0] + "\nLog:" + GLES20.glGetProgramInfoLog(programObjectId));
         return validateStatus[0] != 0;
     }
 }
