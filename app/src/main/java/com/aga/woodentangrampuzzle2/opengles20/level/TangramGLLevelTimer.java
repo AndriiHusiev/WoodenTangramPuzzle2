@@ -7,6 +7,8 @@ import android.util.Log;
 
 import com.aga.android.programs.TextureShaderProgram;
 import com.aga.android.util.ObjectBuildHelper;
+import com.aga.woodentangrampuzzle2.common.TangramCommonTimer;
+import com.aga.woodentangrampuzzle2.common.TangramCommonTimer.mode;
 import com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLSquare;
 
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.screenRect;
@@ -19,32 +21,22 @@ import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.screenRe
 
 public class TangramGLLevelTimer {
     //<editor-fold desc="Variables">
-    public enum mode {STOP, RUN, PAUSE}
-    private mode timerMode;
-    private long startTime;
-    private long pausedTime;
-    private long elapsedTime;
-//    private int[] elapsedTimeDigits;
-    private boolean timerActivated;
     private RectF firstDigitPosition;
     private float digitWidthDC;  // DC means "Device Coordinates"
     private float colonWidthDC;  // DC means "Device Coordinates"
-    private float gapWidthDC;  // DC means "Device Coordinates"
+    private float gapWidthDC;    // DC means "Device Coordinates"
     private float dxSecondDigit;
     private float dxThirdDigit;
     private float dxFourthDigit;
     private TangramGLSquare[] digits;
     private TangramGLSquare colon;
+    private TangramCommonTimer timer;
     private final float[] modelMatrix = new float[16];
     private final float[] modelViewProjectionMatrix = new float[16];
     //</editor-fold>
 
     public TangramGLLevelTimer() {
-        startTime = 0;
-        pausedTime = 0;
-        elapsedTime = 0;
-        timerActivated = false;
-        timerMode = mode.STOP;
+        timer = new TangramCommonTimer();
         digits = new TangramGLSquare[10];
 //        elapsedTimeDigits = new int[4];
     }
@@ -55,7 +47,7 @@ public class TangramGLLevelTimer {
         int seconds = (int) (elapsedTime / 1000);
 //        Log.d("debug","TangramGLLevelTimer.convertElapsedTime seconds == " + seconds);
         int minutes = seconds / 60;
-        int hours = minutes / 60;
+//        int hours = minutes / 60;
         seconds = seconds % 60;
 
         // TODO: не забыть что-то сделать, если время больше одного часа. Хоть это и маловероятное событие.
@@ -67,28 +59,28 @@ public class TangramGLLevelTimer {
         return elapsedTimeDigits;
     }
 
-    private int calcFirstDigit() {
+    private int calcFirstDigit(long elapsedTime) {
         int seconds = (int) (elapsedTime / 1000);
         int minutes = seconds / 60;
 
         return (minutes / 10);
     }
 
-    private int calcSecondDigit() {
+    private int calcSecondDigit(long elapsedTime) {
         int seconds = (int) (elapsedTime / 1000);
         int minutes = seconds / 60;
 
         return (minutes % 10);
     }
 
-    private int calcThirdDigit() {
+    private int calcThirdDigit(long elapsedTime) {
         int seconds = (int) (elapsedTime / 1000);
         seconds = seconds % 60;
 
         return (seconds / 10);
     }
 
-    private int calcFourthDigit() {
+    private int calcFourthDigit(long elapsedTime) {
         int seconds = (int) (elapsedTime / 1000);
         seconds = seconds % 60;
 
@@ -138,77 +130,32 @@ public class TangramGLLevelTimer {
     //</editor-fold>
 
     //<editor-fold desc="Timer Control">
-    /**
-     * Start new timer. If timer is already activated it will be restarted.
-     */
-    public void start() {
-        timerActivated = true;
-        timerMode = mode.RUN;
-        pausedTime = 0;
-        startTime = System.currentTimeMillis();
-    }
-
-    /**
-     * Resume previously started and then paused timer.
-     */
     public void resume() {
-        timerActivated = true;
-        timerMode = mode.RUN;
-        startTime = System.currentTimeMillis();
-    }
-
-    /**
-     * Pause timer.
-     */
-    public void pause() {
-        timerActivated = false;
-        timerMode = mode.PAUSE;
-        pausedTime += System.currentTimeMillis() - startTime;
-//        Log.d("debug","TangramGLLevelTimer.pause pausedTime == " + pausedTime);
-    }
-
-    /**
-     * Stop timer.
-     */
-    public void stop() {
-        timerActivated = false;
-        timerMode = mode.STOP;
-        startTime = 0;
-        pausedTime = 0;
-    }
-
-    public mode getTimerMode() {
-        return timerMode;
+        timer.resume();
     }
 
     public void addTimePeriod(long millis) {
-        pausedTime += millis;
+        timer.addTimePeriod(millis);
     }
 
     public long getElapsedTime() {
-        if (timerMode == mode.RUN)
-            return System.currentTimeMillis() - startTime + pausedTime;
-        else if (timerMode == mode.PAUSE)
-            return pausedTime;
-        else
-            return 0;
-//        Log.d("debug","TangramGLLevelTimer.getElapsedTime elapsedTime == " + elapsedTime);
-//        return elapsedTime;
+        return timer.getElapsedTime();
     }
     //</editor-fold>
 
     public void draw(float[] projectionMatrix) {
-        if (timerActivated)
-            elapsedTime = System.currentTimeMillis() - startTime + pausedTime;
+        long elapsedTime = 0;
+        if (timer.getTimerMode() == mode.RUN)
+            elapsedTime = timer.getElapsedTime();
 
         // FirstDigit
-        digits[calcFirstDigit()].draw(projectionMatrix);
+        digits[calcFirstDigit(elapsedTime)].draw(projectionMatrix);
 
         // SecondDigit
         Matrix.setIdentityM(modelMatrix, 0);
         Matrix.translateM(modelMatrix, 0, dxSecondDigit, 0, 0);
         Matrix.multiplyMM(modelViewProjectionMatrix, 0, projectionMatrix, 0, modelMatrix, 0);
-        digits[calcSecondDigit()].draw(modelViewProjectionMatrix);
+        digits[calcSecondDigit(elapsedTime)].draw(modelViewProjectionMatrix);
 
         // Colon
         colon.draw(projectionMatrix);
@@ -217,12 +164,12 @@ public class TangramGLLevelTimer {
         Matrix.setIdentityM(modelMatrix, 0);
         Matrix.translateM(modelMatrix, 0, dxThirdDigit, 0, 0);
         Matrix.multiplyMM(modelViewProjectionMatrix, 0, projectionMatrix, 0, modelMatrix, 0);
-        digits[calcThirdDigit()].draw(modelViewProjectionMatrix);
+        digits[calcThirdDigit(elapsedTime)].draw(modelViewProjectionMatrix);
 
         // FourthDigit
         Matrix.setIdentityM(modelMatrix, 0);
         Matrix.translateM(modelMatrix, 0, dxFourthDigit, 0, 0);
         Matrix.multiplyMM(modelViewProjectionMatrix, 0, projectionMatrix, 0, modelMatrix, 0);
-        digits[calcFourthDigit()].draw(modelViewProjectionMatrix);
+        digits[calcFourthDigit(elapsedTime)].draw(modelViewProjectionMatrix);
     }
 }

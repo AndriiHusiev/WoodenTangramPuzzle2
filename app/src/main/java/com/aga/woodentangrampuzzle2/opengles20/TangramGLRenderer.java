@@ -120,7 +120,6 @@ public class TangramGLRenderer implements GLSurfaceView.Renderer {
                 if (playMode == Mode.LOCK_LS_TOUCH) {
                     if (additionalDrawCycleEnds){
                         loadLevel();
-//                        level.timer.resume();
                         levelScreen.timer.resume();
                         levelScreen.shiftTilesToStartPosition();
                         playMode = Mode.LEVEL;
@@ -143,6 +142,16 @@ public class TangramGLRenderer implements GLSurfaceView.Renderer {
     }
 
     //<editor-fold desc="All about screen interaction">
+    public void onFling(float velocity) {
+        switch (playMode) {
+            case LEVELS_SET_SELECTION:
+                break;
+            case LEVEL_SELECTION:
+                screenLS.onFling(velocity);
+                break;
+        }
+    }
+
     public void handleTouch(float normalizedX, float normalizedY, int motionEvent) {
         switch (playMode) {
             case LOADING_SCREEN:
@@ -159,8 +168,6 @@ public class TangramGLRenderer implements GLSurfaceView.Renderer {
             case LEVEL_SELECTION:
                 playMode = screenLS.touch(normalizedX, normalizedY, motionEvent);
                 selectedLevel = screenLS.getSelectedLevel();
-//                Log.d("debug","TangramGLRenderer.handleTouch.LEVEL_SELECTION selectedLevel == " + selectedLevel);
-//                Log.d("debug","TangramGLRenderer.handleTouch.LEVEL_SELECTION isSelectedLevelLocked == " + screenLS.isSelectedLevelLocked());
 //                if (selectedLevel > 0) {
 //                    if (screenLS.isSelectedLevelLocked()) {
 //                        Log.d("debug","TangramGLRenderer.handleTouch.LEVEL_SELECTION place here MsgBox");
