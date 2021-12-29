@@ -21,6 +21,7 @@ import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LSS_LOC
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LSS_OFFSET_FROM_TOP_DC;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LSS_TITLE_HEIGHT;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LSS_TITLE_OFFSET_FROM_TOP;
+import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.SCROLLING_ANIMATION_DURATION;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.ASPECT_RATIO;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.INSTANTIATED_LEVEL_SET_NUMBER;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.textureProgram;
@@ -43,6 +44,7 @@ import android.view.MotionEvent;
 
 import com.aga.android.util.ObjectBuildHelper;
 import com.aga.woodentangrampuzzle2.R;
+import com.aga.woodentangrampuzzle2.common.TangramAnimator;
 import com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLButton;
 import com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLSquare;
 
@@ -62,6 +64,7 @@ public class TangramGLLevelSetSelectionScreen {
     private PointF prevTouch;
     private boolean isStartScrolling;
     private int selectedLevelSet;
+    private TangramAnimator animator;
     private TangramGLSquare imageMenuBackground;
     private TangramGLSquare imageMenuHeader;
     private TangramGLSquare imageLockScreen;
@@ -84,6 +87,7 @@ public class TangramGLLevelSetSelectionScreen {
         this.screenRect.right = screenRect.right;
         this.screenRect.bottom = screenRect.bottom;
         prevTouch = new PointF();
+        animator = new TangramAnimator(screenRect.height());
     }
 
     private void setBackground() {
@@ -230,6 +234,7 @@ public class TangramGLLevelSetSelectionScreen {
         Mode playMode = Mode.LEVELS_SET_SELECTION;
         switch (motionEvent) {
             case MotionEvent.ACTION_DOWN:
+                if (animator.isAnimationStarted()) animator.stop();
                 pressSelectedButton(normalizedX, normalizedY);
                 startScroll(normalizedY);
                 return playMode;
@@ -349,6 +354,21 @@ public class TangramGLLevelSetSelectionScreen {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Scrolling on Flinging">
+    public void onFling(float velocity) {
+        animator.stop();
+        animator.setAnimatedValues(velocity);
+        animator.setDuration(SCROLLING_ANIMATION_DURATION);
+        animator.start();
+        startScroll(animator.getAnimatedValue());
+    }
+
+    private void scrolling() {
+        if (animator.isAnimationStarted())
+            updateScroll(animator.getAnimatedValue());
+    }
+    //</editor-fold>
+
     public void draw(float[] projectionMatrix, Mode playMode) {
         imageMenuBackground.draw(projectionMatrix);
         for (TangramGLButton t: button)
@@ -357,6 +377,7 @@ public class TangramGLLevelSetSelectionScreen {
         if (playMode == Mode.LOCK_LSS_TOUCH)
             imageLockScreen.draw(projectionMatrix);
 
+        scrolling();
     }
 
 }

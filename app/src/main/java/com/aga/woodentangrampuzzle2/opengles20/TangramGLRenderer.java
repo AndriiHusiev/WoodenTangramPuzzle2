@@ -145,6 +145,7 @@ public class TangramGLRenderer implements GLSurfaceView.Renderer {
     public void onFling(float velocity) {
         switch (playMode) {
             case LEVELS_SET_SELECTION:
+                screenLSS.onFling(velocity);
                 break;
             case LEVEL_SELECTION:
                 screenLS.onFling(velocity);
