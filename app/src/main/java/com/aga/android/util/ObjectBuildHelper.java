@@ -121,6 +121,10 @@ public class ObjectBuildHelper {
         return -((y / screenRect.height()) * 2 - 1);
     }
 
+    public static float pixelsToDeviceCoords(float size, float screenSize) {
+        return ((size / screenSize) * 2 - 1);
+    }
+
     public static float[] yPixelsToDeviceCoords(int[] y, RectF screenRect) {
         int n = y.length;
         float[] yOut = new float[n];

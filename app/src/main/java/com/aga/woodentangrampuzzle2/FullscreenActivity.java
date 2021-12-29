@@ -1,16 +1,16 @@
 package com.aga.woodentangrampuzzle2;
 
+import static com.aga.android.util.ObjectBuildHelper.pixelsToDeviceCoords;
+
 import android.annotation.SuppressLint;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 
 import com.aga.woodentangrampuzzle2.opengles20.TangramGLView;
 
@@ -44,14 +44,11 @@ public class FullscreenActivity extends AppCompatActivity {
         mGLView.onPause();
     }
 
-
     @Override
     protected void onStop() {
         super.onStop();
         Log.d("debug","onStop.");
     }
-
-
 
     public void onBackPressed () {
         mGLView.onBackPressed();
@@ -70,8 +67,8 @@ public class FullscreenActivity extends AppCompatActivity {
         mGLView.setOnTouchListener((v, event) -> {
             // Convert touch coordinates into normalized device coordinates,
             // keeping in mind that Android's Y coordinates are inverted.
-            final float normalizedX = ((event.getX() / (float) v.getWidth()) * 2f - 1f) * ASPECT_RATIO;
-            final float normalizedY = -((event.getY() / (float) v.getHeight()) * 2f - 1f);
+            final float normalizedX = pixelsToDeviceCoords(event.getX(), v.getWidth()) * ASPECT_RATIO;
+            final float normalizedY = -pixelsToDeviceCoords(event.getY(), v.getHeight());
 
             mGLView.queueEvent(() -> mGLView.mRenderer.handleTouch(normalizedX, normalizedY, event.getAction()));
             return true;
@@ -85,7 +82,13 @@ public class FullscreenActivity extends AppCompatActivity {
         }
 
         if (mGLView != null ) {
-            mGLView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+            mGLView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+            );
         }
     }
 }
