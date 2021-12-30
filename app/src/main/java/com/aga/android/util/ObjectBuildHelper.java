@@ -289,8 +289,8 @@ public class ObjectBuildHelper {
     private static final String APP_TAG = "Tangram: ";
     private static final String dot = ". ";
     private static final String colon = ": ";
-    //    private static final boolean SHOW_LOG = true;
-    private static final boolean SHOW_LOG = false;
+        private static final boolean SHOW_LOG = true;
+//    private static final boolean SHOW_LOG = false;
 
     public static void logDebugOut(String object, String message, int param) {
         if (SHOW_LOG) {

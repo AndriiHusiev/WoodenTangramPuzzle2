@@ -13,9 +13,11 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.util.DisplayMetrics;
+import android.view.MotionEvent;
 
 import com.aga.android.programs.TextureShaderProgram;
 import com.aga.woodentangrampuzzle2.R;
+import com.aga.woodentangrampuzzle2.common.MultiTouchGestures;
 import com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLSquare;
 import com.aga.woodentangrampuzzle2.opengles20.screens.TangramGLLevelScreen;
 import com.aga.woodentangrampuzzle2.opengles20.screens.TangramGLLevelSelectionScreen;
@@ -69,6 +71,7 @@ public class TangramGLRenderer implements GLSurfaceView.Renderer {
     private TangramGLLevelSetSelectionScreen screenLSS;
     private TangramGLLevelSelectionScreen screenLS;
     private TangramGLLevelScreen levelScreen;
+    private MultiTouchGestures multiTouchGestures;
 
     public static TextureShaderProgram textureProgram;
     private final float[] projectionMatrix = new float[16];
@@ -152,6 +155,10 @@ public class TangramGLRenderer implements GLSurfaceView.Renderer {
                 screenLS.onFling(velocity);
                 break;
         }
+    }
+
+    public void onTouch(MotionEvent event, float normalizedX, float normalizedY) {
+        multiTouchGestures.onTouchEvent(event);
     }
 
     public void handleTouch(float normalizedX, float normalizedY, int motionEvent) {
@@ -249,6 +256,7 @@ public class TangramGLRenderer implements GLSurfaceView.Renderer {
     private void setObjects() {
         screenMainMenu = new TangramGLMainMenuScreen(context, screenRect);
         screenLSS = new TangramGLLevelSetSelectionScreen(context, screenRect);
+        multiTouchGestures = new MultiTouchGestures();
 
         isLoadingEnds = true;
     }

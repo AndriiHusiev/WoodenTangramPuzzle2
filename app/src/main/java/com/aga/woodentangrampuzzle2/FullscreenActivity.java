@@ -82,7 +82,7 @@ public class FullscreenActivity extends AppCompatActivity {
 
             mDetector.onTouchEvent(event);
             mGLView.queueEvent(() -> mGLView.mRenderer.handleTouch(normalizedX, normalizedY, event.getAction()));
-//            mGLView.queueEvent(() -> mGLView.mRenderer.onTouch(event, normalizedX, normalizedY));
+            mGLView.queueEvent(() -> mGLView.mRenderer.onTouch(event, normalizedX, normalizedY));
             return true;
         });
     }
