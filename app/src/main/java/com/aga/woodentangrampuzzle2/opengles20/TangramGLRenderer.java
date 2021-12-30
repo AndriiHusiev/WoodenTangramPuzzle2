@@ -157,11 +157,12 @@ public class TangramGLRenderer implements GLSurfaceView.Renderer {
         }
     }
 
-    public void onTouch(MotionEvent event, float normalizedX, float normalizedY) {
+    public void onTouch(MotionEvent event) {
         multiTouchGestures.onTouchEvent(event);
+        handleTouch(multiTouchGestures.getNormalizedX(), multiTouchGestures.getNormalizedY(), multiTouchGestures.getAction());
     }
 
-    public void handleTouch(float normalizedX, float normalizedY, int motionEvent) {
+    private void handleTouch(float normalizedX, float normalizedY, int motionEvent) {
         switch (playMode) {
             case LOADING_SCREEN:
                 break;
@@ -256,7 +257,7 @@ public class TangramGLRenderer implements GLSurfaceView.Renderer {
     private void setObjects() {
         screenMainMenu = new TangramGLMainMenuScreen(context, screenRect);
         screenLSS = new TangramGLLevelSetSelectionScreen(context, screenRect);
-        multiTouchGestures = new MultiTouchGestures();
+        multiTouchGestures = new MultiTouchGestures(screenRect);
 
         isLoadingEnds = true;
     }

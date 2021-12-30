@@ -23,7 +23,6 @@ import com.aga.woodentangrampuzzle2.opengles20.TangramGLView;
 
 public class FullscreenActivity extends AppCompatActivity {
     private static final String TAG = "FullscreenActivity";
-    private static float ASPECT_RATIO;
     private TangramGLView mGLView;
     private GestureDetectorCompat mDetector;
 
@@ -67,7 +66,6 @@ public class FullscreenActivity extends AppCompatActivity {
     private DisplayMetrics setDisplayMetrics() {
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        ASPECT_RATIO = (float) metrics.widthPixels / metrics.heightPixels;
 
         return metrics;
     }
@@ -75,14 +73,8 @@ public class FullscreenActivity extends AppCompatActivity {
     @SuppressLint("ClickableViewAccessibility")
     private void setOnTouchListener() {
         mGLView.setOnTouchListener((v, event) -> {
-            // Convert touch coordinates into normalized device coordinates,
-            // keeping in mind that Android's Y coordinates are inverted.
-            final float normalizedX = pixelsToDeviceCoords(event.getX(), v.getWidth()) * ASPECT_RATIO;
-            final float normalizedY = -pixelsToDeviceCoords(event.getY(), v.getHeight());
-
             mDetector.onTouchEvent(event);
-            mGLView.queueEvent(() -> mGLView.mRenderer.handleTouch(normalizedX, normalizedY, event.getAction()));
-            mGLView.queueEvent(() -> mGLView.mRenderer.onTouch(event, normalizedX, normalizedY));
+            mGLView.queueEvent(() -> mGLView.mRenderer.onTouch(event));
             return true;
         });
     }
