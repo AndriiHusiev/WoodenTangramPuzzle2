@@ -8,6 +8,8 @@ import static android.view.MotionEvent.ACTION_MOVE;
 import static android.view.MotionEvent.INVALID_POINTER_ID;
 import static com.aga.android.util.ObjectBuildHelper.logDebugOut;
 import static com.aga.android.util.ObjectBuildHelper.pixelsToDeviceCoords;
+import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.ONE;
+import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.ZERO;
 
 import android.graphics.RectF;
 import android.view.MotionEvent;
@@ -18,7 +20,8 @@ public class MultiTouchGestures {
 
     private final RectF screenRect;
     private final SingleTouchGesture[] singleTouch;
-    private float normalizedX, normalizedY;
+    private boolean isMultiTouch;
+    private int action;
 
     public MultiTouchGestures(RectF screenRectangle) {
         singleTouch = new SingleTouchGesture[2];
@@ -30,49 +33,57 @@ public class MultiTouchGestures {
         screenRect.right = screenRectangle.width();
         screenRect.bottom = screenRectangle.height();
         ASPECT_RATIO = screenRectangle.width() / screenRectangle.height();
+        isMultiTouch = false;
     }
 
     public void onTouchEvent(MotionEvent event) {
-        switch (event.getActionMasked()) {
+        action = event.getActionMasked();
+        switch (action) {
             case ACTION_DOWN:
-                singleTouch[0].setTouchData(event.getX(), event.getY(), event.getPointerId(0), ACTION_DOWN);
+            case ACTION_UP:
+                singleTouch[ZERO].setTouchData(event.getX(), event.getY(), event.getPointerId(ZERO));
                 break;
             case ACTION_POINTER_DOWN:
-                logDebugOut(TAG, "onTouchEvent event.getActionIndex()","ACTION_POINTER_DOWN");
-                singleTouch[1].setTouchData(event.getX(1), event.getY(1), event.getPointerId(1), ACTION_POINTER_DOWN);
-                break;
-            case ACTION_UP:
-                singleTouch[0].setTouchData(event.getX(), event.getY(), ACTION_UP);
-                break;
             case ACTION_POINTER_UP:
+                singleTouch[ONE].setTouchData(event.getX(ONE), event.getY(ONE), event.getPointerId(ONE));
                 break;
             case ACTION_MOVE:
-                int pointerIndex = event.findPointerIndex(singleTouch[0].getId());
-                if (pointerIndex != INVALID_POINTER_ID) {
-                    singleTouch[0].setAction(ACTION_MOVE);
-                    singleTouch[0].setTouchData(event.getX(), event.getY(), ACTION_MOVE);
-                }
+                int pointerIndex = event.findPointerIndex(singleTouch[ZERO].getId());
+                if (pointerIndex != INVALID_POINTER_ID)
+                    singleTouch[ZERO].setTouchData(event.getX(), event.getY(), event.getPointerId(ZERO));
+                pointerIndex = event.findPointerIndex(singleTouch[ONE].getId());
+                if (pointerIndex != INVALID_POINTER_ID)
+                    singleTouch[ONE].setTouchData(event.getX(pointerIndex), event.getY(pointerIndex), event.getPointerId(ONE));
                 break;
         }
-        normalizeCoordinates();
-    }
-
-    private void normalizeCoordinates() {
-        // Convert touch coordinates into normalized device coordinates,
-        // keeping in mind that Android's Y coordinates are inverted.
-        normalizedX = pixelsToDeviceCoords(singleTouch[0].getX(), screenRect.width()) * ASPECT_RATIO;
-        normalizedY = -pixelsToDeviceCoords(singleTouch[0].getY(), screenRect.height());
+        isMultiTouch = event.getPointerCount() > 1;
     }
 
     public int getAction() {
-        return singleTouch[0].getAction();
+        return action;
     }
 
-    public float getNormalizedX() {
-        return normalizedX;
+    /**
+     * Convert touch coordinates into normalized device coordinates.
+     * @param pointerIndex Raw index of pointer to retrieve.
+     * @return Touch coordinates which converted into normalized device coordinates.
+     */
+    public float getNormalizedX(int pointerIndex) {
+        return pixelsToDeviceCoords(singleTouch[pointerIndex].getX(), screenRect.width()) * ASPECT_RATIO;
     }
 
-    public float getNormalizedY() {
-        return normalizedY;
+    /**
+     * Convert touch coordinates into normalized device coordinates,
+     * keeping in mind that Android's Y coordinates are inverted.
+     * @param pointerIndex Raw index of pointer to retrieve.
+     * @return Touch coordinates which converted into normalized device coordinates.
+     */
+    public float getNormalizedY(int pointerIndex) {
+        return -pixelsToDeviceCoords(singleTouch[pointerIndex].getY(), screenRect.height());
+    }
+
+    public boolean isMultiTouch() {
+//        logDebugOut(TAG, "isMultiTouch",isMultiTouch);
+        return isMultiTouch;
     }
 }

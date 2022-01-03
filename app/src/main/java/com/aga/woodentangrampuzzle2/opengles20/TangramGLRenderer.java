@@ -35,6 +35,7 @@ import static com.aga.android.util.ObjectBuildHelper.setPaint;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.ALL_FONTS_SIZE;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LOADSCREEN_TEXT_HEIGHT;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LOADSCREEN_TEXT_OFFSET_FROM_TOP;
+import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.ZERO;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.digitalTF;
 import static com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLSquare.createBitmapSizeFromText;
 import static com.aga.woodentangrampuzzle2.opengles20.screens.TangramGLLevelSelectionScreen.saveData;
@@ -71,7 +72,7 @@ public class TangramGLRenderer implements GLSurfaceView.Renderer {
     private TangramGLLevelSetSelectionScreen screenLSS;
     private TangramGLLevelSelectionScreen screenLS;
     private TangramGLLevelScreen levelScreen;
-    private MultiTouchGestures multiTouchGestures;
+    private MultiTouchGestures multiTouchEvent;
 
     public static TextureShaderProgram textureProgram;
     private final float[] projectionMatrix = new float[16];
@@ -158,8 +159,8 @@ public class TangramGLRenderer implements GLSurfaceView.Renderer {
     }
 
     public void onTouch(MotionEvent event) {
-        multiTouchGestures.onTouchEvent(event);
-        handleTouch(multiTouchGestures.getNormalizedX(), multiTouchGestures.getNormalizedY(), multiTouchGestures.getAction());
+        multiTouchEvent.onTouchEvent(event);
+        handleTouch(multiTouchEvent.getNormalizedX(ZERO), multiTouchEvent.getNormalizedY(ZERO), multiTouchEvent.getAction());
     }
 
     private void handleTouch(float normalizedX, float normalizedY, int motionEvent) {
@@ -187,7 +188,7 @@ public class TangramGLRenderer implements GLSurfaceView.Renderer {
                     additionalDrawCycleEnds = false;
                 break;
             case LEVEL:
-                if (levelScreen.touch(normalizedX, normalizedY, motionEvent) == Mode.LEVEL_SELECTION)
+                if (levelScreen.touch(multiTouchEvent) == Mode.LEVEL_SELECTION)
                     onBackPressed();
                 break;
         }
@@ -257,7 +258,7 @@ public class TangramGLRenderer implements GLSurfaceView.Renderer {
     private void setObjects() {
         screenMainMenu = new TangramGLMainMenuScreen(context, screenRect);
         screenLSS = new TangramGLLevelSetSelectionScreen(context, screenRect);
-        multiTouchGestures = new MultiTouchGestures(screenRect);
+        multiTouchEvent = new MultiTouchGestures(screenRect);
 
         isLoadingEnds = true;
     }

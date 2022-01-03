@@ -79,25 +79,20 @@ public class TangramGlobalConstants {
     public static final float INGAME_CUP_BRONZE = 80.0f;
     public static final float INGAME_CUP_SILVER = 95.0f;
     public static final float INGAME_CUP_GOLD = 99.0f;
+    public static final float INGAME_TILE_ROTATION_MOVEMENT_THRESHOLD = 0.01f;
 
     public static final float INGAME_TILE0_OFFSET_X = 0.2f;
     public static final float INGAME_TILE0_OFFSET_Y = 0.2f;
-
     public static final float INGAME_TILE1_OFFSET_X = 0.17f;
     public static final float INGAME_TILE1_OFFSET_Y = 0.47f;
-
     public static final float INGAME_TILE2_OFFSET_X = 0.27f;
     public static final float INGAME_TILE2_OFFSET_Y = 0.41f;
-
     public static final float INGAME_TILE3_OFFSET_X = 0.187f;
     public static final float INGAME_TILE3_OFFSET_Y = 0.79f;
-
     public static final float INGAME_TILE4_OFFSET_X = 0.317f;
     public static final float INGAME_TILE4_OFFSET_Y = 0.703f;
-
     public static final float INGAME_TILE5_OFFSET_Y = 0.267f;
     public static final float INGAME_TILE6_OFFSET_Y = 0.689f;
-
     public static final float INGAME_TILES_OFFSET_FROM_RIGHT = 0.3f;
     //</editor-fold>
 
@@ -123,6 +118,8 @@ public class TangramGlobalConstants {
     public static final int SILVER_CUP = 2;
     public static final int GOLDEN_CUP = 3;
     public static final int TILES_NUMBER = 7;
+    public static final int ZERO = 0;
+    public static final int ONE = 1;
     public static final long TIME_GAP = 500; //milliseconds
     //</editor-fold>
 

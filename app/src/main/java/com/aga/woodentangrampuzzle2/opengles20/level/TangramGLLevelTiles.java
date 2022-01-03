@@ -1,24 +1,37 @@
 package com.aga.woodentangrampuzzle2.opengles20.level;
 
+import static android.view.MotionEvent.ACTION_DOWN;
+import static android.view.MotionEvent.ACTION_POINTER_DOWN;
+import static android.view.MotionEvent.ACTION_UP;
+import static android.view.MotionEvent.ACTION_POINTER_UP;
+import static android.view.MotionEvent.ACTION_MOVE;
+
+import static com.aga.android.util.ObjectBuildHelper.logDebugOut;
+import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.INGAME_TILE_ROTATION_MOVEMENT_THRESHOLD;
+import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.ONE;
+import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.ZERO;
+
 import android.graphics.Bitmap;
 import android.graphics.PointF;
-import android.view.MotionEvent;
 
 import com.aga.android.programs.TextureShaderProgram;
+import com.aga.woodentangrampuzzle2.common.MultiTouchGestures;
 import com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLTile;
 
 /**
  *
  * Created by Andrii Husiev on 18.02.2016 for Wooden Tangram.
- * Этот класс отвечает за отображение плиток танграма.
+ * This class create and draw tiles and provide interaction reaction with tiles.
  *
  */
 public class TangramGLLevelTiles {
+    private static final String TAG = "TangramGLLevelTiles";
     private static int TILES_NUMBER;
+    private enum Rotation {NO_ROTATION, CLOCKWISE, COUNTERCLOCKWISE}
     private int selectedTile;
     private TangramGLTile[] tile;
-    private PointF prevTouch;
-    private float dx, dy;
+    private PointF prevTouch, prevTouch2Finger;
+    private float dx, dy, dx2, dy2;
     private int i;
 
     public TangramGLLevelTiles(int numberOfTiles) {
@@ -26,6 +39,7 @@ public class TangramGLLevelTiles {
         tile = new TangramGLTile[TILES_NUMBER];
         selectedTile = -1;
         prevTouch = new PointF(0, 0);
+        prevTouch2Finger = new PointF(0, 0);
     }
 
     //<editor-fold desc="Common Function">
@@ -63,21 +77,30 @@ public class TangramGLLevelTiles {
     //</editor-fold>
 
     //<editor-fold desc="Touch">
-    public void touch(float normalizedX, float normalizedY, int motionEvent) {
-        switch (motionEvent) {
-            case MotionEvent.ACTION_DOWN:
-                saveStartPoint(normalizedX, normalizedY);
-                if (isAnyTileWasSelected(normalizedX, normalizedY))
+    public void touch(MultiTouchGestures multiTouch) {
+        switch (multiTouch.getAction()) {
+            case ACTION_DOWN:
+                saveStartPoint(multiTouch.getNormalizedX(ZERO), multiTouch.getNormalizedY(ZERO));
+                if (isAnyTileWasSelected(multiTouch.getNormalizedX(ZERO), multiTouch.getNormalizedY(ZERO)))
                     reorderTiles();
                 break;
-            case MotionEvent.ACTION_MOVE:
-                if (selectedTile >= 0)
-                    updateTileDrag(normalizedX, normalizedY);
+            case ACTION_POINTER_DOWN:
+                saveStartPoint2Finger(multiTouch.getNormalizedX(ONE), multiTouch.getNormalizedY(ONE));
                 break;
-            case MotionEvent.ACTION_UP:
+            case ACTION_MOVE:
+                if (selectedTile >= 0){
+                    rotateTile(checkForRotationDirection(multiTouch));
+                    updateTileDrag(multiTouch.getNormalizedX(ZERO), multiTouch.getNormalizedY(ZERO));
+                    update2FingerMove(multiTouch.getNormalizedX(ONE), multiTouch.getNormalizedY(ONE));
+                }
+                break;
+            case ACTION_UP:
                 selectedTile = -1;
+                // TODO: place here implementation of calculation level progress
 //                if (selectedTile >= 0)
 //                    calcLevelProgress();
+                break;
+            case ACTION_POINTER_UP:
                 break;
         }
     }
@@ -123,6 +146,11 @@ public class TangramGLLevelTiles {
         prevTouch.y = normalizedY;
     }
 
+    private void saveStartPoint2Finger(float normalizedX, float normalizedY) {
+        prevTouch2Finger.x = normalizedX;
+        prevTouch2Finger.y = normalizedY;
+    }
+
     private void updateTileDrag(float normalizedX, float normalizedY) {
         dx = normalizedX - prevTouch.x;
         dy = normalizedY - prevTouch.y;
@@ -131,6 +159,71 @@ public class TangramGLLevelTiles {
 
         tile[selectedTile].offset(dx, dy);
 //        tile[selectedTile].moveTo(normalizedX, normalizedY);
+    }
+
+    private void update2FingerMove(float normalizedX, float normalizedY) {
+//        dx2 = normalizedX - prevTouch2Finger.x;
+//        dy2 = normalizedY - prevTouch2Finger.y;
+        prevTouch2Finger.x = normalizedX;
+        prevTouch2Finger.y = normalizedY;
+    }
+
+    /**
+     * Determines if a list of triangle points are in clockwise order.<ul>
+     * <li>First point - previous position of finger;</li>
+     * <li>Second point - current position of finger;</li>
+     * <li>Third point - current position of other finger.</li></ul>
+     * If the result is negative, then the triangle is oriented clockwise,
+     * if it's positive, the triangle is oriented counterclockwise.
+     * @param multiTouch Object that contains current position of two fingers.
+     */
+    private Rotation checkForRotationDirection(MultiTouchGestures multiTouch) {
+        if (!multiTouch.isMultiTouch())
+            return Rotation.NO_ROTATION;
+        float sumEdges = 0;
+        float dx2 = multiTouch.getNormalizedX(ONE) - prevTouch2Finger.x;
+        float dy2 = multiTouch.getNormalizedY(ONE) - prevTouch2Finger.y;
+        float x1,x2,x3,y1,y2,y3;
+        x1 = prevTouch2Finger.x;
+        y1 = prevTouch2Finger.y;
+        x2 = multiTouch.getNormalizedX(ONE);
+        y2 = multiTouch.getNormalizedY(ONE);
+        x3 = multiTouch.getNormalizedX(ZERO);
+        y3 = multiTouch.getNormalizedY(ZERO);
+        if (movementLongEnough(lengthOfMovement(dx2, dy2))) {
+            sumEdges = x2*y3 - y2*x3 - x1*y3 + y1*x3 + x1*y2 - y1*x2;
+            if (sumEdges < 0)
+                return Rotation.CLOCKWISE;
+            else
+                return Rotation.COUNTERCLOCKWISE;
+        }
+
+//        float dx = multiTouch.getNormalizedX(ZERO) - prevTouch.x;
+//        float dy = multiTouch.getNormalizedY(ZERO) - prevTouch.y;
+
+        return Rotation.NO_ROTATION;
+    }
+
+    private static boolean movementLongEnough(float absLength) {
+        return absLength > INGAME_TILE_ROTATION_MOVEMENT_THRESHOLD;
+    }
+
+    private static float lengthOfMovement(float dx, float dy) {
+        return (float) Math.pow(Math.pow(dx,2)+Math.pow(dy,2), 0.5);
+    }
+
+    private void rotateTile(Rotation direction) {
+        switch (direction) {
+            case NO_ROTATION:
+                return;
+            case CLOCKWISE:
+                logDebugOut(TAG, "rotateTile","CLOCKWISE.");
+                break;
+            case COUNTERCLOCKWISE:
+                logDebugOut(TAG, "rotateTile","COUNTERCLOCKWISE.");
+//                tile[selectedTile].rotate(0);
+                break;
+        }
     }
     //</editor-fold>
 

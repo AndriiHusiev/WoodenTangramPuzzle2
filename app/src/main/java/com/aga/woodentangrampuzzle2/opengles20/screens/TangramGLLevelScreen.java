@@ -37,6 +37,7 @@ import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.INGAME_
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.NO_CUP;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.SILVER_CUP;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.TILES_NUMBER;
+import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.ZERO;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.digitalTF;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.BASE_SCREEN_DIMENSION;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.Mode;
@@ -58,6 +59,7 @@ import android.graphics.Typeface;
 
 import com.aga.android.util.ObjectBuildHelper;
 import com.aga.woodentangrampuzzle2.R;
+import com.aga.woodentangrampuzzle2.common.MultiTouchGestures;
 import com.aga.woodentangrampuzzle2.opengles20.level.TangramGLLevelBackground;
 import com.aga.woodentangrampuzzle2.opengles20.level.TangramGLLevelButtons;
 import com.aga.woodentangrampuzzle2.opengles20.level.TangramGLLevelCup;
@@ -219,10 +221,15 @@ public class TangramGLLevelScreen {
     //</editor-fold>
 
     //<editor-fold desc="Touch">
-    public Mode touch(float normalizedX, float normalizedY, int motionEvent) {
+    public Mode touch(MultiTouchGestures multiTouch) {
         // Reaction if tile is touched
-        tiles.touch(normalizedX, normalizedY, motionEvent);
+        tiles.touch(multiTouch);
+
         // Reaction if button is touched
+        return touchButtons(multiTouch.getNormalizedX(ZERO), multiTouch.getNormalizedY(ZERO), multiTouch.getAction());
+    }
+
+    public Mode touchButtons(float normalizedX, float normalizedY, int motionEvent) {
         switch (buttons.touch(normalizedX, normalizedY, motionEvent)) {
             case BACK:
                 return Mode.LEVEL_SELECTION;

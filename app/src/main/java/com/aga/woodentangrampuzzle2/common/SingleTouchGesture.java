@@ -1,26 +1,17 @@
 package com.aga.woodentangrampuzzle2.common;
 
-import android.view.MotionEvent;
-
 public class SingleTouchGesture {
     private float x, y;
-    private int id, action;
+    private int id;
 
     public SingleTouchGesture() {
-        id = MotionEvent.INVALID_POINTER_ID;
+        id = -1;
     }
 
-    public void setTouchData(float x, float y, int pointerId, int action) {
+    public void setTouchData(float x, float y, int pointerId) {
         this.x = x;
         this.y = y;
-        this.action = action;
         id = pointerId;
-    }
-
-    public void setTouchData(float x, float y, int action) {
-        this.x = x;
-        this.y = y;
-        this.action = action;
     }
 
     public float getX() {
@@ -33,17 +24,5 @@ public class SingleTouchGesture {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getAction() {
-        return action;
-    }
-
-    public void setAction(int action) {
-        this.action = action;
     }
 }
