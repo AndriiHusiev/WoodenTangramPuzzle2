@@ -358,7 +358,8 @@ public class TangramGLLevelSetSelectionScreen {
     //<editor-fold desc="Scrolling on Flinging">
     public void onFling(float velocity) {
         animator.stop();
-        animator.setAnimatedValues(velocity);
+        animator.setStartValue(velocity);
+        animator.setAnimationType(TangramAnimator.ANIM_TYPE.LINEAR);
         animator.setDuration(SCROLLING_ANIMATION_DURATION);
         animator.start();
         startScroll(animator.getAnimatedValue());
