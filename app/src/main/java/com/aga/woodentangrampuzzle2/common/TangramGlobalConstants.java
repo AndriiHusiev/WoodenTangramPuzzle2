@@ -99,8 +99,8 @@ public class TangramGlobalConstants {
     //<editor-fold desc="Fling Constants">
     public static final int FLING_MIN_DISTANCE = 120;
     public static final int FLING_MAX_OFF_PATH = 250;
-    public static final int FLING_THRESHOLD_VELOCITY = 200;
-    public static final long SCROLLING_ANIMATION_DURATION = 2000;
+    public static final int FLING_THRESHOLD_VELOCITY = 150;
+    public static final long SCROLLING_ANIMATION_DURATION = 1500;
     //</editor-fold>
 
     //<editor-fold desc="Mixed Constants">

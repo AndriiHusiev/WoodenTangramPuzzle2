@@ -359,7 +359,7 @@ public class TangramGLLevelSetSelectionScreen {
     public void onFling(float velocity) {
         animator.stop();
         animator.setStartValue(velocity);
-        animator.setAnimationType(TangramAnimator.ANIM_TYPE.LINEAR);
+        animator.setAnimationType(TangramAnimator.ANIM_TYPE.PARABOLIC);
         animator.setDuration(SCROLLING_ANIMATION_DURATION);
         animator.start();
         startScroll(animator.getAnimatedValue());

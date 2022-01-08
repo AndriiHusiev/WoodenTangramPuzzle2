@@ -14,10 +14,8 @@ import com.aga.woodentangrampuzzle2.common.TangramCommonTimer.mode;
 
 public class TangramAnimator {
     private static final String TAG = "TangramAnimator";
-    private static final float VELOCITY_COEFFICIENT = 0.0001f;
-    private static final float MSEC_TO_SEC = 0.001f;
 
-    public enum ANIM_TYPE {LINEAR, PARABOLIC}
+    public enum ANIM_TYPE {LINEAR, PARABOLIC, INV_PARABOLIC}
     private ANIM_TYPE animType;
     private long duration;
     private float velocity, screenSize;
@@ -43,8 +41,18 @@ public class TangramAnimator {
      */
     public void setStartValue(float initialVelocity) {
         velocity = 2 * initialVelocity / screenSize;
+        logDebugOut(TAG, "setStartValue velocity", velocity);
     }
 
+    /**
+     * Sets the desired animation formula to be used in this animator:
+     * <ul>
+     *     <li>LINEAR - linear decay formula from StartValue to zero;</li>
+     *     <li>PARABOLIC - parabolic decay formula from StartValue to zero;</li>
+     *     <li>INV_PARABOLIC - parabolic formula from zero to StartValue and again to zero.</li>
+     * </ul>
+     * @param type Desired animation formula; select from internal enum.
+     */
     public void setAnimationType(ANIM_TYPE type) {
         animType = type;
     }
@@ -82,30 +90,43 @@ public class TangramAnimator {
                 return calcLinearDecay(elapsedTime);
             case PARABOLIC:
                 return calcParabolicDecay(elapsedTime);
+            case INV_PARABOLIC:
+                return calcInvertedParabolic(elapsedTime);
         }
         return 0;
     }
 
     /**
-     * The pctElapsedTime interpolator used in calculating the elapsed fraction of this animation.
+     * This interpolator used in calculating the elapsed fraction of this animation.
      * The current interpolator use linear curve formula:
      *          y = velocity - k * elapsedTime;
      * @param elapsedTime Time depending on which the last value will be calculated by this Animator.
-     * @return The value most recently calculated by this ValueAnimator
+     * @return The value most recently calculated by this ValueAnimator.
      */
     private float calcLinearDecay(float elapsedTime) {
         return velocity * (1 - elapsedTime / duration);
     }
 
     /**
-     * The pctElapsedTime interpolator used in calculating the elapsed fraction of this animation.
+     * This interpolator used in calculating the elapsed fraction of this animation.
      * The current interpolator use parabolic curve formula:
-     *          y = k * velocity * sqr(elapsedTime - animation_duration)
+     *          y = velocity * sqr(1 - elapsedTime / animation_duration)
      * @param elapsedTime Time depending on which the last value will be calculated by this Animator.
-     * @return The value most recently calculated by this ValueAnimator
+     * @return The value most recently calculated by this ValueAnimator.
      */
     private float calcParabolicDecay(float elapsedTime) {
-        return (VELOCITY_COEFFICIENT * duration * velocity * (float) Math.pow((elapsedTime - duration) * MSEC_TO_SEC, 2));
+        return velocity * (float) Math.pow(1 - elapsedTime / duration, 2);
+    }
+
+    /**
+     * This interpolator used in calculating the elapsed fraction of this animation.
+     * The current interpolator use parabolic curve formula:
+     *          y = velocity * (1 - sqr(1 - 2 * elapsedTime / animation_duration));
+     * @param elapsedTime Time depending on which the last value will be calculated by this Animator.
+     * @return The value most recently calculated by this ValueAnimator.
+     */
+    private float calcInvertedParabolic(float elapsedTime) {
+        return velocity * (1 - (float) Math.pow(1 - 2 * elapsedTime / duration, 2));
     }
 
 }
