@@ -6,6 +6,7 @@ import static com.aga.android.util.ObjectBuildHelper.getWoodShader;
 import static com.aga.android.util.ObjectBuildHelper.logDebugOut;
 import static com.aga.android.util.ObjectBuildHelper.setPaint;
 import static com.aga.android.util.ObjectBuildHelper.setTextWithShader;
+import static com.aga.android.util.ObjectBuildHelper.velocityToDeviceCoords;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.ALL_FONTS_SIZE;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.COLOR_SHADOW;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.COLOR_TEXT_ON_BUTTONS;
@@ -88,7 +89,7 @@ public class TangramGLLevelSetSelectionScreen {
         this.screenRect.right = screenRect.right;
         this.screenRect.bottom = screenRect.bottom;
         prevTouch = new PointF();
-        animator = new TangramAnimator(screenRect.height());
+        animator = new TangramAnimator();
     }
 
     private void setBackground() {
@@ -358,7 +359,7 @@ public class TangramGLLevelSetSelectionScreen {
     //<editor-fold desc="Scrolling on Flinging">
     public void onFling(float velocity) {
         animator.stop();
-        animator.setStartValue(velocity);
+        animator.setStartValue(velocityToDeviceCoords(velocity, screenRect.height()));
         animator.setAnimationType(TangramAnimator.ANIM_TYPE.PARABOLIC);
         animator.setDuration(SCROLLING_ANIMATION_DURATION);
         animator.start();

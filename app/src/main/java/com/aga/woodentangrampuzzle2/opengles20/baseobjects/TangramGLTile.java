@@ -1,9 +1,12 @@
 package com.aga.woodentangrampuzzle2.opengles20.baseobjects;
 
+import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.ROTATING_ANIMATION_DURATION;
+
 import android.graphics.Bitmap;
 import android.graphics.PointF;
 
 import com.aga.android.programs.TextureShaderProgram;
+import com.aga.woodentangrampuzzle2.common.TangramAnimator;
 import com.aga.woodentangrampuzzle2.common.TangramLevelPath;
 
 /**
@@ -15,17 +18,15 @@ public class TangramGLTile{
     private static final int SQUARE = 2;
     private static final int TRIANGLE = 3;
     private static final int QUADRANGLE = 4;
-    public static final float ANGLE = 0.785398f;
-    private static final float SCALE_FACTOR = 1.05f;
     private final float[] modelMatrix = new float[16];
     private final float[] modelViewProjectionMatrix = new float[16];
     private final int INDEX;
 
     private float scaleFactor;
-    private float accumulatedAngle = 0;
+    private float accumulatedAngle, savedAngle, increasingAngle;
     private PointF offsetFromStartPos, realPosition, startPosition;
-//    private PlainGLObject tile;
     private BaseGLObject tile;
+    private TangramAnimator animator;
     private int numberOfVertices, i;
     private float[] polyX, polyY;
     private TangramLevelPath shadowTilePath;
@@ -70,6 +71,9 @@ public class TangramGLTile{
         offsetFromStartPos = new PointF(0, 0);
 
         startPosition = new PointF(tile.getPivotPoint().x, tile.getPivotPoint().y);
+
+        animator = new TangramAnimator();
+        accumulatedAngle = savedAngle = increasingAngle = 0;
     }
     //</editor-fold>
 
@@ -117,7 +121,21 @@ public class TangramGLTile{
 
     //<editor-fold desc="Rotate">
     public void rotate(float angle) {
-        accumulatedAngle += angle;
+        if (animator.isAnimationStarted())
+            return;
+
+        savedAngle += increasingAngle;
+        animator.setStartValue(angle);
+        animator.setAnimationType(TangramAnimator.ANIM_TYPE.INV_PARABOLIC);
+        animator.setDuration(ROTATING_ANIMATION_DURATION);
+        animator.start();
+    }
+
+    private void rotateTile() {
+        if (animator.isAnimationStarted()) {
+            increasingAngle = animator.getAnimatedValue();
+            accumulatedAngle = savedAngle + increasingAngle;
+        }
     }
     //</editor-fold>
 
@@ -143,11 +161,17 @@ public class TangramGLTile{
     }
 
     public void draw(float[] projectionMatrix) {
+        rotateTile();
+        matrixMathUtilities(projectionMatrix);
+        tile.draw(modelViewProjectionMatrix);
+    }
+
+    private void matrixMathUtilities(float[] projectionMatrix) {
         android.opengl.Matrix.setIdentityM(modelMatrix, 0);
         // Rotate
-//        android.opengl.Matrix.translateM(modelMatrix, 0, realPosition.x, realPosition.y, 0);
-//        android.opengl.Matrix.rotateM(modelMatrix, 0, accumulatedAngle, 0, 0, 1);
-//        android.opengl.Matrix.translateM(modelMatrix, 0, -realPosition.x, -realPosition.y, 0);
+        android.opengl.Matrix.translateM(modelMatrix, 0, realPosition.x, realPosition.y, 0);
+        android.opengl.Matrix.rotateM(modelMatrix, 0, accumulatedAngle, 0, 0, 1);
+        android.opengl.Matrix.translateM(modelMatrix, 0, -realPosition.x, -realPosition.y, 0);
         // Scale
         android.opengl.Matrix.translateM(modelMatrix, 0, realPosition.x, realPosition.y, 0);
         android.opengl.Matrix.scaleM(modelMatrix, 0, scaleFactor, scaleFactor, 1);
@@ -156,32 +180,5 @@ public class TangramGLTile{
         android.opengl.Matrix.translateM(modelMatrix, 0, offsetFromStartPos.x, offsetFromStartPos.y, 0);
         // Multiply all changes
         android.opengl.Matrix.multiplyMM(modelViewProjectionMatrix, 0, projectionMatrix, 0, modelMatrix, 0);
-
-        tile.draw(modelViewProjectionMatrix);
-    }
-
-    //TODO: Удалить эти функции после решения проблем с масштабированием и координированием.
-    public void drawNoScale(float[] projectionMatrix) {
-        android.opengl.Matrix.setIdentityM(modelMatrix, 0);
-        // Move
-        android.opengl.Matrix.translateM(modelMatrix, 0, offsetFromStartPos.x, offsetFromStartPos.y, 0);
-        // Multiply all changes
-        android.opengl.Matrix.multiplyMM(modelViewProjectionMatrix, 0, projectionMatrix, 0, modelMatrix, 0);
-
-        tile.draw(modelViewProjectionMatrix);
-    }
-
-    public void drawInversedScaling(float[] projectionMatrix) {
-        android.opengl.Matrix.setIdentityM(modelMatrix, 0);
-        // Scale
-        android.opengl.Matrix.translateM(modelMatrix, 0, -realPosition.x, -realPosition.y, 0);
-        android.opengl.Matrix.scaleM(modelMatrix, 0, scaleFactor, scaleFactor, 1);
-        android.opengl.Matrix.translateM(modelMatrix, 0, realPosition.x, realPosition.y, 0);
-        // Move
-        android.opengl.Matrix.translateM(modelMatrix, 0, offsetFromStartPos.x, offsetFromStartPos.y, 0);
-        // Multiply all changes
-        android.opengl.Matrix.multiplyMM(modelViewProjectionMatrix, 0, projectionMatrix, 0, modelMatrix, 0);
-
-        tile.draw(modelViewProjectionMatrix);
     }
 }

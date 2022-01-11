@@ -18,12 +18,11 @@ public class TangramAnimator {
     public enum ANIM_TYPE {LINEAR, PARABOLIC, INV_PARABOLIC}
     private ANIM_TYPE animType;
     private long duration;
-    private float velocity, screenSize;
+    private float velocity;
     private TangramCommonTimer timer;
 
-    public TangramAnimator(float screenSize) {
+    public TangramAnimator() {
         duration = 300;
-        this.screenSize = screenSize;
         timer = new TangramCommonTimer();
     }
 
@@ -40,7 +39,7 @@ public class TangramAnimator {
      * @param initialVelocity Initial velocity which will decay at the end of duration time.
      */
     public void setStartValue(float initialVelocity) {
-        velocity = 2 * initialVelocity / screenSize;
+        velocity = initialVelocity;
         logDebugOut(TAG, "setStartValue velocity", velocity);
     }
 
@@ -49,7 +48,7 @@ public class TangramAnimator {
      * <ul>
      *     <li>LINEAR - linear decay formula from StartValue to zero;</li>
      *     <li>PARABOLIC - parabolic decay formula from StartValue to zero;</li>
-     *     <li>INV_PARABOLIC - parabolic formula from zero to StartValue and again to zero.</li>
+     *     <li>INV_PARABOLIC - parabolic formula from zero to StartValue.</li>
      * </ul>
      * @param type Desired animation formula; select from internal enum.
      */
@@ -78,8 +77,10 @@ public class TangramAnimator {
         long elapsedTime = timer.getElapsedTime();
         float percent = (float) elapsedTime / duration;
 
-        if (percent >= 1f)
+        if (percent >= 1f) {
             timer.stop();
+            return duration;
+        }
 
         return elapsedTime;
     }
@@ -121,12 +122,12 @@ public class TangramAnimator {
     /**
      * This interpolator used in calculating the elapsed fraction of this animation.
      * The current interpolator use parabolic curve formula:
-     *          y = velocity * (1 - sqr(1 - 2 * elapsedTime / animation_duration));
+     *          y = velocity * (1 - sqr(1 - elapsedTime / animation_duration));
      * @param elapsedTime Time depending on which the last value will be calculated by this Animator.
      * @return The value most recently calculated by this ValueAnimator.
      */
     private float calcInvertedParabolic(float elapsedTime) {
-        return velocity * (1 - (float) Math.pow(1 - 2 * elapsedTime / duration, 2));
+        return velocity * (1 - (float) Math.pow(1 - elapsedTime / duration, 2));
     }
 
 }

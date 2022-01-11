@@ -9,6 +9,7 @@ import static android.view.MotionEvent.ACTION_MOVE;
 import static com.aga.android.util.ObjectBuildHelper.logDebugOut;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.INGAME_TILE_ROTATION_MOVEMENT_THRESHOLD;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.ONE;
+import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.ROTATING_ANGLE;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.ZERO;
 
 import android.graphics.Bitmap;
@@ -31,8 +32,6 @@ public class TangramGLLevelTiles {
     private int selectedTile;
     private TangramGLTile[] tile;
     private PointF prevTouch, prevTouch2Finger;
-    private float dx, dy, dx2, dy2;
-    private int i;
 
     public TangramGLLevelTiles(int numberOfTiles) {
         TILES_NUMBER = numberOfTiles;
@@ -108,7 +107,7 @@ public class TangramGLLevelTiles {
     private boolean isAnyTileWasSelected(float normalizedX, float normalizedY) {
         // Чтобы сбросить выделение плитки, если ни одна не выбрана.
         selectedTile = -1;
-        for (i = 0; i < TILES_NUMBER; i++) {
+        for (int i = 0; i < TILES_NUMBER; i++) {
             if (tile[i].pointInPolygon(normalizedX, normalizedY)) {
                 selectedTile = i;
                 return true;
@@ -118,6 +117,7 @@ public class TangramGLLevelTiles {
     }
 
     private void reorderTiles() {
+        logDebugOut(TAG, "reorderTiles","Another tile was selected.");
         // Sequence of tiles in array is changed so that selected tile always be on top
         TangramGLTile[] reorderedTiles = new TangramGLTile[TILES_NUMBER];
         int shift = 1;
@@ -152,8 +152,8 @@ public class TangramGLLevelTiles {
     }
 
     private void updateTileDrag(float normalizedX, float normalizedY) {
-        dx = normalizedX - prevTouch.x;
-        dy = normalizedY - prevTouch.y;
+        float dx = normalizedX - prevTouch.x;
+        float dy = normalizedY - prevTouch.y;
         prevTouch.x = normalizedX;
         prevTouch.y = normalizedY;
 
@@ -162,8 +162,6 @@ public class TangramGLLevelTiles {
     }
 
     private void update2FingerMove(float normalizedX, float normalizedY) {
-//        dx2 = normalizedX - prevTouch2Finger.x;
-//        dy2 = normalizedY - prevTouch2Finger.y;
         prevTouch2Finger.x = normalizedX;
         prevTouch2Finger.y = normalizedY;
     }
@@ -180,9 +178,8 @@ public class TangramGLLevelTiles {
     private Rotation checkForRotationDirection(MultiTouchGestures multiTouch) {
         if (!multiTouch.isMultiTouch())
             return Rotation.NO_ROTATION;
-        float sumEdges = 0;
-        float dx2 = multiTouch.getNormalizedX(ONE) - prevTouch2Finger.x;
-        float dy2 = multiTouch.getNormalizedY(ONE) - prevTouch2Finger.y;
+        float dx = multiTouch.getNormalizedX(ONE) - prevTouch2Finger.x;
+        float dy = multiTouch.getNormalizedY(ONE) - prevTouch2Finger.y;
         float x1,x2,x3,y1,y2,y3;
         x1 = prevTouch2Finger.x;
         y1 = prevTouch2Finger.y;
@@ -190,16 +187,13 @@ public class TangramGLLevelTiles {
         y2 = multiTouch.getNormalizedY(ONE);
         x3 = multiTouch.getNormalizedX(ZERO);
         y3 = multiTouch.getNormalizedY(ZERO);
-        if (movementLongEnough(lengthOfMovement(dx2, dy2))) {
-            sumEdges = x2*y3 - y2*x3 - x1*y3 + y1*x3 + x1*y2 - y1*x2;
+        if (movementLongEnough(lengthOfMovement(dx, dy))) {
+            float sumEdges = x2*y3 - y2*x3 - x1*y3 + y1*x3 + x1*y2 - y1*x2;
             if (sumEdges < 0)
                 return Rotation.CLOCKWISE;
             else
                 return Rotation.COUNTERCLOCKWISE;
         }
-
-//        float dx = multiTouch.getNormalizedX(ZERO) - prevTouch.x;
-//        float dy = multiTouch.getNormalizedY(ZERO) - prevTouch.y;
 
         return Rotation.NO_ROTATION;
     }
@@ -217,21 +211,18 @@ public class TangramGLLevelTiles {
             case NO_ROTATION:
                 return;
             case CLOCKWISE:
-                logDebugOut(TAG, "rotateTile","CLOCKWISE.");
+                tile[selectedTile].rotate(-ROTATING_ANGLE);
                 break;
             case COUNTERCLOCKWISE:
-                logDebugOut(TAG, "rotateTile","COUNTERCLOCKWISE.");
-//                tile[selectedTile].rotate(0);
+                tile[selectedTile].rotate(ROTATING_ANGLE);
                 break;
         }
     }
     //</editor-fold>
 
     public void draw(float[] projectionMatrix) {
-        for(i = TILES_NUMBER - 1; i >= 0; i--){
+        for(int i = TILES_NUMBER - 1; i >= 0; i--) {
             tile[i].draw(projectionMatrix);
-//            tile[i].drawInversedScaling(projectionMatrix);
-//            tile[i].drawNoScale(projectionMatrix);
         }
 
     }
