@@ -10,17 +10,12 @@ import android.util.DisplayMetrics;
  *
  */
 public class TangramGLView extends GLSurfaceView {
-    //<editor-fold desc="Variables">
     public final TangramGLRenderer mRenderer;
-//    public static float ASPECT_RATIO;
-//    public TangramTimer universalTimer;
-//    private Vibrator v;
-    //</editor-fold>
 
     public TangramGLView(Context context, DisplayMetrics metrics){
         super(context);
 
-        //TODO: This call crashes app on real devices.
+        //This call crashes app on real devices.
 //        super.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
         mRenderer = new TangramGLRenderer(context, metrics);
         // Create an OpenGL ES 2.0 context
@@ -30,9 +25,6 @@ public class TangramGLView extends GLSurfaceView {
         setRenderer(mRenderer);
         // Render the view only when there is a change in the drawing data
         //setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
-
-//        v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
-//        universalTimer = new TangramTimer(this);
     }
 
     public TangramGLView(Context context) {

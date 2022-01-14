@@ -18,13 +18,20 @@ import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.util.Log;
 
+import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.ALL_FONTS_SIZE;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.COLOR_CLEANUP;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.COLOR_SHADOW;
+import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LOADSCREEN_TEXT_HEIGHT;
+import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LOADSCREEN_TEXT_OFFSET_FROM_TOP;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.SHADOW_LAYER_OFFSET;
+import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.ASPECT_RATIO;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.BASE_SCREEN_DIMENSION;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.screenRect;
+import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.textureProgram;
+import static com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLSquare.createBitmapSizeFromText;
 
 import com.aga.woodentangrampuzzle2.R;
+import com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLSquare;
 
 /**
  *
@@ -286,6 +293,28 @@ public class ObjectBuildHelper {
                 calcRectF.bottom = calcRectF.top + screenRect.width() * heightFactor * aspectRatio;
         }
         return calcRectF;
+    }
+
+    public static TangramGLSquare setLoadScreen(Context context) {
+        Bitmap b = Bitmap.createBitmap((int)screenRect.width(), (int)screenRect.height(), Bitmap.Config.ARGB_8888);
+        String text = context.getResources().getString(R.string.app_name);//"LoadScreen";//
+        PointF textPos = new PointF();
+
+        Paint textPaint = setPaint(ALL_FONTS_SIZE, Color.BLACK, false, Typeface.DEFAULT_BOLD);
+        textPaint.setShader(getWoodShader(context));
+        Bitmap textBitmap = createBitmapSizeFromText(text, textPaint, textPos, true);
+        RectF textRectF = getSizeAndPositionRectangle("centerheight", LOADSCREEN_TEXT_OFFSET_FROM_TOP, 0, LOADSCREEN_TEXT_HEIGHT, (float) textBitmap.getWidth() / textBitmap.getHeight());
+        Canvas canvas = new Canvas(textBitmap);
+        canvas.drawText(text, textPos.x, textPos.y, textPaint);
+
+        TangramGLSquare imageLoadingBg = new TangramGLSquare(b, ASPECT_RATIO, 1.0f);
+        imageLoadingBg.drawColor(Color.BLACK);
+        imageLoadingBg.addBitmap(textBitmap, textRectF);
+        imageLoadingBg.castObjectSizeAutomatically();
+        imageLoadingBg.bitmapToTexture(textureProgram);
+        imageLoadingBg.recycleBitmap();
+
+        return imageLoadingBg;
     }
     //</editor-fold>
 

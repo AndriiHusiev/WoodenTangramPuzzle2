@@ -3,7 +3,6 @@ package com.aga.woodentangrampuzzle2.common;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.graphics.Region;
 
 /**
  *
@@ -19,7 +18,6 @@ public class TangramLevelPath {
     private RectF pathBounds;
     private PointF pivotPoint;
     private boolean hasHole;
-    private Region tileRegion, clipRegion;
 
     //<editor-fold desc="Public Functions">
     public TangramLevelPath(int[] x, int[] y) {
@@ -47,8 +45,6 @@ public class TangramLevelPath {
     }
 
     private void init() {
-        tileRegion = new Region();
-        clipRegion = new Region();
         calcBounds();
         setPivotPoint();
         xyToPath();

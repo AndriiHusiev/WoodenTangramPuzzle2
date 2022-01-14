@@ -21,7 +21,7 @@ public class TangramGlobalConstants {
     public static final float MM_TITLE_HEIGHT = 0.12f;
     public static final float MM_BUTTON_OFFSET_FROM_TOP = 0.407f;
     public static final float MM_BUTTON_HEIGHT = 0.15f;
-    public static final float MM_BUTTON_TEXT_HEIGHT = 0.66f; //0.1f; - предыдущее было % от экрана, а теперь от кнопки
+    public static final float MM_BUTTON_TEXT_HEIGHT = 0.5f; //0.1f; - предыдущее было % от экрана, а теперь от кнопки
     public static final float MM_BUTTON_GAP = 0.05f;
     public static final float MM_VERSION_TEXT_HEIGHT = 0.03f;
     public static final float MM_VERSION_TEXT_OFFSET = 0.01f;
@@ -36,7 +36,7 @@ public class TangramGlobalConstants {
     public static final float LSS_GRADIENT_HEADER_HEIGHT = 0.06f;
     public static final float LSS_BUTTON_OFFSET_FROM_TOP = 0.2f;
     public static final float LSS_BUTTON_HEIGHT = 0.25f;
-    public static final float LSS_BUTTON_TEXT_HEIGHT = 0.66f;
+    public static final float LSS_BUTTON_TEXT_HEIGHT = 0.5f;
     public static final float LSS_BUTTON_GAP = 0.04f;
     public static final float LSS_LOCK_SIZE = 0.71f; // 0.17f;
     //</editor-fold>

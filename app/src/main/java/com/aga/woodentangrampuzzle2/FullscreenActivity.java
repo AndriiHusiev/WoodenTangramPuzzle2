@@ -1,7 +1,6 @@
 package com.aga.woodentangrampuzzle2;
 
 import static com.aga.android.util.ObjectBuildHelper.logDebugOut;
-import static com.aga.android.util.ObjectBuildHelper.pixelsToDeviceCoords;
 
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.FLING_MAX_OFF_PATH;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.FLING_MIN_DISTANCE;
@@ -100,7 +99,7 @@ public class FullscreenActivity extends AppCompatActivity {
     private void hideUI() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            ((ActionBar) actionBar).hide();
+            actionBar.hide();
         }
 
         if (mGLView != null ) {

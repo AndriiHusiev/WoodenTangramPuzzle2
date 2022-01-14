@@ -1,7 +1,6 @@
 package com.aga.woodentangrampuzzle2.opengles20.baseobjects;
 
 import android.graphics.Bitmap;
-import android.graphics.Paint;
 import android.graphics.PointF;
 import android.opengl.GLES20;
 

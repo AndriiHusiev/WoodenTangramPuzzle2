@@ -11,7 +11,6 @@ import android.opengl.Matrix;
  *
  */
 public class TangramGLButton extends TangramGLSquare {
-//    private static final float SCALE_FACTOR = 0.975f;
     private static final float SCALE_FACTOR = 0.95f;
     private final float[] modelMatrix = new float[16];
     private final float[] modelViewProjectionMatrix = new float[16];
