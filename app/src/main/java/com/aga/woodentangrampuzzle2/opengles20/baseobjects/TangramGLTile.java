@@ -1,7 +1,5 @@
 package com.aga.woodentangrampuzzle2.opengles20.baseobjects;
 
-import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.ROTATING_ANIMATION_DURATION;
-
 import android.graphics.Bitmap;
 import android.graphics.PointF;
 
@@ -127,7 +125,7 @@ public class TangramGLTile{
         savedAngle += increasingAngle;
         animator.setStartValue(angle);
         animator.setAnimationType(TangramAnimator.ANIM_TYPE.INV_PARABOLIC);
-        animator.setDuration(ROTATING_ANIMATION_DURATION);
+//        animator.setDuration(ROTATING_ANIMATION_DURATION);
         animator.start();
     }
 
