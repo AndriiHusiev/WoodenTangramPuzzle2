@@ -1,21 +1,11 @@
 package com.aga.woodentangrampuzzle2;
 
 import static com.aga.android.util.ObjectBuildHelper.logDebugOut;
-
-import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.FLING_MAX_OFF_PATH;
-import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.FLING_MIN_DISTANCE;
-import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.FLING_THRESHOLD_VELOCITY;
-
-import android.annotation.SuppressLint;
-
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GestureDetectorCompat;
-
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
 
 import com.aga.woodentangrampuzzle2.opengles20.TangramGLView;
@@ -23,7 +13,6 @@ import com.aga.woodentangrampuzzle2.opengles20.TangramGLView;
 public class FullscreenActivity extends AppCompatActivity {
     private static final String TAG = "FullscreenActivity";
     private TangramGLView mGLView;
-    private GestureDetectorCompat mDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +21,7 @@ public class FullscreenActivity extends AppCompatActivity {
         // Create a GLSurfaceView instance and set it
         // as the ContentView for this Activity.
         mGLView = new TangramGLView(this, setDisplayMetrics());
-        mDetector = new GestureDetectorCompat(this, new TangramGestureListener());
-        setOnTouchListener();
+        setOnBackPressed();
         setContentView(mGLView);
     }
 
@@ -58,8 +46,13 @@ public class FullscreenActivity extends AppCompatActivity {
         logDebugOut(TAG, "onStop","stopped.");
     }
 
-    public void onBackPressed () {
-        mGLView.onBackPressed();
+    public void setOnBackPressed() {
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                mGLView.onBackPressed();
+            }
+        });
     }
 
     private DisplayMetrics setDisplayMetrics() {
@@ -67,33 +60,6 @@ public class FullscreenActivity extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
         return metrics;
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private void setOnTouchListener() {
-        mGLView.setOnTouchListener((v, event) -> {
-            mDetector.onTouchEvent(event);
-            mGLView.queueEvent(() -> mGLView.mRenderer.onTouch(event));
-            return true;
-        });
-    }
-
-    class TangramGestureListener extends GestureDetector.SimpleOnGestureListener {
-        @Override
-        public boolean onDown(MotionEvent event) {
-            return true;
-        }
-
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            if (Math.abs(e1.getX() - e2.getX()) > FLING_MAX_OFF_PATH)
-                return false;
-            if(Math.abs(e1.getY() - e2.getY()) > FLING_MIN_DISTANCE && Math.abs(velocityY) > FLING_THRESHOLD_VELOCITY) {
-                mGLView.queueEvent(() -> mGLView.mRenderer.onFling(velocityY));
-            }
-            return false;
-//            return true;
-        }
     }
 
     private void hideUI() {

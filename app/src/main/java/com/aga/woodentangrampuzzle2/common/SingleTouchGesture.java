@@ -14,6 +14,11 @@ public class SingleTouchGesture {
         id = pointerId;
     }
 
+    public void setTouchData(float x, float y) {
+        this.x = x;
+        this.y = y;
+    }
+
     public float getX() {
         return x;
     }

@@ -37,26 +37,34 @@ public class MultiTouchGestures {
     }
 
     public void onTouchEvent(MotionEvent event) {
-        action = event.getActionMasked();
-        switch (action) {
-            case ACTION_DOWN:
-            case ACTION_UP:
-                singleTouch[ZERO].setTouchData(event.getX(), event.getY(), event.getPointerId(ZERO));
-                break;
-            case ACTION_POINTER_DOWN:
-            case ACTION_POINTER_UP:
-                singleTouch[ONE].setTouchData(event.getX(ONE), event.getY(ONE), event.getPointerId(ONE));
-                break;
-            case ACTION_MOVE:
-                int pointerIndex = event.findPointerIndex(singleTouch[ZERO].getId());
-                if (pointerIndex != INVALID_POINTER_ID)
-                    singleTouch[ZERO].setTouchData(event.getX(), event.getY(), event.getPointerId(ZERO));
-                pointerIndex = event.findPointerIndex(singleTouch[ONE].getId());
-                if (pointerIndex != INVALID_POINTER_ID)
-                    singleTouch[ONE].setTouchData(event.getX(pointerIndex), event.getY(pointerIndex), event.getPointerId(ONE));
-                break;
-        }
         isMultiTouch = event.getPointerCount() > 1;
+        action = event.getActionMasked();
+        try {
+            switch (action) {
+                case ACTION_DOWN:
+                case ACTION_UP:
+                    singleTouch[ZERO].setTouchData(event.getX(), event.getY(), event.getPointerId(ZERO));
+                    break;
+                case ACTION_POINTER_DOWN:
+                    singleTouch[ONE].setTouchData(event.getX(ONE), event.getY(ONE), event.getPointerId(ONE));
+                    break;
+                case ACTION_POINTER_UP:
+                    singleTouch[ONE].setTouchData(event.getX(ONE), event.getY(ONE));
+                    break;
+                case ACTION_MOVE:
+                    int p0 = event.findPointerIndex(singleTouch[ZERO].getId());
+                    int p1 = event.findPointerIndex(singleTouch[ONE].getId());
+
+                    if (p0 != INVALID_POINTER_ID)
+                        singleTouch[ZERO].setTouchData(event.getX(p0), event.getY(p0), event.getPointerId(p0));
+                    if (p1 != INVALID_POINTER_ID && isMultiTouch)
+                        singleTouch[ONE].setTouchData(event.getX(p1), event.getY(p1), event.getPointerId(p1));
+                    break;
+            }
+        }
+        catch (Exception ex) {
+            logDebugOut(TAG, "onTouchEvent","catch an Exception: " + ex.getMessage());
+        }
     }
 
     public int getAction() {

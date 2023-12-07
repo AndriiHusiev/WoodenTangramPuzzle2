@@ -71,6 +71,7 @@ public class TangramGLTile{
         startPosition = new PointF(tile.getPivotPoint().x, tile.getPivotPoint().y);
 
         animator = new TangramAnimator();
+        animator.setAnimationType(TangramAnimator.ANIM_TYPE.INV_PARABOLIC);
         accumulatedAngle = savedAngle = increasingAngle = 0;
     }
     //</editor-fold>
@@ -124,7 +125,6 @@ public class TangramGLTile{
 
         savedAngle += increasingAngle;
         animator.setStartValue(angle);
-        animator.setAnimationType(TangramAnimator.ANIM_TYPE.INV_PARABOLIC);
 //        animator.setDuration(ROTATING_ANIMATION_DURATION);
         animator.start();
     }
