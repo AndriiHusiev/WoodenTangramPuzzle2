@@ -1,6 +1,5 @@
 package com.aga.woodentangrampuzzle2.common;
 
-import android.graphics.RectF;
 import android.graphics.Typeface;
 
 /**
@@ -31,8 +30,7 @@ public class TangramGlobalConstants {
     public static final float LSS_TITLE_OFFSET_FROM_TOP = 0.04f;
     public static final float LSS_TITLE_HEIGHT = 0.085f;
     public static final float LSS_OFFSET_FROM_TOP_DC = 0.6f; // DC means "Device Coordinates"
-    public static final float LSS_GRADIENT_HEADER_OFFSET_FROM_TOP = 0.14f; //-0.206f;
-    public static final float LSS_GRADIENT_HEADER_WIDTH = 1.277f;
+    public static final float LSS_GRADIENT_HEADER_OFFSET_FROM_TOP = 0.86f;
     public static final float LSS_GRADIENT_HEADER_HEIGHT = 0.06f;
     public static final float LSS_BUTTON_OFFSET_FROM_TOP = 0.2f;
     public static final float LSS_BUTTON_HEIGHT = 0.25f;
@@ -49,7 +47,7 @@ public class TangramGlobalConstants {
 //    public static final float LS_OFFSET_TIMER_FROM_BUTTONS_BOTTOM = 0.104f;//0.053f;
     public static final float LS_BUTTONS_TIMER_TEXT_OFFSET = 0.815f; // 0.195f;
     public static final float LS_BUTTONS_TIMER_TEXT_HEIGHT = 0.145f;//0.031f;
-    public static final float LS_GRADIENT_HEADER_OFFSET_FROM_TOP = 0.14f;
+    public static final float LS_GRADIENT_HEADER_OFFSET_FROM_TOP = 0.86f;
     public static final float LS_GRADIENT_HEADER_HEIGHT = 0.06f;
     public static final float LS_BUTTON_WIDTH = 0.25f;
     public static final float LS_BUTTON_GAP = 0.04f;

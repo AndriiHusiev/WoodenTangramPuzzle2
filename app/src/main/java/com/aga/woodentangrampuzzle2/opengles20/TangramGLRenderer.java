@@ -9,6 +9,7 @@ import android.opengl.Matrix;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 
+import com.aga.android.programs.AlphaGradientShaderProgram;
 import com.aga.android.programs.TextureShaderProgram;
 import com.aga.woodentangrampuzzle2.R;
 import com.aga.woodentangrampuzzle2.common.MultiTouchGestures;
@@ -62,6 +63,8 @@ public class TangramGLRenderer implements GLSurfaceView.Renderer {
     private MultiTouchGestures multiTouchEvent;
 
     public static TextureShaderProgram textureProgram;
+    public static TextureShaderProgram desaturationProgram;
+    public static AlphaGradientShaderProgram aGradientProgram;
     private final float[] projectionMatrix = new float[16];
 //    private float testX=0, testY=0;
     //</editor-fold>
@@ -218,8 +221,8 @@ public class TangramGLRenderer implements GLSurfaceView.Renderer {
         GLES20.glEnable(GLES20.GL_BLEND);
         // Интересные ссылки по типам смешивания:
         // http://www.gamedev.ru/code/forum/?id=60501&page=2
-        GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA);
-//        GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+//        GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+        GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
     }
 
     private void doTheVeryFirstInitializations() {
@@ -235,6 +238,8 @@ public class TangramGLRenderer implements GLSurfaceView.Renderer {
         digitalTF = ResourcesCompat.getFont(context, R.font.digitaldismay);
 
         textureProgram = new TextureShaderProgram(context);
+        desaturationProgram = new TextureShaderProgram(context, R.raw.desaturation_shader);
+        aGradientProgram = new AlphaGradientShaderProgram(context);
         imageLoadingBg = setLoadScreen(context);
         playMode = Mode.LOADING_SCREEN;
     }

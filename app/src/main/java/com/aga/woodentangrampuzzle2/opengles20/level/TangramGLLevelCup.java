@@ -40,7 +40,8 @@ public class TangramGLLevelCup {
         try {
             cup[index] = new TangramGLSquare(bitmap, ObjectBuildHelper.pixelsToDeviceCoords(dst, screenRect));
             cup[index].castObjectSizeAutomatically();
-            cup[index].bitmapToTexture(textureProgram);
+            cup[index].setShader(textureProgram);
+            cup[index].bitmapToTexture();
             cup[index].recycleBitmap();
         }
         catch (Exception ex) {

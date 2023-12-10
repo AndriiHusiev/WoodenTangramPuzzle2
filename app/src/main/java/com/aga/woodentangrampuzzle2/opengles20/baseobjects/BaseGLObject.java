@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.opengl.GLES20;
 
+import com.aga.android.programs.AlphaGradientShaderProgram;
 import com.aga.android.programs.TextureShaderProgram;
 import com.aga.android.util.ObjectBuildHelper;
 import com.aga.android.util.VertexArray;
@@ -26,7 +27,7 @@ public class BaseGLObject {
     private static final int STRIDE = (POSITION_COMPONENT_COUNT + TEXTURE_COORDINATES_COMPONENT_COUNT) * VertexArray.BYTES_PER_FLOAT;
 
     private VertexArray vertexArray;
-    private TextureShaderProgram textureProgram;
+    private TextureShaderProgram textureProgram = null;
     private int texture;
     private Bitmap bitmap;
     private PointF pivotPoint;
@@ -80,8 +81,11 @@ public class BaseGLObject {
     public void drawFrame(int color, float width) {
     }
 
-    public void bitmapToTexture(TextureShaderProgram textureProgram) {
+    public void setShader(TextureShaderProgram textureProgram) {
         this.textureProgram = textureProgram;
+    }
+
+    public void bitmapToTexture() {
         texture = ObjectBuildHelper.loadTexture(bitmap);
     }
 
@@ -96,22 +100,37 @@ public class BaseGLObject {
     }
 
     public void draw(float[] projectionMatrix) {
-        textureProgram.useProgram();
-        textureProgram.setUniforms(projectionMatrix, texture);
-        bindData(textureProgram);
+        if (textureProgram != null) {
+            textureProgram.useProgram();
+            textureProgram.setUniforms(projectionMatrix, texture);
+            bindData(textureProgram.getPositionAttributeLocation(), textureProgram.getTextureCoordinatesAttributeLocation());
+        }
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, vertexArray.getVertexCount());
     }
 
-    private void bindData(TextureShaderProgram textureProgram) {
+    public void useGradientShader(
+            AlphaGradientShaderProgram gradientTextureProgram,
+            float[] projectionMatrix,
+            float width,
+            float height,
+            float offsetFromTop,
+            float gradientHeight
+    ) {
+        gradientTextureProgram.useProgram();
+        gradientTextureProgram.setUniforms(projectionMatrix, width, height, offsetFromTop, gradientHeight, texture);
+        bindData(gradientTextureProgram.getPositionAttributeLocation(), gradientTextureProgram.getTextureCoordinatesAttributeLocation());
+    }
+
+    private void bindData(int aPositionLocation, int aTextureCoordinatesLocation) {
         vertexArray.setVertexAttribPointer(
                 0,
-                textureProgram.getPositionAttributeLocation(),
+                aPositionLocation,
                 POSITION_COMPONENT_COUNT,
                 STRIDE);
 
         vertexArray.setVertexAttribPointer(
                 POSITION_COMPONENT_COUNT,
-                textureProgram.getTextureCoordinatesAttributeLocation(),
+                aTextureCoordinatesLocation,
                 TEXTURE_COORDINATES_COMPONENT_COUNT,
                 STRIDE);
     }

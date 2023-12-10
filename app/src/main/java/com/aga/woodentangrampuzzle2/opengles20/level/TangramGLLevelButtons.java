@@ -32,7 +32,8 @@ public class TangramGLLevelButtons {
             buttonBackToMenu = new TangramGLButton(bitmap, ObjectBuildHelper.pixelsToDeviceCoords(dst, screenRect));
             buttonBackToMenu.setCenterOfScaling("bottomleft");
             buttonBackToMenu.castObjectSizeAutomatically();
-            buttonBackToMenu.bitmapToTexture(textureProgram);
+            buttonBackToMenu.setShader(textureProgram);
+            buttonBackToMenu.bitmapToTexture();
             buttonBackToMenu.recycleBitmap();
         }
         catch (Exception ex) {
@@ -45,7 +46,8 @@ public class TangramGLLevelButtons {
             buttonResetLevel = new TangramGLButton(bitmap, ObjectBuildHelper.pixelsToDeviceCoords(dst, screenRect));
             buttonResetLevel.setCenterOfScaling("bottomright");
             buttonResetLevel.castObjectSizeAutomatically();
-            buttonResetLevel.bitmapToTexture(textureProgram);
+            buttonResetLevel.setShader(textureProgram);
+            buttonResetLevel.bitmapToTexture();
             buttonResetLevel.recycleBitmap();
         }
         catch (Exception ex) {

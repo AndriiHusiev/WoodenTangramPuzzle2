@@ -136,7 +136,8 @@ public class TangramGLLevelScreen {
         background.setLevelPathToCenter(getIngamePlayableRect());
         background.addPathToBackground();
         background.castObjectSizeAutomatically();
-        background.bitmapToTexture(textureProgram);
+        background.setShader(textureProgram);
+        background.bitmapToTexture();
         background.recycleBitmap();
     }
 
@@ -172,7 +173,8 @@ public class TangramGLLevelScreen {
         setAngularHeaders(context, foreground, screenRect);
         setLevelTitle(context, foreground, screenRect, selectedLevelSet, selectedLevel);
         foreground.castObjectSizeAutomatically();
-        foreground.bitmapToTexture(textureProgram);
+        foreground.setShader(textureProgram);
+        foreground.bitmapToTexture();
         foreground.recycleBitmap();
     }
 

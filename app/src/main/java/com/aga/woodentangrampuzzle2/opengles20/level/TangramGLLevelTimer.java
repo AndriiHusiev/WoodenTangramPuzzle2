@@ -101,7 +101,8 @@ public class TangramGLLevelTimer {
         try {
             digits[index] = new TangramGLSquare(bitmap, firstDigitPosition);
             digits[index].castObjectSizeAutomatically();
-            digits[index].bitmapToTexture(textureProgram);
+            digits[index].setShader(textureProgram);
+            digits[index].bitmapToTexture();
             digits[index].recycleBitmap();
         }
         catch (Exception ex) {
@@ -113,7 +114,8 @@ public class TangramGLLevelTimer {
         try {
             colon = new TangramGLSquare(bitmap, ObjectBuildHelper.pixelsToDeviceCoords(dst, screenRect));
             colon.castObjectSizeAutomatically();
-            colon.bitmapToTexture(textureProgram);
+            colon.setShader(textureProgram);
+            colon.bitmapToTexture();
             colon.recycleBitmap();
 
             colonWidthDC = ObjectBuildHelper.pixelsToDeviceCoords(dst, screenRect).width();

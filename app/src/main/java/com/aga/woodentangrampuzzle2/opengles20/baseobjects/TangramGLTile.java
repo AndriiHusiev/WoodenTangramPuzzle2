@@ -154,7 +154,8 @@ public class TangramGLTile{
 
     public void finalizeForDraw(TextureShaderProgram textureProgram) {
         tile.castObjectSizeAutomatically();
-        tile.bitmapToTexture(textureProgram);
+        tile.setShader(textureProgram);
+        tile.bitmapToTexture();
         tile.recycleBitmap();
     }
 

@@ -17,6 +17,7 @@ import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.MM_TITL
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.MM_VERSION_TEXT_HEIGHT;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.MM_VERSION_TEXT_OFFSET;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.ASPECT_RATIO;
+import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.desaturationProgram;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.textureProgram;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.Mode;
 import static com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLSquare.createBitmapSizeFromText;
@@ -83,7 +84,8 @@ public class TangramGLMainMenuScreen {
             imageMenuBackground.addBitmap(bitmapVersion, bitmapVersionCoords);
         }
         imageMenuBackground.castObjectSizeAutomatically();
-        imageMenuBackground.bitmapToTexture(textureProgram);
+        imageMenuBackground.setShader(textureProgram);
+        imageMenuBackground.bitmapToTexture();
         imageMenuBackground.recycleBitmap();
     }
 
@@ -101,7 +103,8 @@ public class TangramGLMainMenuScreen {
         textPaint.setShader(getWoodShader(context));
         imageMenuHeader.addText(text, textPos.x, textPos.y, textPaint);
         imageMenuHeader.castObjectSizeAutomatically();
-        imageMenuHeader.bitmapToTexture(textureProgram);
+        imageMenuHeader.setShader(textureProgram);
+        imageMenuHeader.bitmapToTexture();
         imageMenuHeader.recycleBitmap();
     }
 
@@ -109,7 +112,8 @@ public class TangramGLMainMenuScreen {
         buttonStart = createButtonWithBackground(context, screenRect, R.drawable.button01, MM_BUTTON_OFFSET_FROM_TOP);
         setButtonTitle(context, buttonStart, R.string.button_MM_start);
         buttonStart.castObjectSizeAutomatically();
-        buttonStart.bitmapToTexture(textureProgram);
+        buttonStart.setShader(textureProgram);
+        buttonStart.bitmapToTexture();
         buttonStart.recycleBitmap();
     }
 
@@ -117,7 +121,8 @@ public class TangramGLMainMenuScreen {
         buttonCredits = createButtonWithBackground(context, screenRect, R.drawable.button01, MM_BUTTON_OFFSET_FROM_TOP + MM_BUTTON_HEIGHT + MM_BUTTON_GAP);
         setButtonTitle(context, buttonCredits, R.string.button_MM_credits);
         buttonCredits.castObjectSizeAutomatically();
-        buttonCredits.bitmapToTexture(textureProgram);
+        buttonCredits.setShader(desaturationProgram);
+        buttonCredits.bitmapToTexture();
         buttonCredits.recycleBitmap();
     }
 
@@ -125,7 +130,8 @@ public class TangramGLMainMenuScreen {
         buttonExit = createButtonWithBackground(context, screenRect, R.drawable.button01, MM_BUTTON_OFFSET_FROM_TOP + MM_BUTTON_HEIGHT * 2 + MM_BUTTON_GAP * 2);
         setButtonTitle(context, buttonExit, R.string.button_MM_exit);
         buttonExit.castObjectSizeAutomatically();
-        buttonExit.bitmapToTexture(textureProgram);
+        buttonExit.setShader(textureProgram);
+        buttonExit.bitmapToTexture();
         buttonExit.recycleBitmap();
     }
 

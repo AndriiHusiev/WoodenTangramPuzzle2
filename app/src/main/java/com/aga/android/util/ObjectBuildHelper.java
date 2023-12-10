@@ -150,49 +150,8 @@ public class ObjectBuildHelper {
         return new  BitmapShader(bitmapWood, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
     }
 
-    public static Bitmap bitmapToShadow(Bitmap srcBitmap) {
-        int color;
-        Bitmap shadowButtonInLSS = Bitmap.createBitmap(srcBitmap.getWidth(), srcBitmap.getHeight(), Bitmap.Config.ARGB_8888);
-
-        for (int i = 0; i < srcBitmap.getWidth(); i++)
-            for (int j = 0; j < srcBitmap.getHeight(); j++) {
-                color = srcBitmap.getPixel(i, j);
-                color |= COLOR_CLEANUP;
-                color &= COLOR_SHADOW;
-                shadowButtonInLSS.setPixel(i, j, color);
-            }
-
-        return shadowButtonInLSS;
-    }
-
     public static boolean rectContainsPoint(RectF rect, float x, float y) {
         return x >= rect.left && x < rect.right && y <= rect.top && y > rect.bottom;
-    }
-
-    public static Bitmap createGradientBitmap(Bitmap srcBitmap, Resources res, float baseScreenDimension, float gradientOffsetFromTop, float gradientHeight, Rect bounds) {
-        Bitmap gradientHeaderLSS = Bitmap.createBitmap(bounds.width(), bounds.height(), Bitmap.Config.ARGB_8888);
-        Canvas c = new Canvas(gradientHeaderLSS);
-        c.drawColor(Color.TRANSPARENT);
-        BitmapDrawable gradientHeaderDrawable = new BitmapDrawable(res, srcBitmap);
-        gradientHeaderDrawable.setTileModeX(Shader.TileMode.REPEAT);
-        gradientHeaderDrawable.setTileModeY(Shader.TileMode.REPEAT);
-        gradientHeaderDrawable.setBounds(bounds);
-        gradientHeaderDrawable.draw(c);
-        int color, currentColor = 0xffffffff;
-        int step = ((int) Math.ceil(255f / (baseScreenDimension * gradientHeight))) * 0x1000000;
-        for (int i = (int) (baseScreenDimension * gradientOffsetFromTop); i < gradientHeaderLSS.getHeight(); i++) {
-            for (int j = 0; j < gradientHeaderLSS.getWidth(); j++) {
-                color = gradientHeaderLSS.getPixel(j, i);
-                color &= currentColor;
-                gradientHeaderLSS.setPixel(j, i, color);
-            }
-            if (currentColor > 0 && (currentColor - step) < 0)
-                currentColor = 0x00ffffff;
-            else
-                currentColor -= step;
-        }
-
-        return gradientHeaderLSS;
     }
 
     public static int loadTexture(Bitmap bitmap) {
@@ -311,7 +270,8 @@ public class ObjectBuildHelper {
         imageLoadingBg.drawColor(Color.BLACK);
         imageLoadingBg.addBitmap(textBitmap, textRectF);
         imageLoadingBg.castObjectSizeAutomatically();
-        imageLoadingBg.bitmapToTexture(textureProgram);
+        imageLoadingBg.setShader(textureProgram);
+        imageLoadingBg.bitmapToTexture();
         imageLoadingBg.recycleBitmap();
 
         return imageLoadingBg;
@@ -323,7 +283,7 @@ public class ObjectBuildHelper {
     private static final String dot = ". ";
     private static final String colon = ": ";
 //        private static final boolean SHOW_LOG = true;
-    private static final boolean SHOW_LOG = false;
+    private static final boolean SHOW_LOG = true;
 
     public static void logDebugOut(String object, String message, int param) {
         if (SHOW_LOG) {

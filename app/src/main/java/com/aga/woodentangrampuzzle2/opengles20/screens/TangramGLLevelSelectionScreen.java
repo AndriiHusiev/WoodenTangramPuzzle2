@@ -33,6 +33,8 @@ import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.SILVER_
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.digitalTF;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.ASPECT_RATIO;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.BASE_SCREEN_DIMENSION;
+import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.aGradientProgram;
+import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.desaturationProgram;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.textureProgram;
 import static com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLSquare.createBitmapSizeFromText;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.Mode;
@@ -105,7 +107,8 @@ public class TangramGLLevelSelectionScreen {
 
         imageMenuBackground = new TangramGLSquare(b, ASPECT_RATIO, 1.0f);
         imageMenuBackground.castObjectSizeAutomatically();
-        imageMenuBackground.bitmapToTexture(textureProgram);
+        imageMenuBackground.setShader(textureProgram);
+        imageMenuBackground.bitmapToTexture();
         imageMenuBackground.recycleBitmap();
     }
 
@@ -121,7 +124,7 @@ public class TangramGLLevelSelectionScreen {
         imageMenuHeader = setLSHeader_Bg(context, screenRect);
         imageMenuHeader.addBitmap(textBitmap, textRectF);
         imageMenuHeader.castObjectSizeAutomatically();
-        imageMenuHeader.bitmapToTexture(textureProgram);
+        imageMenuHeader.bitmapToTexture();
         imageMenuHeader.recycleBitmap();
     }
 
@@ -131,7 +134,6 @@ public class TangramGLLevelSelectionScreen {
         // Координаты, фон кнопки, таймер, превью уровня, кубки, затенение, замок.
         Bitmap b = ObjectBuildHelper.loadBitmap(context, R.drawable.button03);
         Bitmap lockBitmap = ObjectBuildHelper.loadBitmap(context, R.drawable.lock);
-        Bitmap shadowButtonInLS = ObjectBuildHelper.bitmapToShadow(b);
         RectF[] rectButtons = new RectF[LEVELS_NUMBER];
         float buttonRatio = (float) b.getHeight() / b.getWidth();
         int[] cup = new int[LEVELS_NUMBER];
@@ -156,7 +158,8 @@ public class TangramGLLevelSelectionScreen {
         setButtonCup(context, button[0], cup[0], b);
         button[0].setLocked(false);
         button[0].castObjectSizeAutomatically();
-        button[0].bitmapToTexture(textureProgram);
+        button[0].setShader(textureProgram);
+        button[0].bitmapToTexture();
         button[0].recycleBitmap();
 
         // Первый ряд кнопок. Ориентиром является первая кнопка.
@@ -168,7 +171,8 @@ public class TangramGLLevelSelectionScreen {
             setButtonCup(context, button[i], cup[i], b);
             button[i].setLocked(false);
             button[i].castObjectSizeAutomatically();
-            button[i].bitmapToTexture(textureProgram);
+            button[i].setShader(textureProgram);
+            button[i].bitmapToTexture();
             button[i].recycleBitmap();
         }
 
@@ -181,20 +185,20 @@ public class TangramGLLevelSelectionScreen {
             if (allLevelsInThePrevRowSolved(i, button)) {
                 setButtonPreviews(context, button[i], selectedLevelSet, i, b, screenRect);
                 button[i].setLocked(false);
+                button[i].setShader(textureProgram);
             }
             else {
-                setButtonShadow(button[i], shadowButtonInLS);
                 setButtonLock(button[i], lockBitmap, b);
                 button[i].setLocked(true);
+                button[i].setShader(desaturationProgram);
             }
             button[i].castObjectSizeAutomatically();
-            button[i].bitmapToTexture(textureProgram);
+            button[i].bitmapToTexture();
             button[i].recycleBitmap();
         }
 
         b.recycle();
         lockBitmap.recycle();
-        shadowButtonInLS.recycle();
     }
 
     /**
@@ -217,7 +221,8 @@ public class TangramGLLevelSelectionScreen {
         setButtonPreviews(context, newButton, selectedLevelSet, selectedLevel, b, screenRect);
 
         newButton.castObjectSizeAutomatically();
-        newButton.bitmapToTexture(textureProgram);
+        newButton.setShader(textureProgram);
+        newButton.bitmapToTexture();
         newButton.recycleBitmap();
         b.recycle();
 
@@ -232,7 +237,8 @@ public class TangramGLLevelSelectionScreen {
         imageLockScreen = setLockScreen_Bg(text, textPaint, textPos, screenRect);
         imageLockScreen.addText(text, textPos.x, textPos.y, textPaint);
         imageLockScreen.castObjectSizeAutomatically();
-        imageLockScreen.bitmapToTexture(textureProgram);
+        imageLockScreen.setShader(textureProgram);
+        imageLockScreen.bitmapToTexture();
         imageLockScreen.recycleBitmap();
     }
     //</editor-fold>
@@ -353,6 +359,9 @@ public class TangramGLLevelSelectionScreen {
         imageMenuBackground.draw(projectionMatrix);
         for (TangramGLButton t: button)
             t.draw(projectionMatrix);
+
+        imageMenuHeader.useGradientShader(aGradientProgram, projectionMatrix, screenRect.width(), screenRect.height(),
+                LS_GRADIENT_HEADER_OFFSET_FROM_TOP-LS_GRADIENT_HEADER_HEIGHT, LS_GRADIENT_HEADER_OFFSET_FROM_TOP);
         imageMenuHeader.draw(projectionMatrix);
         if (playMode == TangramGLRenderer.Mode.LOCK_LS_TOUCH)
             imageLockScreen.draw(projectionMatrix);
@@ -369,19 +378,14 @@ public class TangramGLLevelSelectionScreen {
     }
 
     private static TangramGLSquare setLSHeader_Bg(Context context, RectF screenRect) {
-        Resources res = context.getResources();
-        float baseScreenDimension = screenRect.height();
-        Rect bounds = new Rect();
-
+        RectF bounds = new RectF();
         bounds.left = 0;
-        bounds.right = (int)screenRect.width();
+        bounds.right = screenRect.width();
         bounds.top =  0;
-        bounds.bottom = (int)(screenRect.height() * (LS_GRADIENT_HEADER_OFFSET_FROM_TOP + LS_GRADIENT_HEADER_HEIGHT));
-        RectF rect = new RectF(bounds);
-        Bitmap srcBitmap = ObjectBuildHelper.loadBitmap(context, R.drawable.maple_full);
-        Bitmap gradientHeaderLSS = ObjectBuildHelper.createGradientBitmap(srcBitmap, res, baseScreenDimension, LS_GRADIENT_HEADER_OFFSET_FROM_TOP, LS_GRADIENT_HEADER_HEIGHT, bounds);
+        bounds.bottom = screenRect.height() * (1f - LS_GRADIENT_HEADER_OFFSET_FROM_TOP + LS_GRADIENT_HEADER_HEIGHT);
+        Bitmap gradientHeaderLSS = ObjectBuildHelper.createTiledBitmap(context, bounds, R.drawable.maple_full);
 
-        return new TangramGLSquare(gradientHeaderLSS, ObjectBuildHelper.pixelsToDeviceCoords(rect, screenRect));
+        return new TangramGLSquare(gradientHeaderLSS, ObjectBuildHelper.pixelsToDeviceCoords(bounds, screenRect));
     }
 
     private static TangramGLSquare setLockScreen_Bg(String text, Paint textPaint, PointF textPos, RectF screenRect) {

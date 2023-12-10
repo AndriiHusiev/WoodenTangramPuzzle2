@@ -12,21 +12,20 @@ import com.aga.woodentangrampuzzle2.R;
  */
 public class TextureShaderProgram extends ShaderProgram {
     // Uniform locations
-    private final int uMatrixLocation;
-    private final int uTextureUnitLocation;
+    private int uMatrixLocation;
+    private int uTextureUnitLocation;
     // Attribute locations
-    private final int aPositionLocation;
-    private final int aTextureCoordinatesLocation;
+    private int aPositionLocation;
+    private int aTextureCoordinatesLocation;
+
+    public TextureShaderProgram(Context context, int fragmentShaderResourceId) {
+        super(context, R.raw.texture_vertex_shader, fragmentShaderResourceId);
+        initHandlers();
+    }
 
     public TextureShaderProgram(Context context) {
         super(context, R.raw.texture_vertex_shader, R.raw.texture_fragment_shader);
-
-        // Retrieve uniform locations for the shader program.
-        uMatrixLocation = GLES20.glGetUniformLocation(program, U_MATRIX);
-        uTextureUnitLocation = GLES20.glGetUniformLocation(program, U_TEXTURE_UNIT);
-        // Retrieve attribute locations for the shader program.
-        aPositionLocation = GLES20.glGetAttribLocation(program, A_POSITION);
-        aTextureCoordinatesLocation = GLES20.glGetAttribLocation(program, A_TEXTURE_COORDINATES);
+        initHandlers();
     }
 
     public void setUniforms(float[] matrix, int textureId) {
@@ -47,5 +46,14 @@ public class TextureShaderProgram extends ShaderProgram {
 
     public int getTextureCoordinatesAttributeLocation() {
         return aTextureCoordinatesLocation;
+    }
+
+    private void initHandlers() {
+        // Retrieve uniform locations for the shader program.
+        uMatrixLocation = GLES20.glGetUniformLocation(program, U_MATRIX);
+        uTextureUnitLocation = GLES20.glGetUniformLocation(program, U_TEXTURE_UNIT);
+        // Retrieve attribute locations for the shader program.
+        aPositionLocation = GLES20.glGetAttribLocation(program, A_POSITION);
+        aTextureCoordinatesLocation = GLES20.glGetAttribLocation(program, A_TEXTURE_COORDINATES);
     }
 }

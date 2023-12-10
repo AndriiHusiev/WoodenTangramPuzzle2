@@ -15,6 +15,9 @@ public class ShaderProgram {
     // Uniform constants
     protected static final String U_MATRIX = "u_Matrix";
     protected static final String U_TEXTURE_UNIT = "u_TextureUnit";
+    protected static final String U_RESOLUTION = "u_resolution";
+    protected static final String U_OFFSET_FROM_TOP = "u_offsetFromTop";
+    protected static final String U_GRADIENT_HEIGHT = "u_gradientHeight";
     // Attribute constants
     protected static final String A_POSITION = "a_Position";
     protected static final String A_COLOR = "a_Color";
