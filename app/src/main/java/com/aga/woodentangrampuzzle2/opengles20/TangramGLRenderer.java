@@ -13,6 +13,7 @@ import com.aga.android.programs.AlphaGradientShaderProgram;
 import com.aga.android.programs.TextureShaderProgram;
 import com.aga.woodentangrampuzzle2.R;
 import com.aga.woodentangrampuzzle2.common.MultiTouchGestures;
+import com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLReusable;
 import com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLSquare;
 import com.aga.woodentangrampuzzle2.opengles20.screens.TangramGLLevelScreen;
 import com.aga.woodentangrampuzzle2.opengles20.screens.TangramGLLevelSelectionScreen;
@@ -61,6 +62,7 @@ public class TangramGLRenderer implements GLSurfaceView.Renderer {
     private TangramGLLevelSelectionScreen screenLS;
     private TangramGLLevelScreen levelScreen;
     private MultiTouchGestures multiTouchEvent;
+    public static TangramGLReusable reuse;
 
     public static TextureShaderProgram textureProgram;
     public static TextureShaderProgram desaturationProgram;
@@ -240,6 +242,7 @@ public class TangramGLRenderer implements GLSurfaceView.Renderer {
         textureProgram = new TextureShaderProgram(context);
         desaturationProgram = new TextureShaderProgram(context, R.raw.desaturation_shader);
         aGradientProgram = new AlphaGradientShaderProgram(context);
+        reuse = new TangramGLReusable(context);
         imageLoadingBg = setLoadScreen(context);
         playMode = Mode.LOADING_SCREEN;
     }

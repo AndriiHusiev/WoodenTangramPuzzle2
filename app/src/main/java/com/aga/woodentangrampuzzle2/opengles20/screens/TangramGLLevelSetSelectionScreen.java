@@ -28,6 +28,7 @@ import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.ASPECT_R
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.INSTANTIATED_LEVEL_SET_NUMBER;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.aGradientProgram;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.desaturationProgram;
+import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.reuse;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.textureProgram;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.Mode;
 import static com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLSquare.createBitmapSizeFromText;
@@ -96,7 +97,7 @@ public class TangramGLLevelSetSelectionScreen {
     }
 
     private void setBackground() {
-        Bitmap b = createTiledBitmap(context, screenRect, R.drawable.maple_full);
+        Bitmap b = createTiledBitmap(context, screenRect, reuse.bitmapMaple);
 
         imageMenuBackground = new TangramGLSquare(b, ASPECT_RATIO, 1.0f);
         imageMenuBackground.castObjectSizeAutomatically();
@@ -112,7 +113,7 @@ public class TangramGLLevelSetSelectionScreen {
         Paint textPaint = setPaint(ALL_FONTS_SIZE, Color.BLACK, true, Typeface.DEFAULT_BOLD);
         Bitmap textBitmap = createBitmapSizeFromText(text, textPaint, textPos, true);
         float aspectRatio = (float) textBitmap.getWidth() / textBitmap.getHeight();
-        setTextWithShader(text, textPos, textPaint, textBitmap, getWoodShader(context));
+        setTextWithShader(text, textPos, textPaint, textBitmap, getWoodShader());
         RectF textRect = getSizeAndPositionRectangle("centerheight", LSS_TITLE_OFFSET_FROM_TOP, 0, LSS_TITLE_HEIGHT, aspectRatio);
         imageMenuHeader = setLSSHeader_Bg();
         imageMenuHeader.addBitmap(textBitmap, textRect);
@@ -127,7 +128,7 @@ public class TangramGLLevelSetSelectionScreen {
         bounds.right = screenRect.width();
         bounds.top =  0;
         bounds.bottom = screenRect.height() * (1f - LSS_GRADIENT_HEADER_OFFSET_FROM_TOP + LSS_GRADIENT_HEADER_HEIGHT);
-        Bitmap gradientHeaderLSS = ObjectBuildHelper.createTiledBitmap(context, bounds, R.drawable.maple_full);
+        Bitmap gradientHeaderLSS = ObjectBuildHelper.createTiledBitmap(context, bounds, reuse.bitmapMaple);
 
         return new TangramGLSquare(gradientHeaderLSS, ObjectBuildHelper.pixelsToDeviceCoords(bounds, screenRect));
     }
@@ -138,7 +139,6 @@ public class TangramGLLevelSetSelectionScreen {
         Paint textPaint;
         Resources res = context.getResources();
         Bitmap b = ObjectBuildHelper.loadBitmap(context, R.drawable.button02);
-        Rect bitmapRect = new Rect(0, 0, b.getWidth(), b.getHeight());
         float aspectRatio, lockSize;
         Bitmap lockBitmap = BitmapFactory.decodeResource(res, R.drawable.lock);
         String title;
@@ -155,8 +155,7 @@ public class TangramGLLevelSetSelectionScreen {
         // Creating each LSS button.
         aspectRatio = (float) b.getWidth()/b.getHeight();
         buttonRect = getSizeAndPositionRectangle("centerheight", LSS_BUTTON_OFFSET_FROM_TOP, 0, LSS_BUTTON_HEIGHT, aspectRatio);
-        button[0] = new TangramGLButton(Bitmap.createBitmap(b.getWidth(), b.getHeight(), Bitmap.Config.ARGB_8888), ObjectBuildHelper.pixelsToDeviceCoords(buttonRect, screenRect));
-        button[0].addBitmap(b, bitmapRect);
+        button[0] = new TangramGLButton(Bitmap.createBitmap(b), ObjectBuildHelper.pixelsToDeviceCoords(buttonRect, screenRect));
         button[0].setLocked(false);
         // Text Bitmap
         title = getButtonTitle(context, 0);
@@ -170,8 +169,7 @@ public class TangramGLLevelSetSelectionScreen {
         for (int i = 1; i < LEVEL_SET_NUMBER; i++) {
 //            aspectRatio = (float) b.getWidth()/b.getHeight();
             buttonRect = getSizeAndPositionRectangle("centerheight", LSS_BUTTON_OFFSET_FROM_TOP + LSS_BUTTON_HEIGHT * i + LSS_BUTTON_GAP * i, 0, LSS_BUTTON_HEIGHT, aspectRatio);
-            button[i] = new TangramGLButton(Bitmap.createBitmap(b.getWidth(), b.getHeight(), Bitmap.Config.ARGB_8888), ObjectBuildHelper.pixelsToDeviceCoords(buttonRect, screenRect));
-            button[i].addBitmap(b, bitmapRect);
+            button[i] = new TangramGLButton(Bitmap.createBitmap(b), ObjectBuildHelper.pixelsToDeviceCoords(buttonRect, screenRect));
 
             // Text Bitmap
             title = getButtonTitle(context, i);

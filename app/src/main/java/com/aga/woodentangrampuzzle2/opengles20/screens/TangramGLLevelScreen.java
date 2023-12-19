@@ -41,6 +41,7 @@ import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.ZERO;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.digitalTF;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.BASE_SCREEN_DIMENSION;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.Mode;
+import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.reuse;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.textureProgram;
 import static com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLSquare.createBitmapSizeFromText;
 
@@ -247,7 +248,7 @@ public class TangramGLLevelScreen {
 
     //<editor-fold desc="Static">
     private static TangramGLLevelBackground setLevelBackground(Context context, RectF screenRect) {
-        Bitmap b = createTiledBitmap(context, screenRect, R.drawable.maple_full);
+        Bitmap b = createTiledBitmap(context, screenRect, reuse.bitmapMaple);
         TangramGLLevelBackground bg = new TangramGLLevelBackground(Bitmap.createBitmap(b.getWidth(), b.getHeight(), Bitmap.Config.ARGB_8888), ObjectBuildHelper.pixelsToDeviceCoords(screenRect, screenRect));
         bg.addBitmap(b);
 
@@ -308,7 +309,7 @@ public class TangramGLLevelScreen {
 
     private static void setLevelHeader(Context context, TangramGLLevelForeground fg, RectF screenRect) {
         RectF rectF = new RectF(0, 0, screenRect.width(), screenRect.height() * INGAME_HEADER_HEIGHT);
-        Bitmap b = createTiledBitmap(context, rectF, R.drawable.oak_full);
+        Bitmap b = createTiledBitmap(context, rectF, reuse.bitmapOak);
         fg.addBitmap(b, rectF);
 
         // Draw shadow under header.

@@ -44,20 +44,18 @@ public class TangramGlobalConstants {
     public static final float LS_TITLE_HEIGHT = 0.085f;
     public static final float LS_BUTTONS_OFFSET_FROM_TOP = 0.2f;
     public static final float LS_BUTTONS_OFFSET_FROM_TOP_DC  = 0.6f; // DC means "Device Coordinates"
-//    public static final float LS_OFFSET_TIMER_FROM_BUTTONS_BOTTOM = 0.104f;//0.053f;
-    public static final float LS_BUTTONS_TIMER_TEXT_OFFSET = 0.815f; // 0.195f;
-    public static final float LS_BUTTONS_TIMER_TEXT_HEIGHT = 0.145f;//0.031f;
+    public static final float LS_BUTTONS_TIMER_HOFFSET = 0.029f;
+    public static final float LS_BUTTONS_TIMER_VOFFSET = 0.13f;
+    public static final float LS_BUTTONS_TIMER_SCALE = 0.00065f;
     public static final float LS_GRADIENT_HEADER_OFFSET_FROM_TOP = 0.86f;
     public static final float LS_GRADIENT_HEADER_HEIGHT = 0.06f;
     public static final float LS_BUTTON_WIDTH = 0.25f;
     public static final float LS_BUTTON_GAP = 0.04f;
-    public static final float LS_CUP_SIZE = 0.06f; //0.175f; //0.10875f; //0.087f;
-    public static final float LS_PREVIEW_BITMAP_SIZE = 0.535f;
+    public static final float LS_CUP_SCALE = 0.00085f;
+    public static final float LS_CUP_OFFSET = -0.13f;
+    public static final float LS_PREVIEW_BITMAP_SIZE = 0.00105f;
     public static final float LS_PREVIEW_PATH_SIZE = 0.94f;
-    public static final float LS_PREVIEW_OFFSET_FROM_TOP = 0.03f;
-    public static final float LS_LOCK_SIZE = 0.55f;
-    public static final float LS_LOCK_OFFSET_FROM_TOP = 0.0385f;
-    public static final float LS_LOCK_TEXT_BITMAP_START_SIZE = 0.6f;
+    public static final float LS_LOCK_SIZE = 0.0009f;
     //</editor-fold>
 
     //<editor-fold desc="Ingame Constants">

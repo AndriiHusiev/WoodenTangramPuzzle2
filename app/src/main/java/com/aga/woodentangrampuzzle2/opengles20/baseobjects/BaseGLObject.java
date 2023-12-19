@@ -89,6 +89,15 @@ public class BaseGLObject {
         texture = ObjectBuildHelper.loadTexture(bitmap);
     }
 
+    public void replaceTexture(Bitmap b) {
+        final int[] textureIds = new int[]{texture};
+        GLES20.glDeleteTextures(1, textureIds, 0);
+
+        bitmap = b;
+        castObjectSizeAutomatically();
+        bitmapToTexture();
+    }
+
     /**
      * Now that the data’s been loaded into OpenGL, we no longer need to keep the
      * Android bitmap around. Under normal circumstances, it might take a few

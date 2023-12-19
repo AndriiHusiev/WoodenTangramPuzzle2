@@ -18,6 +18,7 @@ import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.MM_VERS
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.MM_VERSION_TEXT_OFFSET;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.ASPECT_RATIO;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.desaturationProgram;
+import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.reuse;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.textureProgram;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.Mode;
 import static com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLSquare.createBitmapSizeFromText;
@@ -75,7 +76,7 @@ public class TangramGLMainMenuScreen {
     }
 
     private void setBackground() {
-        Bitmap bitmapBackground = createTiledBitmap(context, screenRect, R.drawable.maple_full);
+        Bitmap bitmapBackground = createTiledBitmap(context, screenRect, reuse.bitmapMaple);
         Bitmap bitmapVersion = getVersion();
 
         imageMenuBackground = new TangramGLSquare(bitmapBackground, ASPECT_RATIO, 1.0f);
@@ -100,7 +101,7 @@ public class TangramGLMainMenuScreen {
         imageMenuHeader.drawColor(Color.TRANSPARENT);
         imageMenuHeader.addText(text, textPos.x, textPos.y, textPaint);
         textPaint.setShadowLayer(0, 0, 0, 0);
-        textPaint.setShader(getWoodShader(context));
+        textPaint.setShader(getWoodShader());
         imageMenuHeader.addText(text, textPos.x, textPos.y, textPaint);
         imageMenuHeader.castObjectSizeAutomatically();
         imageMenuHeader.setShader(textureProgram);
@@ -211,11 +212,9 @@ public class TangramGLMainMenuScreen {
     //<editor-fold desc="Static">
     private static TangramGLButton createButtonWithBackground(Context context, RectF screenRect, int drawable_id, float distanceFactor) {
         Bitmap b = ObjectBuildHelper.loadBitmap(context, drawable_id);
-        Rect bitmapRect = new Rect(0, 0, b.getWidth(), b.getHeight());
         float ratio = (float) b.getWidth()/b.getHeight();
         RectF buttonRect = getSizeAndPositionRectangle("centerheight", distanceFactor, 0, MM_BUTTON_HEIGHT, ratio);
-        TangramGLButton button = new TangramGLButton(Bitmap.createBitmap(b.getWidth(), b.getHeight(), Bitmap.Config.ARGB_8888), ObjectBuildHelper.pixelsToDeviceCoords(buttonRect, screenRect));
-        button.addBitmap(b, bitmapRect);
+        TangramGLButton button = new TangramGLButton(b, ObjectBuildHelper.pixelsToDeviceCoords(buttonRect, screenRect));
 
         return button;
     }

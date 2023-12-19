@@ -119,6 +119,12 @@ public class TangramGLSquare extends BaseGLObject{
         bitmapPaint = null;
     }
 
+    @Override
+    public void replaceTexture(Bitmap b) {
+        init(b);
+        super.replaceTexture(b);
+    }
+
     //<editor-fold desc="Bitmap">
     /**
      * Draw the specified bitmap, using standard canvas' function.

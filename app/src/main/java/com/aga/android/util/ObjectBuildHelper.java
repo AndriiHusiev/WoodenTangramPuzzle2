@@ -1,7 +1,6 @@
 package com.aga.android.util;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
@@ -19,13 +18,12 @@ import android.opengl.GLUtils;
 import android.util.Log;
 
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.ALL_FONTS_SIZE;
-import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.COLOR_CLEANUP;
-import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.COLOR_SHADOW;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LOADSCREEN_TEXT_HEIGHT;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LOADSCREEN_TEXT_OFFSET_FROM_TOP;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.SHADOW_LAYER_OFFSET;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.ASPECT_RATIO;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.BASE_SCREEN_DIMENSION;
+import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.reuse;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.screenRect;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.textureProgram;
 import static com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLSquare.createBitmapSizeFromText;
@@ -48,9 +46,9 @@ public class ObjectBuildHelper {
         return BitmapFactory.decodeResource(context.getResources(), resourceId, options);
     }
 
-    public static Bitmap createTiledBitmap(Context context, RectF rect, int id) {
+    public static Bitmap createTiledBitmap(Context context, RectF rect, Bitmap orig) {
         Bitmap b = Bitmap.createBitmap((int)rect.width(), (int)rect.height(), Bitmap.Config.ARGB_8888);
-        BitmapDrawable bitmapBack = new BitmapDrawable(context.getResources(), BitmapFactory.decodeResource(context.getResources(), id));
+        BitmapDrawable bitmapBack = new BitmapDrawable(context.getResources(), orig);
         bitmapBack.setTileModeX(Shader.TileMode.REPEAT);
         bitmapBack.setTileModeY(Shader.TileMode.REPEAT);
         bitmapBack.setBounds(0, 0, (int)rect.width(), (int)rect.height());
@@ -144,14 +142,16 @@ public class ObjectBuildHelper {
     //</editor-fold>
 
     //<editor-fold desc="Mix">
-    public static BitmapShader getWoodShader(Context context) {
-        Resources res = context.getResources();
-        Bitmap bitmapWood = BitmapFactory.decodeResource(res, R.drawable.woodentexture);
-        return new  BitmapShader(bitmapWood, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+    public static BitmapShader getWoodShader() {
+        Bitmap bitmapWood = reuse.bitmapWooden;
+        return new BitmapShader(bitmapWood, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
     }
 
     public static boolean rectContainsPoint(RectF rect, float x, float y) {
-        return x >= rect.left && x < rect.right && y <= rect.top && y > rect.bottom;
+        if (rect == null)
+            return false;
+        else
+            return x >= rect.left && x < rect.right && y <= rect.top && y > rect.bottom;
     }
 
     public static int loadTexture(Bitmap bitmap) {
@@ -161,6 +161,8 @@ public class ObjectBuildHelper {
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureObjectIds[0]);
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR_MIPMAP_LINEAR);
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
         GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
 //        bitmap.recycle();
         GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
@@ -260,7 +262,7 @@ public class ObjectBuildHelper {
         PointF textPos = new PointF();
 
         Paint textPaint = setPaint(ALL_FONTS_SIZE, Color.BLACK, false, Typeface.DEFAULT_BOLD);
-        textPaint.setShader(getWoodShader(context));
+        textPaint.setShader(getWoodShader());
         Bitmap textBitmap = createBitmapSizeFromText(text, textPaint, textPos, true);
         RectF textRectF = getSizeAndPositionRectangle("centerheight", LOADSCREEN_TEXT_OFFSET_FROM_TOP, 0, LOADSCREEN_TEXT_HEIGHT, (float) textBitmap.getWidth() / textBitmap.getHeight());
         Canvas canvas = new Canvas(textBitmap);

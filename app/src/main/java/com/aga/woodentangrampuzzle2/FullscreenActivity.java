@@ -57,7 +57,7 @@ public class FullscreenActivity extends AppCompatActivity {
 
     private DisplayMetrics setDisplayMetrics() {
         DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
 
         return metrics;
     }
