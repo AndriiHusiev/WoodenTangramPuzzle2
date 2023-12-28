@@ -109,10 +109,12 @@ public class TangramGLSquare extends BaseGLObject{
         return XY;
     }
 
+    @Override
     public PointF getPivotPoint() {
         return pivotPoint;
     }
 
+    @Override
     public void recycleBitmap() {
         super.recycleBitmap();
         canvas = null;

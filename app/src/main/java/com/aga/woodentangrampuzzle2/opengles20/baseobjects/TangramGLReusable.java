@@ -26,10 +26,7 @@ public class TangramGLReusable {
     public final Bitmap bitmapWooden;
     public final Bitmap[] digits = new Bitmap[10];
     public final Bitmap colon;
-    public final Bitmap cupNo;
-    public final Bitmap cupBronze;
-    public final Bitmap cupSilver;
-    public final Bitmap cupGold;
+    public final Bitmap[] cups;
 
     public TangramGLReusable(Context context) {
         // Common bitmaps for backgrounds
@@ -58,10 +55,12 @@ public class TangramGLReusable {
         colon = createBitmap(bitmap);
 
         // Cups
-        cupNo = ObjectBuildHelper.loadBitmap(context, R.drawable.no_cup);
-        cupBronze = ObjectBuildHelper.loadBitmap(context, R.drawable.bronze_cup);
-        cupSilver = ObjectBuildHelper.loadBitmap(context, R.drawable.silver_cup);
-        cupGold = ObjectBuildHelper.loadBitmap(context, R.drawable.gold_cup);
+        cups = new Bitmap[] {
+                ObjectBuildHelper.loadBitmap(context, R.drawable.no_cup),
+                ObjectBuildHelper.loadBitmap(context, R.drawable.bronze_cup),
+                ObjectBuildHelper.loadBitmap(context, R.drawable.silver_cup),
+                ObjectBuildHelper.loadBitmap(context, R.drawable.gold_cup)
+        };
     }
 
 }

@@ -28,11 +28,15 @@ public class TangramGLButtonExt {
     private final RectF screenRect;
     private final List<RectF> dst = new ArrayList<>();
     private final List<PointF> centerOfScaling = new ArrayList<>();
-//    private int cup;
+    private int selCup;
     private final List<TangramGLSquare> textures = new ArrayList<>();
     private TangramGLSquare enabledTexture, disabledTexture;
-    private RectF dstEnabled, dstDisabled;
-    private PointF centerEnabled, centerDisabled;
+    private RectF dstEnabled, dstDisabled, dstCup;
+    private PointF centerEnabled, centerDisabled, centerCup;
+    private TangramGLSquare[] digits, cups;
+    private final RectF[] dstDigits = new RectF[4];
+    private final PointF[] centerDigits = new PointF[4];
+    private final int[] selDigits = new int[] {0, 0, 0, 0};
     private TextureShaderProgram enabledShaderProgram, disabledShaderProgram;
 
     /**
@@ -50,10 +54,10 @@ public class TangramGLButtonExt {
      * @param b The bitmap for new texture.
      * @param dstPos The rectangle with position in pixels.
      */
-    public void addTexture(Bitmap b, RectF dstPos, boolean recycle) {
+    public void addTexture(Bitmap b, RectF dstPos) {
         RectF pos = pixelsToDeviceCoords(dstPos, screenRect);
         dst.add(pos);
-        textures.add(createTexture(b, pos, recycle));
+        textures.add(createTexture(b, pos, true));
         centerOfScaling.add(setCenterOfScaling(pos));
     }
 
@@ -64,14 +68,13 @@ public class TangramGLButtonExt {
      * @param xOffset The X offset from first texture.
      * @param yOffset The Y offset from first texture.
      * @param scaleFactor Scale factor for both dimensions.
-     * @param recycle Will the bitmap be recycled.
      */
-    public void addTexture(Bitmap b, float xOffset, float yOffset, float scaleFactor, boolean recycle) {
+    public void addTexture(Bitmap b, float xOffset, float yOffset, float scaleFactor) {
         if (dst.size() == 0) return;
 
 		RectF pos = convertOffsetToRect(b.getWidth(), b.getHeight(), xOffset, yOffset, scaleFactor);
         dst.add(pos);
-        textures.add(createTexture(b, pos, recycle));
+        textures.add(createTexture(b, pos, true));
         centerOfScaling.add(setCenterOfScaling(pos));
     }
 
@@ -82,13 +85,12 @@ public class TangramGLButtonExt {
      * @param xOffset The X offset from first texture.
      * @param yOffset The Y offset from first texture.
      * @param scaleFactor Scale factor for both dimensions.
-     * @param recycle Will the bitmap be recycled.
      */
-    public void addEnabledTexture(Bitmap b, float xOffset, float yOffset, float scaleFactor, boolean recycle) {
+    public void addEnabledTexture(Bitmap b, float xOffset, float yOffset, float scaleFactor) {
         if (dst.size() == 0) return;
 
         dstEnabled = convertOffsetToRect(b.getWidth(), b.getHeight(), xOffset, yOffset, scaleFactor);
-        enabledTexture = createTexture(b, dstEnabled, recycle);
+        enabledTexture = createTexture(b, dstEnabled, true);
         centerEnabled = setCenterOfScaling(dstEnabled);
     }
 
@@ -99,14 +101,40 @@ public class TangramGLButtonExt {
      * @param xOffset The X offset from first texture.
      * @param yOffset The Y offset from first texture.
      * @param scaleFactor Scale factor for both dimensions.
-     * @param recycle Will the bitmap be recycled.
      */
-    public void addDisabledTexture(Bitmap b, float xOffset, float yOffset, float scaleFactor, boolean recycle) {
+    public void addDisabledTexture(Bitmap b, float xOffset, float yOffset, float scaleFactor) {
         if (dst.size() == 0) return;
 
         dstDisabled = convertOffsetToRect(b.getWidth(), b.getHeight(), xOffset, yOffset, scaleFactor);
-        disabledTexture = createTexture(b, dstDisabled, recycle);
+        disabledTexture = createTexture(b, dstDisabled, true);
         centerDisabled = setCenterOfScaling(dstDisabled);
+    }
+
+    public void addDigitsTexture(Bitmap[] b, float xOffset, float yOffset, float scaleFactor) {
+        RectF rect = convertOffsetToRect(b[0].getWidth(), b[0].getHeight(), 0, 0, scaleFactor);
+        digits = new TangramGLSquare[b.length];
+
+        for (int i = 0; i < b.length; i++)
+            digits[i] = createTexture(b[i], rect, true);
+
+        dstDigits[0] = convertOffsetToRect(b[0].getWidth(), b[0].getHeight(), -2*xOffset, yOffset, scaleFactor);
+        dstDigits[1] = convertOffsetToRect(b[0].getWidth(), b[0].getHeight(), -xOffset, yOffset, scaleFactor);
+        dstDigits[2] = convertOffsetToRect(b[0].getWidth(), b[0].getHeight(), xOffset, yOffset, scaleFactor);
+        dstDigits[3] = convertOffsetToRect(b[0].getWidth(), b[0].getHeight(), 2*xOffset, yOffset, scaleFactor);
+
+        for (int i = 0; i < dstDigits.length; i++)
+            centerDigits[i] = setCenterOfScaling(dstDigits[i]);
+    }
+
+    public void addCupsTexture(Bitmap[] b, float xOffset, float yOffset, float scaleFactor) {
+        RectF rect = convertOffsetToRect(b[0].getWidth(), b[0].getHeight(), 0, 0, scaleFactor);
+        cups = new TangramGLSquare[b.length];
+
+        for (int i = 0; i < b.length; i++)
+            cups[i] = createTexture(b[i], rect, true);
+
+        dstCup = convertOffsetToRect(b[0].getWidth(), b[0].getHeight(), xOffset, yOffset, scaleFactor);
+        centerCup = setCenterOfScaling(dstCup);
     }
 
     /**
@@ -162,6 +190,10 @@ public class TangramGLButtonExt {
         textures.get(i).replaceTexture(b);
     }
 
+    public void setDigits(int[] t) {
+        System.arraycopy(t, 0, selDigits, 0, selDigits.length);
+    }
+
     public void setPressed(boolean pressed) {
         isPressed = pressed;
     }
@@ -180,11 +212,11 @@ public class TangramGLButtonExt {
     }
 
     public void setCup(int value) {
-//        cup = value;
+        selCup = value;
     }
 
     public int getCup() {
-        return 0;//cup;
+        return selCup;
     }
 
     public RectF getDstRect() {
@@ -195,12 +227,11 @@ public class TangramGLButtonExt {
     }
 
     public void offset(float dx, float dy) {
-        for (RectF rect: dst)
-            rect.offset(dx, dy);
-        if (dstEnabled != null)
-            dstEnabled.offset(dx, dy);
-        if (dstDisabled != null)
-            dstDisabled.offset(dx, dy);
+        for (RectF rect: dst) rect.offset(dx, dy);
+        if (dstEnabled != null) dstEnabled.offset(dx, dy);
+        if (dstDisabled != null) dstDisabled.offset(dx, dy);
+        if (dstCup != null) dstCup.offset(dx, dy);
+        for (RectF rect: dstDigits) if (rect != null) rect.offset(dx, dy);
     }
 
     private void setActualShaderProgram() {
@@ -211,6 +242,14 @@ public class TangramGLButtonExt {
             disabledTexture.setShader(curShader);
         if (enabledTexture != null)
             enabledTexture.setShader(curShader);
+        if (enabledTexture != null)
+            enabledTexture.setShader(curShader);
+        if (cups != null)
+            for (TangramGLSquare tex: cups)
+                tex.setShader(curShader);
+        if (digits != null)
+            for (TangramGLSquare tex: digits)
+                tex.setShader(curShader);
     }
 
     public void draw(float[] projectionMatrix) {
@@ -224,6 +263,13 @@ public class TangramGLButtonExt {
             texDraw(projectionMatrix, disabledTexture, centerDisabled, dstDisabled.centerX(), dstDisabled.centerY());
         else if (!isLocked && enabledTexture != null)
             texDraw(projectionMatrix, enabledTexture, centerEnabled, dstEnabled.centerX(), dstEnabled.centerY());
+
+        if (cups != null)
+            texDraw(projectionMatrix, cups[selCup], centerCup, dstCup.centerX(), dstCup.centerY());
+
+        if (digits != null)
+            for (int i = 0; i < selDigits.length; i++)
+                texDraw(projectionMatrix, digits[selDigits[i]], centerDigits[i], dstDigits[i].centerX(), dstDigits[i].centerY());
 
         // Return to normal blend mode
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);

@@ -11,10 +11,8 @@ import static com.aga.android.util.ObjectBuildHelper.setPaint;
 import static com.aga.android.util.ObjectBuildHelper.setTextWithShader;
 import static com.aga.android.util.ObjectBuildHelper.velocityToDeviceCoords;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.ALL_FONTS_SIZE;
-import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.BRONZE_CUP;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.COLOR_LEVEL_BG;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.COLOR_SHADOW;
-import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.GOLDEN_CUP;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.INSENSITIVE_BACKLASH_ON_SCROLL;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LEVELS_IN_THE_ROW;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LEVELS_NUMBER;
@@ -35,7 +33,6 @@ import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LS_PREV
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LS_TITLE_HEIGHT;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.LS_TITLE_OFFSET_FROM_TOP;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.SCROLLING_ANIMATION_DURATION;
-import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.SILVER_CUP;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.ASPECT_RATIO;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.BASE_SCREEN_DIMENSION;
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.aGradientProgram;
@@ -46,6 +43,7 @@ import static com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLSquar
 import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.Mode;
 import static com.aga.woodentangrampuzzle2.opengles20.screens.TangramGLLevelScreen.loadLevelPathByNumber;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -62,7 +60,6 @@ import com.aga.android.util.ObjectBuildHelper;
 import com.aga.woodentangrampuzzle2.R;
 import com.aga.woodentangrampuzzle2.common.TangramAnimator;
 import com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer;
-import com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLButton;
 import com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLButtonExt;
 import com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLSquare;
 import com.aga.woodentangrampuzzle2.opengles20.level.TangramGLLevelBackground;
@@ -134,8 +131,6 @@ public class TangramGLLevelSelectionScreen {
         Bitmap lockBitmap = ObjectBuildHelper.loadBitmap(context, R.drawable.lock);
         RectF[] rectButtons = new RectF[LEVELS_NUMBER];
         float buttonRatio = (float) b.getHeight() / b.getWidth();
-        float yOffsetCup = BASE_SCREEN_DIMENSION * LS_CUP_OFFSET;
-        float yScaleCup = BASE_SCREEN_DIMENSION * LS_CUP_SCALE;
         int[] cup = new int[LEVELS_NUMBER];
         long[] timer = new long[LEVELS_NUMBER];
         loadData(context, selectedLevelSet, timer, cup);
@@ -154,10 +149,10 @@ public class TangramGLLevelSelectionScreen {
         button = new TangramGLButtonExt[LEVELS_NUMBER];
         button[0] = new TangramGLButtonExt(screenRect);
         button[0].setLocked(false);
-        button[0].addTexture(b, rectButtons[0], false);
+        button[0].addTexture(b, rectButtons[0]);
         setButtonTimer(button[0], timer[0]);
-        button[0].addTexture(setButtonCup(cup[0]), 0, yOffsetCup, yScaleCup, true);
-        button[0].addEnabledTexture(setButtonPreviews(context, selectedLevelSet, 0, b, screenRect), 0, 0, 1, true);
+        setButtonCup(button[0], cup[0]);
+        button[0].addEnabledTexture(setButtonPreviews(context, selectedLevelSet, 0, b, screenRect), 0, 0, 1);
         button[0].setShaders(textureProgram, desaturationProgram);
 
         // Первый ряд кнопок. Ориентиром является первая кнопка.
@@ -165,10 +160,10 @@ public class TangramGLLevelSelectionScreen {
             rectButtons[i] = setButtonPositionFirstRow(rectButtons, i);
             button[i] = new TangramGLButtonExt(screenRect);
             button[i].setLocked(false);
-            button[i].addTexture(b, rectButtons[i], false);
+            button[i].addTexture(b, rectButtons[i]);
             setButtonTimer(button[i], timer[i]);
-            button[i].addTexture(setButtonCup(cup[i]), 0, yOffsetCup, yScaleCup, true);
-            button[i].addEnabledTexture(setButtonPreviews(context, selectedLevelSet, i, b, screenRect), 0, 0, 1, true);
+            setButtonCup(button[i], cup[i]);
+            button[i].addEnabledTexture(setButtonPreviews(context, selectedLevelSet, i, b, screenRect), 0, 0, 1);
             button[i].setShaders(textureProgram, desaturationProgram);
         }
 
@@ -177,11 +172,11 @@ public class TangramGLLevelSelectionScreen {
             rectButtons[i] = setButtonPositionOtherRows(rectButtons, buttonRatio, i);
             button[i] = new TangramGLButtonExt(screenRect);
             button[i].setLocked(true);
-            button[i].addTexture(b, rectButtons[i], false);
+            button[i].addTexture(b, rectButtons[i]);
             setButtonTimer(button[i], timer[i]);
-            button[i].addTexture(setButtonCup(cup[i]), 0, yOffsetCup, yScaleCup, true);
-            button[i].addEnabledTexture(setButtonPreviews(context, selectedLevelSet, i, b, screenRect), 0, 0, 1, true);
-            button[i].addDisabledTexture(lockBitmap, 0, 0, LS_LOCK_SIZE * BASE_SCREEN_DIMENSION, false);
+            setButtonCup(button[i], cup[i]);
+            button[i].addEnabledTexture(setButtonPreviews(context, selectedLevelSet, i, b, screenRect), 0, 0, 1);
+            button[i].addDisabledTexture(lockBitmap, 0, 0, LS_LOCK_SIZE * BASE_SCREEN_DIMENSION);
             button[i].setShaders(textureProgram, desaturationProgram);
         }
 
@@ -191,18 +186,16 @@ public class TangramGLLevelSelectionScreen {
 
     /**
      * При каждом выходе из игрового уровня необходимо обновить данные, отображаемые на кнопке.
-     * Это происходит путем повторного создания объекта кнопки с нуля.
      * @param timer Время, проведенное на уровне.
      * @param cup Номер полученного кубка.
      */
     public void updateButton(long timer, int cup) {
         int[] t = TangramGLLevelTimer.convertElapsedTime(timer);
-        button[selectedLevel].replaceTexture(1, reuse.digits[t[0]]);
-        button[selectedLevel].replaceTexture(2, reuse.digits[t[1]]);
-        button[selectedLevel].replaceTexture(3, reuse.digits[t[2]]);
-        button[selectedLevel].replaceTexture(4, reuse.digits[t[3]]);
+        button[selectedLevel].setDigits(t);
+        button[selectedLevel].setCup(cup);
 
-        button[selectedLevel].replaceTexture(6, setButtonCup(cup));
+//        button[selectedLevel].replaceTexture(6, setButtonCup(cup));
+        button[selectedLevel].setShaders(textureProgram, desaturationProgram);
     }
 
     private void setLockScreen() {
@@ -309,10 +302,6 @@ public class TangramGLLevelSelectionScreen {
     public int getSelectedLevel() {
         return selectedLevel;
     }
-
-    public boolean isSelectedLevelLocked() {
-        return button[selectedLevel].isLocked();
-    }
     //</editor-fold>
 
     //<editor-fold desc="Scrolling on Flinging">
@@ -346,6 +335,7 @@ public class TangramGLLevelSelectionScreen {
     }
 
     //<editor-fold desc="Static Auxiliary Functions">
+    @SuppressLint("DiscouragedApi")
     private static String getLSHeaderText( Context context, int selectedLevelSet) {
         Resources res = context.getResources();
         String str = LEVEL_SET + selectedLevelSet;
@@ -404,11 +394,9 @@ public class TangramGLLevelSelectionScreen {
         float yOffset = BASE_SCREEN_DIMENSION * LS_BUTTONS_TIMER_VOFFSET;
         float scaleFactor = BASE_SCREEN_DIMENSION * LS_BUTTONS_TIMER_SCALE;
 
-        buttonLS.addTexture(reuse.digits[t[0]], -2*xOffset, yOffset, scaleFactor, false);
-        buttonLS.addTexture(reuse.digits[t[1]], -xOffset, yOffset, scaleFactor, false);
-        buttonLS.addTexture(reuse.digits[t[2]], xOffset, yOffset, scaleFactor, false);
-        buttonLS.addTexture(reuse.digits[t[3]], 2*xOffset, yOffset, scaleFactor, false);
-        buttonLS.addTexture(reuse.colon, 0, yOffset, scaleFactor, false);
+        buttonLS.addTexture(reuse.colon, 0, yOffset, scaleFactor);
+        buttonLS.addDigitsTexture(reuse.digits, xOffset, yOffset, scaleFactor);
+        buttonLS.setDigits(t);
     }
 
     private static Bitmap setButtonPreviews(Context context, int selectedLevelSet, int levelNumber, Bitmap b, RectF screenRect) {
@@ -427,18 +415,12 @@ public class TangramGLLevelSelectionScreen {
         return bitmap;
     }
 
-    private static Bitmap setButtonCup(int cup) {
-        switch (cup)
-        {
-            case BRONZE_CUP:
-                return reuse.cupBronze;
-            case SILVER_CUP:
-                return reuse.cupSilver;
-            case GOLDEN_CUP:
-                return reuse.cupGold;
-            default:
-                return reuse.cupNo;
-        }
+    private static void setButtonCup(TangramGLButtonExt buttonLS, int cup) {
+        float yOffsetCup = BASE_SCREEN_DIMENSION * LS_CUP_OFFSET;
+        float scaleCup = BASE_SCREEN_DIMENSION * LS_CUP_SCALE;
+
+        buttonLS.addCupsTexture(reuse.cups, 0, yOffsetCup, scaleCup);
+        buttonLS.setCup(cup);
     }
 
     public static boolean allLevelsInThePrevRowSolved(int indexOfButton, TangramGLButtonExt[] buttonLS) {
@@ -459,6 +441,7 @@ public class TangramGLLevelSelectionScreen {
     //</editor-fold>
 
     //<editor-fold desc="Save-Load Data">
+    @SuppressLint("DiscouragedApi")
     private static void loadData(Context context, int selectedLevelSet, long[] timer, int[] cup) {
         int id;
         String resName;
@@ -482,6 +465,7 @@ public class TangramGLLevelSelectionScreen {
         }
     }
 
+    @SuppressLint("DiscouragedApi")
     public static void saveData(Context context, int selectedLevelSet, int level, long timer, int cup) {
         int id;
         Resources res = context.getResources();

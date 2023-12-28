@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 
 import com.aga.android.programs.AlphaGradientShaderProgram;
 import com.aga.android.programs.TextureShaderProgram;
+import com.aga.woodentangrampuzzle2.FullscreenActivity;
 import com.aga.woodentangrampuzzle2.R;
 import com.aga.woodentangrampuzzle2.common.MultiTouchGestures;
 import com.aga.woodentangrampuzzle2.opengles20.baseobjects.TangramGLReusable;
@@ -171,17 +172,14 @@ public class TangramGLRenderer implements GLSurfaceView.Renderer {
             case LEVEL_SELECTION:
                 playMode = screenLS.touch(normalizedX, normalizedY, motionEvent);
                 selectedLevel = screenLS.getSelectedLevel();
-//                if (selectedLevel > 0) {
-//                    if (screenLS.isSelectedLevelLocked()) {
-//                        logDebugOut(TAG, "handleTouch.LEVEL_SELECTION","Place here MsgBox");
-//                    }
-//                }
                 if (playMode == Mode.LOCK_LS_TOUCH)
                     additionalDrawCycleEnds = false;
                 break;
             case LEVEL:
                 if (levelScreen.touch(multiTouchEvent) == Mode.LEVEL_SELECTION)
-                    onBackPressed();
+                    ((FullscreenActivity) context).getOnBackPressedDispatcher().onBackPressed();
+                // Direct call causes textures to be created in main thread rather than not in OpenGL context.
+//                    onBackPressed();
                 break;
         }
     }
