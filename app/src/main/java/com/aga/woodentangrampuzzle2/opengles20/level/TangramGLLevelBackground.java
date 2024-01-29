@@ -1,5 +1,10 @@
 package com.aga.woodentangrampuzzle2.opengles20.level;
 
+import static com.aga.android.util.ObjectBuildHelper.xPixelsToDeviceCoords;
+import static com.aga.android.util.ObjectBuildHelper.yPixelsToDeviceCoords;
+import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.ASPECT_RATIO;
+import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.screenRect;
+
 import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.RectF;
@@ -20,6 +25,10 @@ public class TangramGLLevelBackground extends TangramGLSquare {
         super(b, Math.abs(dst.width()/2f), Math.abs(dst.height()/2f));
     }
 
+    public TangramGLLevelBackground(Bitmap b) {
+        super(b, ASPECT_RATIO, 1.0f);
+    }
+
     /**
      * Create path
      * @param x X-axis coordinates in pixels.
@@ -27,6 +36,22 @@ public class TangramGLLevelBackground extends TangramGLSquare {
      */
     public void setLevelPath(int[] x, int[] y) {
         levelPath = new TangramLevelPath(x, y);
+    }
+
+    public float[] getNormalizedPointsX() {
+        float[] x = levelPath.getPathX();
+        for (int i = 0; i < x.length; i++) {
+            x[i] = xPixelsToDeviceCoords(x[i], screenRect);
+        }
+        return x;
+    }
+
+    public float[] getNormalizedPointsY() {
+        float[] y = levelPath.getPathY();
+        for (int i = 0; i < y.length; i++) {
+            y[i] = yPixelsToDeviceCoords(y[i], screenRect);
+        }
+        return y;
     }
 
     public void resizeLevelPath(float size, boolean independentResize) {

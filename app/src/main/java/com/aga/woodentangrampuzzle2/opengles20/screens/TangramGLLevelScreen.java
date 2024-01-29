@@ -101,11 +101,7 @@ public class TangramGLLevelScreen {
 
     public TangramGLLevelScreen(Context context, RectF screenRect) {
         this.context = context;
-        this.screenRect = new RectF();
-        this.screenRect.left = screenRect.left;
-        this.screenRect.top = screenRect.top;
-        this.screenRect.right = screenRect.right;
-        this.screenRect.bottom = screenRect.bottom;
+        this.screenRect = new RectF(screenRect);
     }
 
     //<editor-fold desc="Initialization">
@@ -162,6 +158,7 @@ public class TangramGLLevelScreen {
         tiles.drawFrames(Color.BLACK, FRAME_WIDTH);
         tiles.scale(tilesScaleFactor);
         tiles.finalizeForDraw(textureProgram);
+        tiles.setLevelPoints(background.getNormalizedPointsX(), background.getNormalizedPointsY());
     }
 
     /**
@@ -186,15 +183,11 @@ public class TangramGLLevelScreen {
      */
     private void loadLevelCups() {
         cup = new TangramGLLevelCup();
-        Bitmap cupBitmap = ObjectBuildHelper.loadBitmap(context, R.drawable.no_cup);
-        RectF cupDstRect = getIngameCupPosition(cupBitmap, screenRect);
-        cup.addCup(cupBitmap, cupDstRect, NO_CUP, textureProgram);
-        cupBitmap = ObjectBuildHelper.loadBitmap(context, R.drawable.bronze_cup);
-        cup.addCup(cupBitmap, cupDstRect, BRONZE_CUP, textureProgram);
-        cupBitmap = ObjectBuildHelper.loadBitmap(context, R.drawable.silver_cup);
-        cup.addCup(cupBitmap, cupDstRect, SILVER_CUP, textureProgram);
-        cupBitmap = ObjectBuildHelper.loadBitmap(context, R.drawable.gold_cup);
-        cup.addCup(cupBitmap, cupDstRect, GOLDEN_CUP, textureProgram);
+        RectF cupDstRect = getIngameCupPosition(reuse.cups[0], screenRect);
+        cup.addCup(reuse.cups[0], cupDstRect, NO_CUP, textureProgram);
+        cup.addCup(reuse.cups[1], cupDstRect, BRONZE_CUP, textureProgram);
+        cup.addCup(reuse.cups[2], cupDstRect, SILVER_CUP, textureProgram);
+        cup.addCup(reuse.cups[3], cupDstRect, GOLDEN_CUP, textureProgram);
         // чисто для тестов, потом надо убрать
 //        cup.setReachedCup(GOLDEN_CUP);
         cup.setReachedCup(loadDataCup(context, selectedLevelSet, selectedLevel));
@@ -249,10 +242,8 @@ public class TangramGLLevelScreen {
     //<editor-fold desc="Static">
     private static TangramGLLevelBackground setLevelBackground(Context context, RectF screenRect) {
         Bitmap b = createTiledBitmap(context, screenRect, reuse.bitmapMaple);
-        TangramGLLevelBackground bg = new TangramGLLevelBackground(Bitmap.createBitmap(b.getWidth(), b.getHeight(), Bitmap.Config.ARGB_8888), ObjectBuildHelper.pixelsToDeviceCoords(screenRect, screenRect));
-        bg.addBitmap(b);
 
-        return bg;
+        return new TangramGLLevelBackground(b);
     }
 
     public static boolean loadLevelPathByNumber(TangramGLLevelBackground level, Context context, int selectedLevelSet, int levelNumber){

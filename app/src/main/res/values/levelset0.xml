@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer-array name="ls0_level_0_x">
-        <item>600</item>
-        <item>600</item>
-        <item>589</item>
-        <item>730</item>
-        <item>873</item>
-        <item>1014</item>
-        <item>1003</item>
-        <item>1003</item>
+        <item>601</item>
+        <item>601</item>
+        <item>590</item>
+        <item>731</item>
+        <item>872</item>
+        <item>1013</item>
+        <item>1001</item>
+        <item>1001</item>
     </integer-array>
     <integer-array name="ls0_level_0_y">
         <item>900</item>
         <item>800</item>
         <item>800</item>
-        <item>659</item>
-        <item>659</item>
+        <item>658</item>
+        <item>658</item>
         <item>800</item>
         <item>800</item>
         <item>900</item>

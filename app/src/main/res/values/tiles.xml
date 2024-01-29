@@ -10,46 +10,46 @@
     </integer-array>
 
     <integer-array name="tile1_x">
-        <item>129</item>
+        <item>130</item>
         <item>30</item>
         <item>30</item>
     </integer-array>
     <integer-array name="tile1_y">
-        <item>179</item>
+        <item>180</item>
         <item>80</item>
-        <item>179</item>
+        <item>180</item>
     </integer-array>
 
     <integer-array name="tile2_x">
         <item>40</item>
-        <item>139</item>
-        <item>139</item>
+        <item>140</item>
+        <item>140</item>
     </integer-array>
     <integer-array name="tile2_y">
         <item>80</item>
-        <item>179</item>
+        <item>180</item>
         <item>80</item>
     </integer-array>
 
     <integer-array name="tile3_x">
-        <item>171</item>
+        <item>172</item>
         <item>30</item>
         <item>30</item>
     </integer-array>
     <integer-array name="tile3_y">
-        <item>331</item>
+        <item>332</item>
         <item>190</item>
-        <item>331</item>
+        <item>332</item>
     </integer-array>
 
     <integer-array name="tile4_x">
         <item>40</item>
-        <item>181</item>
-        <item>181</item>
+        <item>182</item>
+        <item>182</item>
     </integer-array>
     <integer-array name="tile4_y">
         <item>190</item>
-        <item>331</item>
+        <item>332</item>
         <item>190</item>
     </integer-array>
 
@@ -63,15 +63,15 @@
     </integer-array>
 
     <integer-array name="tile6_x">
-        <item>30</item>
+        <item>29</item>
         <item>129</item>
         <item>330</item>
         <item>231</item>
     </integer-array>
     <integer-array name="tile6_y">
         <item>493</item>
-        <item>592</item>
-        <item>592</item>
+        <item>593</item>
+        <item>593</item>
         <item>493</item>
     </integer-array>
 </resources>

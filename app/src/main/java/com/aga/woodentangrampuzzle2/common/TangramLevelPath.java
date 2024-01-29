@@ -134,6 +134,14 @@ public class TangramLevelPath {
         return hasHole;
     }
 
+    public float[] getPathX() {
+        return x;
+    }
+
+    public float[] getPathY() {
+        return y;
+    }
+
     /**
      * Assign pivot point from outer source. Overrides initial inner calculations.
      * Be aware: it can be overwritten by the setToCenter() function.

@@ -16,11 +16,12 @@ public class TangramGLTile{
     private static final int SQUARE = 2;
     private static final int TRIANGLE = 3;
     private static final int QUADRANGLE = 4;
+    private static final float MAGNET_DISTANCE = 0.05f;
     private final float[] modelMatrix = new float[16];
     private final float[] modelViewProjectionMatrix = new float[16];
     private final int INDEX;
 
-    private float scaleFactor;
+    private float scaleFactor = 1;
     private float accumulatedAngle, savedAngle, increasingAngle;
     private PointF offsetFromStartPos, realPosition, startPosition;
     private BaseGLObject tile;
@@ -28,6 +29,8 @@ public class TangramGLTile{
     private int numberOfVertices, i;
     private float[] polyX, polyY;
     private TangramLevelPath shadowTilePath;
+
+    public final PointF[] dots;
 
     //<editor-fold desc="Constructor">
     public TangramGLTile(Bitmap b, float[] x, float[] y, int index) {
@@ -53,6 +56,7 @@ public class TangramGLTile{
                 polyY = y;
                 numberOfVertices = 4;
         }
+        dots = new PointF[polyX.length];
         init();
     }
 
@@ -73,6 +77,9 @@ public class TangramGLTile{
         animator = new TangramAnimator();
         animator.setAnimationType(TangramAnimator.ANIM_TYPE.INV_PARABOLIC);
         accumulatedAngle = savedAngle = increasingAngle = 0;
+
+        for (int i = 0; i < polyX.length; i++)
+            dots[i] = new PointF(polyX[i], polyY[i]);
     }
     //</editor-fold>
 
@@ -84,6 +91,7 @@ public class TangramGLTile{
         for (i = 0; i < polyX.length; i++) {
             polyX[i] += dx;
             polyY[i] += dy;
+            dots[i].offset(dx, dy);
         }
     }
 
@@ -94,6 +102,7 @@ public class TangramGLTile{
         for (i = 0; i < polyX.length; i++) {
             polyX[i] += dx;
             polyY[i] += dy;
+            dots[i].offset(dx, dy);
         }
 
         offsetFromStartPos.x = x - startPosition.x;
@@ -115,6 +124,17 @@ public class TangramGLTile{
         }
 
         return result;
+    }
+
+    public PointF isPointNearPolygon(float x, float y) {
+        for (i = 0; i < polyX.length; i++) {
+            float dist = (float) Math.hypot(x - polyX[i], y - polyY[i]);
+            if (dist < MAGNET_DISTANCE) {
+                return new PointF(x - polyX[i], y - polyY[i]);
+            }
+        }
+
+        return null;
     }
     //</editor-fold>
 
@@ -141,6 +161,9 @@ public class TangramGLTile{
     public void scale(float scaleFactor) {
         this.scaleFactor = scaleFactor;
         shadowTilePath.scale(scaleFactor);
+
+        for (i = 0; i < polyX.length; i++)
+            dots[i].set(polyX[i], polyY[i]);
     }
     //</editor-fold>
 

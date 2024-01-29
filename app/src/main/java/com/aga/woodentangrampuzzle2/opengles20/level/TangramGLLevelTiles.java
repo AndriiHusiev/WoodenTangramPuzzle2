@@ -32,6 +32,7 @@ public class TangramGLLevelTiles {
     private int selectedTile;
     private TangramGLTile[] tile;
     private PointF prevTouch, prevTouch2Finger;
+    public PointF[] levelDots;
 
     public TangramGLLevelTiles(int numberOfTiles) {
         TILES_NUMBER = numberOfTiles;
@@ -73,6 +74,64 @@ public class TangramGLLevelTiles {
         for (TangramGLTile t: tile)
             t.finalizeForDraw(textureProgram);
     }
+
+    public void setLevelPoints(float[] px, float[] py) {
+        levelDots = new PointF[px.length];
+        for (int i = 0; i < px.length; i++)
+            levelDots[i] = new PointF(px[i], py[i]);
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Level Progress">
+    private void calcLevelProgress(TangramGLTile t) {
+        logDebugOut(TAG, "calcLevelProgress", magnetizeTile(t));
+    }
+
+    /**
+     * Calculate the distance from the level points to the corners of the dropped tile.
+     * And magnetize tile to the first point, which is within the sensitivity zone.
+     * @param t Just dropped tile
+     */
+    private boolean magnetizeTile(TangramGLTile t) {
+        float TOO_FAR = 1000;
+        float minDist = TOO_FAR;
+        PointF result = new PointF();
+
+        // Min distance to level dots
+        for (PointF levelDot : levelDots) {
+            PointF offset = t.isPointNearPolygon(levelDot.x, levelDot.y);
+            if (offset != null) {
+                float dist = (float) Math.hypot(offset.x, offset.y);
+                if (dist < minDist) {
+                    minDist = dist;
+                    result.set(offset.x, offset.y);
+                }
+            }
+        }
+
+        // Min distance to other tiles dots
+        for (TangramGLTile tt: tile) {
+            if (tt.getIndex() != t.getIndex()) {
+                for (PointF d: tt.dots) {
+                    PointF offset = t.isPointNearPolygon(d.x, d.y);
+                    if (offset != null) {
+                        float dist = (float) Math.hypot(offset.x, offset.y);
+                        if (dist < minDist) {
+                            minDist = dist;
+                            result.set(offset.x, offset.y);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (minDist == TOO_FAR)
+            return false;
+        else {
+            t.offset(result.x, result.y);
+            return true;
+        }
+    }
     //</editor-fold>
 
     //<editor-fold desc="Touch">
@@ -94,10 +153,10 @@ public class TangramGLLevelTiles {
                 }
                 break;
             case ACTION_UP:
-                selectedTile = -1;
                 // TODO: place here implementation of calculation level progress
-//                if (selectedTile >= 0)
-//                    calcLevelProgress();
+                if (selectedTile >= 0)
+                    calcLevelProgress(tile[selectedTile]);
+                selectedTile = -1;
                 break;
             case ACTION_POINTER_UP:
                 break;
