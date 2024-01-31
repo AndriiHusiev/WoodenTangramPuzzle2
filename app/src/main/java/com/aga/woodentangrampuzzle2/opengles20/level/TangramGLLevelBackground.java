@@ -7,6 +7,7 @@ import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.screenRe
 
 import android.graphics.Bitmap;
 import android.graphics.Paint;
+import android.graphics.PointF;
 import android.graphics.RectF;
 
 import com.aga.woodentangrampuzzle2.common.TangramLevelPath;
@@ -21,6 +22,8 @@ public class TangramGLLevelBackground extends TangramGLSquare {
     private TangramLevelPath levelPath;
     private Paint paintPathFill, paintPathStroke;
 
+    public PointF[] progressDots;
+
     public TangramGLLevelBackground(Bitmap b, RectF dst) {
         super(b, Math.abs(dst.width()/2f), Math.abs(dst.height()/2f));
     }
@@ -34,8 +37,12 @@ public class TangramGLLevelBackground extends TangramGLSquare {
      * @param x X-axis coordinates in pixels.
      * @param y Y-axis coordinates in pixels.
      */
-    public void setLevelPath(int[] x, int[] y) {
+    public void setLevelPath(int[] x, int[] y, int[] d) {
         levelPath = new TangramLevelPath(x, y);
+
+        progressDots = new PointF[d.length / 2];
+        for (int i = 0; i < d.length; i+=2)
+            progressDots[i/2] = new PointF(d[i], d[i + 1]);
     }
 
     public float[] getNormalizedPointsX() {
@@ -54,12 +61,36 @@ public class TangramGLLevelBackground extends TangramGLSquare {
         return y;
     }
 
+    public PointF[] getProgressDots() {
+        PointF[] pd = new PointF[progressDots.length];
+        for (int i = 0; i < pd.length; i++) {
+            pd[i] = new PointF(
+                    xPixelsToDeviceCoords(progressDots[i].x, screenRect),
+                    yPixelsToDeviceCoords(progressDots[i].y, screenRect)
+            );
+        }
+        return pd;
+    }
+
     public void resizeLevelPath(float size, boolean independentResize) {
         levelPath.resize(size, independentResize);
     }
 
     public void scaleLevelPath(float scaleFactor) {
         levelPath.scale(scaleFactor);
+        scaleProgressDots(scaleFactor);
+    }
+
+    private void scaleProgressDots(float scaleFactor) {
+        float dx, dy;
+        for (PointF progressDot : progressDots) {
+            dx = progressDot.x - levelPath.getPathBounds().centerX();
+            dy = progressDot.y - levelPath.getPathBounds().centerY();
+            dx *= scaleFactor;
+            dy *= scaleFactor;
+            progressDot.x = dx + levelPath.getPathBounds().centerX();
+            progressDot.y = dy + levelPath.getPathBounds().centerY();
+        }
     }
 
     /**
@@ -67,6 +98,11 @@ public class TangramGLLevelBackground extends TangramGLSquare {
      * @param bounds Bounding rectangle in pixels coordinates.
      */
     public void setLevelPathToCenter(RectF bounds) {
+        float offsetX = bounds.centerX() - levelPath.getPathBounds().centerX();
+        float offsetY = bounds.centerY() - levelPath.getPathBounds().centerY();
+        for (PointF progressDot : progressDots)
+            progressDot.offset(offsetX, offsetY);
+
         levelPath.setToCenter(bounds);
     }
 

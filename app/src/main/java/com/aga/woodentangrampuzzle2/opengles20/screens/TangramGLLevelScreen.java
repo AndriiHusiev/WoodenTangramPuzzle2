@@ -11,8 +11,11 @@ import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.COLOR_L
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.COLOR_TEXT_INGAME_HEADER;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.GOLDEN_CUP;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.INGAME_ANGULAR_HEADER_HEIGHT;
+import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.INGAME_CUP_BRONZE;
+import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.INGAME_CUP_GOLD;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.INGAME_CUP_HEIGHT;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.INGAME_CUP_OFFSET_FROM_RIGHT;
+import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.INGAME_CUP_SILVER;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.INGAME_HEADER_HEIGHT;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.INGAME_HEADER_SHADOW_HEIGHT;
 import static com.aga.woodentangrampuzzle2.common.TangramGlobalConstants.INGAME_TILE0_OFFSET_X;
@@ -85,7 +88,7 @@ public class TangramGLLevelScreen {
     private static final String COORD_Y = "_y";
     private static final String DEF_TYPE_ARRAY = "array";
     private static final String DEF_TYPE_STRING = "string";
-    private static final float FRAME_WIDTH = 2;
+    private static final float FRAME_WIDTH = 4;
 
     public TangramGLLevelForeground foreground;
     public TangramGLLevelTiles tiles;
@@ -98,6 +101,7 @@ public class TangramGLLevelScreen {
     private final RectF screenRect;
     private int selectedLevel, selectedLevelSet;
     private float tilesScaleFactor;
+    private PointF[] pd;
 
     public TangramGLLevelScreen(Context context, RectF screenRect) {
         this.context = context;
@@ -136,6 +140,7 @@ public class TangramGLLevelScreen {
         background.setShader(textureProgram);
         background.bitmapToTexture();
         background.recycleBitmap();
+        pd = background.getProgressDots();
     }
 
     private RectF getIngamePlayableRect() {
@@ -219,7 +224,9 @@ public class TangramGLLevelScreen {
     //<editor-fold desc="Touch">
     public Mode touch(MultiTouchGestures multiTouch) {
         // Reaction if tile is touched
-        tiles.touch(multiTouch);
+        if (tiles.touch(multiTouch)) {
+            calcLevelProgress();
+        }
 
         // Reaction if button is touched
         return touchButtons(multiTouch.getNormalizedX(ZERO), multiTouch.getNormalizedY(ZERO), multiTouch.getAction());
@@ -248,7 +255,7 @@ public class TangramGLLevelScreen {
 
     public static boolean loadLevelPathByNumber(TangramGLLevelBackground level, Context context, int selectedLevelSet, int levelNumber){
         int id;
-        int[] x, y;
+        int[] x, y, d;
         boolean result = true;
         Resources res = context.getResources();
 
@@ -257,8 +264,10 @@ public class TangramGLLevelScreen {
             x = res.getIntArray(id);
             id = res.getIdentifier("ls" + selectedLevelSet + "_level_" + levelNumber + "_y", "array", context.getPackageName());
             y = res.getIntArray(id);
+            id = res.getIdentifier("ls" + selectedLevelSet + "_level_" + levelNumber + "_d", "array", context.getPackageName());
+            d = res.getIntArray(id);
 
-            level.setLevelPath(x, y);
+            level.setLevelPath(x, y, d);
         }
         catch (Exception ex) {
             result = false;
@@ -533,6 +542,25 @@ public class TangramGLLevelScreen {
     //</editor-fold>
 
     //</editor-fold>
+
+    public void calcLevelProgress() {
+        double cc = 0;
+        for (PointF pointF : pd) {
+            cc += Math.ceil((double) (tiles.isPointInTile(pointF.x, pointF.y, true) + 1) / 10);
+        }
+        float progress = (float) cc / pd.length;
+
+        if (progress > INGAME_CUP_GOLD)
+            cup.setReachedCup(GOLDEN_CUP);
+        else if (progress > INGAME_CUP_SILVER)
+            cup.setReachedCup(SILVER_CUP);
+        else if (progress > INGAME_CUP_BRONZE)
+            cup.setReachedCup(BRONZE_CUP);
+        else
+            cup.setReachedCup(NO_CUP);
+
+        logDebugOut(TAG, "calcLevelProgress progress", progress);
+    }
 
     public void shiftTilesToStartPosition() {
         float x, y;

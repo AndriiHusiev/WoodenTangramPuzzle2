@@ -31,7 +31,7 @@ public class TangramGLLevelTiles {
     private enum Rotation {NO_ROTATION, CLOCKWISE, COUNTERCLOCKWISE}
     private int selectedTile;
     private TangramGLTile[] tile;
-    private PointF prevTouch, prevTouch2Finger;
+    private final PointF prevTouch, prevTouch2Finger;
     public PointF[] levelDots;
 
     public TangramGLLevelTiles(int numberOfTiles) {
@@ -82,62 +82,13 @@ public class TangramGLLevelTiles {
     }
     //</editor-fold>
 
-    //<editor-fold desc="Level Progress">
-    private void calcLevelProgress(TangramGLTile t) {
-        logDebugOut(TAG, "calcLevelProgress", magnetizeTile(t));
-    }
-
-    /**
-     * Calculate the distance from the level points to the corners of the dropped tile.
-     * And magnetize tile to the first point, which is within the sensitivity zone.
-     * @param t Just dropped tile
-     */
-    private boolean magnetizeTile(TangramGLTile t) {
-        float TOO_FAR = 1000;
-        float minDist = TOO_FAR;
-        PointF result = new PointF();
-
-        // Min distance to level dots
-        for (PointF levelDot : levelDots) {
-            PointF offset = t.isPointNearPolygon(levelDot.x, levelDot.y);
-            if (offset != null) {
-                float dist = (float) Math.hypot(offset.x, offset.y);
-                if (dist < minDist) {
-                    minDist = dist;
-                    result.set(offset.x, offset.y);
-                }
-            }
-        }
-
-        // Min distance to other tiles dots
-        for (TangramGLTile tt: tile) {
-            if (tt.getIndex() != t.getIndex()) {
-                for (PointF d: tt.dots) {
-                    PointF offset = t.isPointNearPolygon(d.x, d.y);
-                    if (offset != null) {
-                        float dist = (float) Math.hypot(offset.x, offset.y);
-                        if (dist < minDist) {
-                            minDist = dist;
-                            result.set(offset.x, offset.y);
-                        }
-                    }
-                }
-            }
-        }
-
-        if (minDist == TOO_FAR)
-            return false;
-        else {
-            t.offset(result.x, result.y);
-            return true;
-        }
-    }
-    //</editor-fold>
-
     //<editor-fold desc="Touch">
-    public void touch(MultiTouchGestures multiTouch) {
+    public boolean touch(MultiTouchGestures multiTouch) {
+        boolean result = false;
+
         switch (multiTouch.getAction()) {
             case ACTION_DOWN:
+//                logDebugOut(TAG, "touch coords", multiTouch.getNormalizedX(ZERO) + " " + multiTouch.getNormalizedY(ZERO));
                 saveStartPoint(multiTouch.getNormalizedX(ZERO), multiTouch.getNormalizedY(ZERO));
                 if (isAnyTileWasSelected(multiTouch.getNormalizedX(ZERO), multiTouch.getNormalizedY(ZERO)))
                     reorderTiles();
@@ -153,26 +104,28 @@ public class TangramGLLevelTiles {
                 }
                 break;
             case ACTION_UP:
-                // TODO: place here implementation of calculation level progress
                 if (selectedTile >= 0)
-                    calcLevelProgress(tile[selectedTile]);
+                    result = magnetizeTile(tile[selectedTile]);
                 selectedTile = -1;
                 break;
             case ACTION_POINTER_UP:
                 break;
         }
+
+        return result;
     }
 
     private boolean isAnyTileWasSelected(float normalizedX, float normalizedY) {
-        // Чтобы сбросить выделение плитки, если ни одна не выбрана.
-        selectedTile = -1;
+        selectedTile = isPointInTile(normalizedX, normalizedY, false);
+        return selectedTile != -1;
+    }
+
+    public int isPointInTile(float normalizedX, float normalizedY, boolean magnet) {
         for (int i = 0; i < TILES_NUMBER; i++) {
-            if (tile[i].pointInPolygon(normalizedX, normalizedY)) {
-                selectedTile = i;
-                return true;
-            }
+            if (tile[i].pointInPolygon(normalizedX, normalizedY) && (!magnet || tile[i].isMagnetized()))
+                return i;
         }
-        return false;
+        return -1;
     }
 
     private void reorderTiles() {
@@ -275,6 +228,54 @@ public class TangramGLLevelTiles {
             case COUNTERCLOCKWISE:
                 tile[selectedTile].rotate(ROTATING_ANGLE);
                 break;
+        }
+    }
+
+    /**
+     * Calculate the distance from the level points to the corners of the dropped tile.
+     * And magnetize tile to the first point, which is within the sensitivity zone.
+     * @param t Just dropped tile
+     */
+    private boolean magnetizeTile(TangramGLTile t) {
+        float TOO_FAR = 1000;
+        float minDist = TOO_FAR;
+        PointF result = new PointF();
+
+        // Min distance to level dots
+        for (PointF levelDot : levelDots) {
+            PointF offset = t.isPointNearPolygon(levelDot.x, levelDot.y);
+            if (offset != null) {
+                float dist = (float) Math.hypot(offset.x, offset.y);
+                if (dist < minDist) {
+                    minDist = dist;
+                    result.set(offset.x, offset.y);
+                }
+            }
+        }
+
+        // Min distance to other tiles dots
+        for (TangramGLTile tt: tile) {
+            if (tt.getIndex() != t.getIndex()) {
+                for (PointF d: tt.dots) {
+                    PointF offset = t.isPointNearPolygon(d.x, d.y);
+                    if (offset != null) {
+                        float dist = (float) Math.hypot(offset.x, offset.y);
+                        if (dist < minDist) {
+                            minDist = dist;
+                            result.set(offset.x, offset.y);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (minDist == TOO_FAR) {
+            t.setMagnetized(false);
+            return false;
+        } else {
+            t.offset(result.x, result.y);
+            t.setMagnetized(true);
+            return true;
         }
     }
     //</editor-fold>

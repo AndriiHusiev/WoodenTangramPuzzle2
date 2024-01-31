@@ -72,9 +72,9 @@ public class TangramGlobalConstants {
     public static final float INGAME_LEVEL_PROGRESS_OFFSET_FROM_RIGHT = 0.14f;
     public static final float INGAME_CUP_HEIGHT = 0.08f;
     public static final float INGAME_CUP_OFFSET_FROM_RIGHT = -0.023f;
-    public static final float INGAME_CUP_BRONZE = 80.0f;
-    public static final float INGAME_CUP_SILVER = 95.0f;
-    public static final float INGAME_CUP_GOLD = 99.0f;
+    public static final float INGAME_CUP_BRONZE = 0.6f;
+    public static final float INGAME_CUP_SILVER = 0.9f;
+    public static final float INGAME_CUP_GOLD = 0.99f;
     public static final float INGAME_TILE_ROTATION_MOVEMENT_THRESHOLD = 0.01f;
 
     public static final float INGAME_TILE0_OFFSET_X = 0.2f;

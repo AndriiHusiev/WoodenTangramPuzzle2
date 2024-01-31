@@ -21,6 +21,7 @@ import static com.aga.woodentangrampuzzle2.opengles20.TangramGLRenderer.screenRe
 
 public class TangramGLLevelTimer {
     private static final String TAG = "TangramGLLevelTimer";
+    private static final long MAX_VALUE = 5999000; // 99:59
 
     //<editor-fold desc="Variables">
     private RectF firstDigitPosition;
@@ -30,9 +31,9 @@ public class TangramGLLevelTimer {
     private float dxSecondDigit;
     private float dxThirdDigit;
     private float dxFourthDigit;
-    private TangramGLSquare[] digits;
+    private final TangramGLSquare[] digits;
     private TangramGLSquare colon;
-    private TangramCommonTimer timer;
+    private final TangramCommonTimer timer;
     private final float[] modelMatrix = new float[16];
     private final float[] modelViewProjectionMatrix = new float[16];
     //</editor-fold>
@@ -46,12 +47,11 @@ public class TangramGLLevelTimer {
     //<editor-fold desc="Math">
     public static int[] convertElapsedTime(long elapsedTime) {
         int[] elapsedTimeDigits= new int[4];
-        int seconds = (int) (elapsedTime / 1000);
+        int seconds = (int) (saveFromOverflow(elapsedTime) / 1000);
         int minutes = seconds / 60;
 //        int hours = minutes / 60;
         seconds = seconds % 60;
 
-        // TODO: не забыть что-то сделать, если время больше одного часа. Хоть это и маловероятное событие.
         elapsedTimeDigits[0] = minutes / 10;
         elapsedTimeDigits[1] = minutes % 10;
         elapsedTimeDigits[2] = seconds / 10;
@@ -86,6 +86,10 @@ public class TangramGLLevelTimer {
         seconds = seconds % 60;
 
         return (seconds % 10);
+    }
+
+    private static long saveFromOverflow(long millis) {
+        return Math.min(millis, MAX_VALUE);
     }
     //</editor-fold>
 
@@ -142,14 +146,14 @@ public class TangramGLLevelTimer {
     }
 
     public long getElapsedTime() {
-        return timer.getElapsedTime();
+        return saveFromOverflow(timer.getElapsedTime());
     }
     //</editor-fold>
 
     public void draw(float[] projectionMatrix) {
         long elapsedTime = 0;
         if (timer.getTimerMode() == mode.RUN)
-            elapsedTime = timer.getElapsedTime();
+            elapsedTime = saveFromOverflow(timer.getElapsedTime());
 
         // FirstDigit
         digits[calcFirstDigit(elapsedTime)].draw(projectionMatrix);

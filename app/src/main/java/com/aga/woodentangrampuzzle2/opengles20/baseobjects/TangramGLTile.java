@@ -29,6 +29,7 @@ public class TangramGLTile{
     private int numberOfVertices, i;
     private float[] polyX, polyY;
     private TangramLevelPath shadowTilePath;
+    private boolean magnetized = false;
 
     public final PointF[] dots;
 
@@ -80,6 +81,14 @@ public class TangramGLTile{
 
         for (int i = 0; i < polyX.length; i++)
             dots[i] = new PointF(polyX[i], polyY[i]);
+    }
+
+    public boolean isMagnetized() {
+        return magnetized;
+    }
+
+    public void setMagnetized(boolean magnetized) {
+        this.magnetized = magnetized;
     }
     //</editor-fold>
 

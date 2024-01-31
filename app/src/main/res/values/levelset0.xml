@@ -20,6 +20,105 @@
         <item>800</item>
         <item>900</item>
     </integer-array>
+    <integer-array name="ls0_level_0_d">
+        <item>604</item>
+        <item>897</item>
+        <item>694</item>
+        <item>897</item>
+        <item>604</item>
+        <item>807</item>
+        <item>609</item>
+        <item>803</item>
+        <item>698</item>
+        <item>803</item>
+        <item>698</item>
+        <item>893</item>
+        <item>704</item>
+        <item>897</item>
+        <item>794</item>
+        <item>897</item>
+        <item>704</item>
+        <item>807</item>
+        <item>708</item>
+        <item>803</item>
+        <item>798</item>
+        <item>803</item>
+        <item>798</item>
+        <item>893</item>
+        <item>804</item>
+        <item>897</item>
+        <item>894</item>
+        <item>897</item>
+        <item>804</item>
+        <item>807</item>
+        <item>808</item>
+        <item>803</item>
+        <item>898</item>
+        <item>803</item>
+        <item>898</item>
+        <item>893</item>
+        <item>904</item>
+        <item>897</item>
+        <item>904</item>
+        <item>897</item>
+        <item>994</item>
+        <item>897</item>
+        <item>998</item>
+        <item>983</item>
+        <item>908</item>
+        <item>803</item>
+        <item>998</item>
+        <item>803</item>
+        <item>1006</item>
+        <item>797</item>
+        <item>943</item>
+        <item>734</item>
+        <item>938</item>
+        <item>729</item>
+        <item>879</item>
+        <item>797</item>
+        <item>875</item>
+        <item>793</item>
+        <item>869</item>
+        <item>793</item>
+        <item>865</item>
+        <item>797</item>
+        <item>806</item>
+        <item>730</item>
+        <item>802</item>
+        <item>734</item>
+        <item>797</item>
+        <item>730</item>
+        <item>802</item>
+        <item>725</item>
+        <item>738</item>
+        <item>797</item>
+        <item>734</item>
+        <item>793</item>
+        <item>728</item>
+        <item>793</item>
+        <item>724</item>
+        <item>797</item>
+        <item>665</item>
+        <item>729</item>
+        <item>660</item>
+        <item>734</item>
+        <item>597</item>
+        <item>797</item>
+        <item>728</item>
+        <item>666</item>
+        <item>734</item>
+        <item>666</item>
+        <item>737</item>
+        <item>661</item>
+        <item>866</item>
+        <item>737</item>
+        <item>869</item>
+        <item>666</item>
+        <item>875</item>
+        <item>666</item>
+    </integer-array>
+
     <integer-array name="ls0_level_1_x">
         <item>200</item>
         <item>200</item>
@@ -52,6 +151,11 @@
         <item>339</item>
         <item>500</item>
     </integer-array>
+    <integer-array name="ls0_level_1_d">
+        <item>630</item>
+        <item>870</item>
+    </integer-array>
+
     <integer-array name="ls0_level_2_x">
         <item>200</item>
         <item>200</item>
@@ -72,6 +176,11 @@
         <item>443</item>
         <item>300</item>
     </integer-array>
+    <integer-array name="ls0_level_2_d">
+        <item>630</item>
+        <item>870</item>
+    </integer-array>
+
     <integer-array name="ls0_level_3_x">
         <item>242</item>
         <item>442</item>
@@ -84,6 +193,11 @@
         <item>258</item>
         <item>458</item>
     </integer-array>
+    <integer-array name="ls0_level_3_d">
+        <item>630</item>
+        <item>870</item>
+    </integer-array>
+
     <integer-array name="ls0_level_4_x">
         <item>200</item>
         <item>200</item>
@@ -100,6 +214,11 @@
         <item>123</item>
         <item>550</item>
     </integer-array>
+    <integer-array name="ls0_level_4_d">
+        <item>630</item>
+        <item>870</item>
+    </integer-array>
+
     <integer-array name="ls0_level_5_x">
         <item>200</item>
         <item>600</item>
@@ -124,6 +243,11 @@
         <item>300</item>
         <item>200</item>
     </integer-array>
+    <integer-array name="ls0_level_5_d">
+        <item>630</item>
+        <item>870</item>
+    </integer-array>
+
     <integer-array name="ls0_level_6_x">
         <item>200</item>
         <item>584</item>
@@ -144,6 +268,11 @@
         <item>241</item>
         <item>241</item>
     </integer-array>
+    <integer-array name="ls0_level_6_d">
+        <item>630</item>
+        <item>870</item>
+    </integer-array>
+
     <integer-array name="ls0_level_7_x">
         <item>200</item>
         <item>300</item>
@@ -172,6 +301,11 @@
         <item>400</item>
         <item>400</item>
     </integer-array>
+    <integer-array name="ls0_level_7_d">
+        <item>630</item>
+        <item>870</item>
+    </integer-array>
+
     <integer-array name="ls0_level_8_x">
         <item>200</item>
         <item>483</item>
@@ -200,6 +334,11 @@
         <item>312</item>
         <item>241</item>
     </integer-array>
+    <integer-array name="ls0_level_8_d">
+        <item>630</item>
+        <item>870</item>
+    </integer-array>
+
     <integer-array name="ls0_level_9_x">
         <item>200</item>
         <item>341</item>
@@ -232,6 +371,11 @@
         <item>372</item>
         <item>372</item>
     </integer-array>
+    <integer-array name="ls0_level_9_d">
+        <item>630</item>
+        <item>870</item>
+    </integer-array>
+
     <integer-array name="ls0_level_10_x">
         <item>199</item>
         <item>340</item>
@@ -264,6 +408,11 @@
         <item>260</item>
         <item>300</item>
     </integer-array>
+    <integer-array name="ls0_level_10_d">
+        <item>630</item>
+        <item>870</item>
+    </integer-array>
+
     <integer-array name="ls0_level_11_x">
         <item>300</item>
         <item>300</item>
@@ -284,6 +433,11 @@
         <item>300</item>
         <item>400</item>
     </integer-array>
+    <integer-array name="ls0_level_11_d">
+        <item>630</item>
+        <item>870</item>
+    </integer-array>
+
     <integer-array name="ls0_level_12_x">
         <item>300</item>
         <item>300</item>
@@ -304,6 +458,11 @@
         <item>572</item>
         <item>286</item>
     </integer-array>
+    <integer-array name="ls0_level_12_d">
+        <item>630</item>
+        <item>870</item>
+    </integer-array>
+
     <integer-array name="ls0_level_13_x">
         <item>200</item>
         <item>627</item>
@@ -320,6 +479,11 @@
         <item>291</item>
         <item>433</item>
     </integer-array>
+    <integer-array name="ls0_level_13_d">
+        <item>630</item>
+        <item>870</item>
+    </integer-array>
+
     <integer-array name="ls0_level_14_x">
         <item>200</item>
         <item>271</item>
@@ -352,6 +516,11 @@
         <item>307</item>
         <item>271</item>
     </integer-array>
+    <integer-array name="ls0_level_14_d">
+        <item>630</item>
+        <item>870</item>
+    </integer-array>
+
     <integer-array name="ls0_level_15_x">
         <item>300</item>
         <item>583</item>
@@ -376,6 +545,11 @@
         <item>383</item>
         <item>242</item>
     </integer-array>
+    <integer-array name="ls0_level_15_d">
+        <item>630</item>
+        <item>870</item>
+    </integer-array>
+
     <integer-array name="ls0_level_16_x">
         <item>400</item>
         <item>500</item>
@@ -404,6 +578,11 @@
         <item>401</item>
         <item>301</item>
     </integer-array>
+    <integer-array name="ls0_level_16_d">
+        <item>630</item>
+        <item>870</item>
+    </integer-array>
+
     <integer-array name="ls0_level_17_x">
         <item>100</item>
         <item>200</item>
@@ -430,6 +609,11 @@
         <item>401</item>
         <item>401</item>
     </integer-array>
+    <integer-array name="ls0_level_17_d">
+        <item>630</item>
+        <item>870</item>
+    </integer-array>
+
     <integer-array name="ls0_level_18_x">
         <item>100</item>
         <item>141</item>
@@ -450,6 +634,11 @@
         <item>441</item>
         <item>441</item>
     </integer-array>
+    <integer-array name="ls0_level_18_d">
+        <item>630</item>
+        <item>870</item>
+    </integer-array>
+
     <integer-array name="ls0_level_19_x">
         <item>200</item>
         <item>291</item>
@@ -478,6 +667,11 @@
         <item>342</item>
         <item>342</item>
     </integer-array>
+    <integer-array name="ls0_level_19_d">
+        <item>630</item>
+        <item>870</item>
+    </integer-array>
+
     <integer-array name="ls0_level_20_x">
         <item>300</item>
         <item>513</item>
@@ -504,6 +698,11 @@
         <item>492</item>
         <item>492</item>
     </integer-array>
+    <integer-array name="ls0_level_20_d">
+        <item>630</item>
+        <item>870</item>
+    </integer-array>
+
     <integer-array name="ls0_level_21_x">
         <item>200</item>
         <item>340</item>
@@ -524,6 +723,11 @@
         <item>432</item>
         <item>432</item>
     </integer-array>
+    <integer-array name="ls0_level_21_d">
+        <item>630</item>
+        <item>870</item>
+    </integer-array>
+
     <integer-array name="ls0_level_22_x">
         <item>100</item>
         <item>502</item>
@@ -544,6 +748,11 @@
         <item>300</item>
         <item>300</item>
     </integer-array>
+    <integer-array name="ls0_level_22_d">
+        <item>630</item>
+        <item>870</item>
+    </integer-array>
+
     <integer-array name="ls0_level_23_x">
         <item>200</item>
         <item>341</item>
@@ -560,6 +769,11 @@
         <item>453</item>
         <item>241</item>
     </integer-array>
+    <integer-array name="ls0_level_23_d">
+        <item>630</item>
+        <item>870</item>
+    </integer-array>
+
     <integer-array name="ls0_level_24_x">
         <item>200</item>
         <item>341</item>
@@ -576,4 +790,9 @@
         <item>441</item>
         <item>441</item>
     </integer-array>
+    <integer-array name="ls0_level_24_d">
+        <item>630</item>
+        <item>870</item>
+    </integer-array>
+
 </resources>
