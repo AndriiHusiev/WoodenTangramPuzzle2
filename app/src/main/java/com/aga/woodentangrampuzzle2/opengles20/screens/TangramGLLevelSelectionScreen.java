@@ -171,7 +171,7 @@ public class TangramGLLevelSelectionScreen {
         for (int i = LEVELS_IN_THE_ROW; i < LEVELS_NUMBER; i++) {
             rectButtons[i] = setButtonPositionOtherRows(rectButtons, buttonRatio, i);
             button[i] = new TangramGLButtonExt(screenRect);
-            button[i].setLocked(true);
+            button[i].setLocked(!allLevelsInThePrevRowSolved(i, button));
             button[i].addTexture(b, rectButtons[i]);
             setButtonTimer(button[i], timer[i]);
             setButtonCup(button[i], cup[i]);
@@ -193,9 +193,22 @@ public class TangramGLLevelSelectionScreen {
         int[] t = TangramGLLevelTimer.convertElapsedTime(timer);
         button[selectedLevel].setDigits(t);
         button[selectedLevel].setCup(cup);
-
-//        button[selectedLevel].replaceTexture(6, setButtonCup(cup));
         button[selectedLevel].setShaders(textureProgram, desaturationProgram);
+
+        updateLockOfNextRow();
+    }
+
+    /**
+     * Обновление статуса заблокированности уровней следующего ряда после каждого выхода из уровня.
+     */
+    private void updateLockOfNextRow() {
+        int index = selectedLevel + LEVELS_IN_THE_ROW;
+        if (button[index].isLocked() && allLevelsInThePrevRowSolved(index, button)) {
+            int rowOfSelectedLevel = (int) Math.floor((double) index / LEVELS_IN_THE_ROW);
+            for(int j = (rowOfSelectedLevel * LEVELS_IN_THE_ROW); j < ((rowOfSelectedLevel + 1) * LEVELS_IN_THE_ROW); j++) {
+                button[j].setLocked(false);
+            }
+        }
     }
 
     private void setLockScreen() {
@@ -423,14 +436,19 @@ public class TangramGLLevelSelectionScreen {
         buttonLS.setCup(cup);
     }
 
+    /**
+     * Define is the levels unlocked in the current row.
+     * Current row unlocked when all levels in the previous row get at least bronze cup.
+     * But note, first 4 levels are always unlocked.
+     * @param indexOfButton Index of current button.
+     * @param buttonLS Array of all buttons.
+     * @return True if all levels in the previous row is solved.
+     */
     public static boolean allLevelsInThePrevRowSolved(int indexOfButton, TangramGLButtonExt[] buttonLS) {
-        // Define is the levels unlocked in the current row.
-        // Current row unlocked when all levels in the previous row get at least bronze cup.
-        // But note, first 5 levels are always unlocked.
         boolean result = true;
         if (indexOfButton >= LEVELS_IN_THE_ROW) {
             int rowOfSelectedLevel = (int) Math.floor((double) indexOfButton / LEVELS_IN_THE_ROW);
-            for(int j = (rowOfSelectedLevel * LEVELS_IN_THE_ROW - LEVELS_IN_THE_ROW); j < (rowOfSelectedLevel * LEVELS_IN_THE_ROW); j++) {
+            for(int j = (LEVELS_IN_THE_ROW * (rowOfSelectedLevel - 1)); j < (rowOfSelectedLevel * LEVELS_IN_THE_ROW); j++) {
                 result &= (buttonLS[j].getCup() > 0);
             }
         }
